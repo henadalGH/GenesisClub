@@ -1,0 +1,15 @@
+<header class="admin-header">
+  <div class="logo">
+    <h2>Panel Admin</h2>
+  </div>
+
+  <nav class="nav-buttons">
+    <button [routerLink]="['/solicitudesPendientes']">Solicitudes</button>
+    <button [routerLink]="['/invitaciones']">Invitaciones</button>
+    <button [routerLink]="['/listaSocios']">Socios</button>
+  </nav>
+
+  <div class="acciones">
+    <button class="logout" (click)="logout()">Cerrar sesión</button>
+  </div>
+</header>

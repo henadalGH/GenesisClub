@@ -1,0 +1,98 @@
+/* fondo general más claro */
+body {
+  background: #f3f4f6;
+}
+
+/* ===== LISTA ===== */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+
+/* ===== TARJETA MÁS NOTORIA ===== */
+.card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #ffffff;
+  padding: 22px 26px;
+
+  border-radius: 16px;
+
+  /* 👇 clave para que se note */
+  border: 1px solid #e5e7eb;
+  box-shadow:
+    0 4px 6px rgba(0,0,0,0.05),
+    0 10px 25px rgba(0,0,0,0.10);
+
+  transition: all 0.25s ease;
+}
+
+
+/* efecto hover más marcado */
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow:
+    0 8px 14px rgba(0,0,0,0.08),
+    0 18px 40px rgba(0,0,0,0.15);
+}
+
+
+/* ===== INFO ===== */
+.info {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 10px 30px;
+  font-size: 14px;
+  color: #374151;
+}
+
+
+/* ===== BADGE ESTADO (nuevo) ===== */
+.estado-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  background: #fef3c7;
+  color: #b45309;
+}
+
+
+/* ===== BOTONES ===== */
+.acciones {
+  display: flex;
+  gap: 12px;
+}
+
+.btn {
+  padding: 9px 18px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+/* aceptar */
+.aceptar {
+  background: #22c55e;
+  color: white;
+}
+
+.aceptar:hover {
+  background: #16a34a;
+}
+
+/* rechazar */
+.rechazar {
+  background: #ef4444;
+  color: white;
+}
+
+.rechazar:hover {
+  background: #dc2626;
+}

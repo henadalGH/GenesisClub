@@ -1,0 +1,41 @@
+<div class="contenedor">
+
+  <div class="card">
+
+    <h2 class="titulo">Solicitud de Registro</h2>
+    <p class="descripcion">
+      Completá tus datos para continuar con el proceso.
+    </p>
+
+    <form class="formulario" (ngSubmit)="enviarSolicitud()">
+
+      <div class="campos">
+        <label>Nombre</label>
+        <input type="text" placeholder="Ingresá tu nombre" required name="nombre" [(ngModel)]="nombre">
+      </div>
+
+      <div class="campos">
+        <label>Apellido</label>
+        <input type="text" placeholder="Ingresá tu apellido" required name="apellido" [(ngModel)]="apellido">
+      </div>
+
+      <div class="campos">
+        <label>Correo electrónico</label>
+        <input type="email" placeholder="ejemplo@email.com" required name="email" [(ngModel)]="email">
+      </div>
+
+      <div class="campos">
+        <label>Contacto</label>
+        <input type="text" placeholder="Teléfono o celular" required name="contacto" [(ngModel)]="contacto">
+      </div>
+
+      <div class="botones">
+        <button type="submit" class="enviar">Enviar</button>
+        <button type="button" class="cancelar" [routerLink]="['/inicio']">Cancelar</button>
+      </div>
+
+    </form>
+
+  </div>
+
+</div>

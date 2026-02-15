@@ -1,0 +1,76 @@
+<app-header-admin></app-header-admin>
+
+<div class="contenedor">
+
+  <!-- ===== TÍTULOS ===== -->
+  <section class="cabecera">
+    <h1 class="titulo">Solicitudes Pendientes</h1>
+    <p class="subtitulo">
+      Gestioná las solicitudes de nuevos socios
+    </p>
+  </section>
+
+
+  <!-- ===== LISTA ===== -->
+  <section class="lista">
+
+    @for (pen of pendiente; track $index) {
+
+      <article class="card">
+
+        <!-- INFO -->
+        <div class="info">
+
+          <div class="dato">
+            <span class="label">Nombre</span>
+            <span>{{pen.nombre}} {{pen.apellido}}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">Email</span>
+            <span>{{pen.email}}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">Contacto</span>
+            <span>{{pen.contacto}}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">Fecha</span>
+            <span>{{pen.fechaSolicitud}}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">Estado</span>
+            <span class="estado-badge">
+              {{pen.estado}}
+            </span>
+          </div>
+
+        </div>
+
+
+        <!-- ACCIONES -->
+        <div class="acciones">
+          <button
+            class="btn aceptar"
+            >
+            Aceptar
+          </button>
+
+          <button
+            class="btn rechazar"
+            >
+            Rechazar
+          </button>
+        </div>
+
+      </article>
+
+    }
+
+
+  </section>
+
+</div>

@@ -1,0 +1,22 @@
+
+<div class="contenedor">
+    <div class="titulo">
+        <h1>Bienvenidos</h1>
+        <p>Complete el siguiente formulario</p>
+    </div>
+    <form (ngSubmit)="login()" class="formulario">
+        <div class="campos">
+            <label>Correo electronico:</label>
+            <input type="email" name="email"  [(ngModel)]="email" required="">
+        </div>
+
+        <div class="campos">
+            <label>Contraseña: </label>
+            <input type="password" name="password" [(ngModel)]="password" required>
+        </div>
+
+        <button class="iniciar">Iniciar sección</button>
+        
+    </form>
+        <button class="cancelar" [routerLink]="['/inicio']">Cancelar</button>
+</div>

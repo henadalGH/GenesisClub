@@ -1,0 +1,111 @@
+/* Fondo general */
+.contenedor {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: linear-gradient(135deg, #1f2937, #374151);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Tarjeta */
+.card {
+  background: #ffffff;
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+}
+
+/* Título */
+.titulo {
+  text-align: center;
+  margin-bottom: 5px;
+  font-size: 26px;
+  font-weight: bold;
+  color: #1f2937;
+}
+
+/* Descripción */
+.descripcion {
+  text-align: center;
+  font-size: 14px;
+  margin-bottom: 25px;
+  color: #6b7280;
+}
+
+/* Form */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Campos */
+.campos {
+  display: flex;
+  flex-direction: column;
+}
+
+.campos label {
+  font-size: 13px;
+  margin-bottom: 5px;
+  font-weight: 600;
+  color: #374151;
+}
+
+.campos input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: 0.2s;
+  font-size: 14px;
+}
+
+.campos input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Botones */
+.botones {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Enviar */
+.enviar {
+  flex: 1;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.enviar:hover {
+  background: #2563eb;
+}
+
+/* Cancelar */
+.cancelar {
+  flex: 1;
+  background: #e5e7eb;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.2s;
+}
+
+.cancelar:hover {
+  background: #d1d5db;
+}

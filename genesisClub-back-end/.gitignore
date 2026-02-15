@@ -1,0 +1,54 @@
+# --- JAVA & MAVEN ---
+target/
+!.mvn/wrapper/maven-wrapper.jar
+build/
+bin/
+*.class
+*.jar
+*.war
+*.ear
+
+# --- SECURITY (Variables de Entorno) ---
+# Bloquea el archivo donde guardas las claves de Aiven
+.env
+.env.local
+.env.*.local
+
+# Bloquea los archivos de propiedades con claves reales
+src/main/resources/application-prod.properties
+src/main/resources/application-dev.properties
+
+# --- IDEs (Configuraciones locales) ---
+# VS Code
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# STS / Eclipse
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings/
+.springBeans
+.sts4-cache
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# --- SISTEMA ---
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# --- DOCUMENTACIÓN ---
+HELP.md
