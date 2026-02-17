@@ -70,6 +70,7 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
                 .stream()
                 .map(s -> {
                     SolicitudDTO dto = new SolicitudDTO();
+                     dto.setId(s.getId());
                     dto.setNombre(s.getNombre());
                     dto.setApellido(s.getApellido());
                     dto.setEmail(s.getEmail());
@@ -100,6 +101,7 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
             // Devolver la solicitud actualizada en DTO
             SolicitudDTO dto = new SolicitudDTO();
+            dto.setId(solicitud.getId());
             dto.setNombre(solicitud.getNombre());
             dto.setApellido(solicitud.getApellido());
             dto.setEmail(solicitud.getEmail());

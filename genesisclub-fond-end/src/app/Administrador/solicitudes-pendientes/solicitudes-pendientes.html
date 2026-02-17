@@ -11,12 +11,20 @@
   </section>
 
 
+  <!-- ===== LOADING ===== -->
+  @if (cargando) {
+    <p class="loading">Cargando...</p>
+  }
+
+
   <!-- ===== LISTA ===== -->
   <section class="lista">
 
-    @for (pen of pendiente; track $index) {
+    @for (pen of pendiente; track pen.id) {
 
       <article class="card">
+
+        <p></p>
 
         <!-- INFO -->
         <div class="info">
@@ -53,23 +61,26 @@
 
         <!-- ACCIONES -->
         <div class="acciones">
+
           <button
             class="btn aceptar"
-            >
+            [disabled]="cargando"
+            (click)="cambiarEstado(pen.id, 'ACEPTADA')">
             Aceptar
           </button>
 
           <button
             class="btn rechazar"
-            >
+            [disabled]="cargando"
+            (click)="cambiarEstado(pen.id, 'RECHAZADA')">
             Rechazar
           </button>
+
         </div>
 
       </article>
 
     }
-
 
   </section>
 

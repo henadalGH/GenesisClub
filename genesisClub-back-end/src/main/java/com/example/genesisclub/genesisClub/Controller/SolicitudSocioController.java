@@ -54,13 +54,25 @@ public ResponseEntity<?> obtenerSolicitudesPendientes() {
 
 
     @PutMapping("/actualizar/{id}")
-    @PreAuthorize("hasRole('ADMIN')") // solo admin puede acceder
-    public ResponseEntity<ResponceDTO> actualizarEstadoSolicitud(
-            @PathVariable Long id,
-            @RequestParam EstadoSolicitudEnums nuevoEstado
-    ) {
-        ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+@PreAuthorize("hasRole('ADMIN')")
+public ResponseEntity<ResponceDTO> actualizarEstadoSolicitud(
+        @PathVariable Long id,
+        @RequestParam String nuevoEstado
+) {
+    EstadoSolicitudEnums estadoEnum;
+
+    try {
+        estadoEnum = EstadoSolicitudEnums.valueOf(nuevoEstado.toUpperCase());
+    } catch (IllegalArgumentException e) {
+        ResponceDTO error = new ResponceDTO();
+        error.setNumOfErrors(1);
+        error.setMensage("Estado inválido: " + nuevoEstado);
+        return ResponseEntity.badRequest().body(error);
     }
+
+    ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, estadoEnum);
+    return ResponseEntity.ok(response);
+}
+
 }
 

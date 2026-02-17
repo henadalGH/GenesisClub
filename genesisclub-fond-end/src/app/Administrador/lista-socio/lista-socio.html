@@ -1,2 +1,43 @@
 <app-header-admin></app-header-admin>
-<p>lista-socio works!</p>
+
+<section class="socios-container">
+
+  <div class="top-bar">
+    <h1>👥 Gestión de socios</h1>
+    <button class="btn-primary">+ Nuevo socio</button>
+  </div>
+
+  <div class="tabla-wrapper">
+
+    <table class="tabla-socios">
+
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre</th>
+          <th>Apellido</th>
+          <th>Email</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        @for (soc of socios; track $index) {
+          <tr>
+            <td>{{$index + 1}}</td>
+            <td>{{ soc.nombre }}</td>
+            <td>{{ soc.apellido }}</td>
+            <td>{{ soc.email }}</td>
+            <td>
+              <button class="btn-outline" >Ver</button>
+              <button class="btn-edit">Editar</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+
+    </table>
+
+  </div>
+
+</section>

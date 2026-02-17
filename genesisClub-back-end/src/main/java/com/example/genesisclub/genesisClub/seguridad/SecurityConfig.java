@@ -45,11 +45,11 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/registro/**").permitAll()
                 .requestMatchers("/api/solicitud/nuevo").permitAll()
-                .requestMatchers("/api/socio/todos").permitAll()
 
                 // protegidas
                 .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
+                .requestMatchers("/api/socio/todos").hasRole("ADMIN")
                 .requestMatchers("/api/invitacion/**").authenticated()
 
                 .anyRequest().authenticated()
