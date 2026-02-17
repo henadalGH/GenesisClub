@@ -15,13 +15,15 @@ export class SolicitudServicio {
     nombre: string,
     apellido: string,
     email: string,
-    contacto: string
+    contacto: string,
+    password: string  // agregado
   ) {
     return this.http.post<any>(this.urlSolicitud, {
       nombre,
       apellido,
       email,
-      contacto
+      contacto,
+      password // enviado al backend
     });
   }
 }
