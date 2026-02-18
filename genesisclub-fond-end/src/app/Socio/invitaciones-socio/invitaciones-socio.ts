@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
-import { HeraderSocio } from "../herader-socio/herader-socio";
 
 @Component({
   selector: 'app-invitaciones-socio',
-  imports: [HeraderSocio],
+  imports: [],
   templateUrl: './invitaciones-socio.html',
   styleUrl: './invitaciones-socio.css',
 })
