@@ -31,6 +31,9 @@ public class SolicitudEntity {
     @Column(name = "email")
     private String email;
 
+    @Column(name = "password")
+    private String password;
+
     @Column(name = "contacto")
     private String contacto;
 

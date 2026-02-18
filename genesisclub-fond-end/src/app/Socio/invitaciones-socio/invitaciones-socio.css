@@ -1,0 +1,91 @@
+/* fondo general */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: linear-gradient(135deg, #eef2f7, #dbeafe);
+}
+
+/* centrado total */
+.contenedor {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* card */
+.card-invitacion {
+  background: white;
+  width: 360px;
+  padding: 35px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: 0.2s;
+}
+
+.card-invitacion:hover {
+  transform: translateY(-2px);
+}
+
+/* títulos */
+.card-invitacion h2 {
+  margin: 0;
+  text-align: center;
+  color: #1e293b;
+}
+
+.subtitulo {
+  text-align: center;
+  font-size: 14px;
+  color: #64748b;
+  margin-bottom: 10px;
+}
+
+/* campo */
+.campo {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #334155;
+}
+
+/* input */
+input {
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 14px;
+  outline: none;
+  transition: 0.2s;
+}
+
+input:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+}
+
+/* botón */
+button {
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #2563eb;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+

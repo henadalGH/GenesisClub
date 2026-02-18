@@ -1,0 +1,74 @@
+<header class="admin-header">
+
+    <!-- LOGO -->
+    <div class="logo">
+        <h2>GenesisClub</h2>
+        <span class="panel-label">Panel Socio</span>
+    </div>
+
+
+    <!-- MENÚ PRINCIPAL -->
+    <nav class="nav-buttons">
+
+        <button>
+            🏠 Inicio
+        </button>
+
+        <button (click)="abrirModal()">
+            ✉ Invitar socio
+        </button>
+
+        <button routerLink="/socio/socios">
+            👥 Mis socios
+        </button>
+
+        <button routerLink="/socio/rubros">
+            💼 Mis rubros
+        </button>
+
+        <button routerLink="/socio/estadisticas">
+            📊 Estadísticas
+        </button>
+
+    </nav>
+
+
+    <!-- ACCIONES DERECHA -->
+    <div class="acciones">
+
+        <button class="perfil" routerLink="/socio/perfil">
+            👤 Perfil
+        </button>
+
+        <button class="logout" (click)="logout()">
+            Cerrar sesión
+        </button>
+
+    </div>
+
+</header>
+
+@if (modalAbierto) {
+  <div class="overlay" (click)="cerrarModal()">
+
+    <div class="modal" (click)="$event.stopPropagation()">
+
+      <span class="cerrar" (click)="cerrarModal()">✕</span>
+
+      <h2>Enviar invitación</h2>
+      <p class="subtitulo">Ingresá el email del invitado</p>
+
+      <form>
+        <input type="email" placeholder="correo@mail.com" />
+
+        <button type="submit">Enviar invitación</button>
+
+        <button type="button" class="cancelar" (click)="cerrarModal()">
+          Cancelar
+        </button>
+      </form>
+
+    </div>
+  </div>
+}
+
