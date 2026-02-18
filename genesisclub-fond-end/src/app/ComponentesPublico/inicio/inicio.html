@@ -1,53 +1,72 @@
+<!-- ================= NAVBAR ================= -->
 <header class="navbar">
+
     <h2 class="logo">GenesisClub</h2>
 
     <div class="nav-actions">
-        <button class="btn-outline" [routerLink]="['/solicitud']">Solicitar ser socio</button>
-        <button class="btn-primary" [routerLink]="['/login']">Iniciar sesión</button>
+        <button class="btn-outline" [routerLink]="['/solicitud']">
+            Solicitar ser socio
+        </button>
+
+        <button class="btn-primary" [routerLink]="['/login']">
+            Iniciar sesión
+        </button>
     </div>
+
 </header>
 
 
-<section class="hero">
-    <h1>Gestión inteligente de socios y negocios</h1>
-    <p>
-        Administre socios, rubros y negocios desde una única plataforma
-        de forma simple, rápida y segura.
-    </p>
 
-    <div class="hero-buttons">
-        <button class="btn-primary">Comenzar</button>
-        <button class="btn-outline">Más información</button>
+<!-- ================= HERO PRINCIPAL ================= -->
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>Todo tu club en un solo lugar</h1>
+
+        <p>
+            Gestioná socios, negocios y rubros desde una plataforma simple,
+            rápida y segura.
+        </p>
+
+        <!-- CTA PRINCIPAL (único acceso libre) -->
+        <button class="btn-guest hero-cta" [routerLink]="['/inicioRubro']">
+            🎮 Entrar como jugador
+        </button>
+
+        <span class="hero-note">
+            No requiere registro
+        </span>
+
     </div>
+
 </section>
 
 
+
+<!-- ================= BENEFICIOS (menos cards) ================= -->
 <section class="features">
 
     <div class="card">
-        <h3>👥 Gestión de socios</h3>
-        <p>Administre altas, bajas, solicitudes y estados fácilmente.</p>
+        <h3>⚡ Gestión rápida</h3>
+        <p>Administrá socios y negocios en segundos.</p>
     </div>
 
     <div class="card">
-        <h3>💼 Negocios</h3>
-        <p>Registre y controle los negocios asociados al sistema.</p>
+        <h3>🔒 Acceso seguro</h3>
+        <p>Roles y permisos para cada tipo de usuario.</p>
     </div>
 
     <div class="card">
-        <h3>📊 Reportes</h3>
-        <p>Obtenga métricas y estadísticas en tiempo real.</p>
-    </div>
-
-    <div class="card">
-        <h3>🔒 Seguridad</h3>
-        <p>Acceso por roles: usuarios, socios y administradores.</p>
+        <h3>🎮 Exploración libre</h3>
+        <p>Los jugadores pueden ver rubros sin registrarse.</p>
     </div>
 
 </section>
 
 
-<footer class="footer">
-    © 2026 GenesisClub — Sistema de Gestión
-</footer>
 
+<!-- ================= FOOTER SIMPLE ================= -->
+<footer class="footer">
+    <p>© 2026 GenesisClub — Sistema de Gestión</p>
+</footer>

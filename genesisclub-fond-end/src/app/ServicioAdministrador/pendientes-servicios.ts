@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 
@@ -7,19 +7,38 @@ import { environment } from '../../environments/environment';
 })
 export class PendientesServicios {
 
-  constructor(private http: HttpClient){}
-
   private urlPendientes = `${environment.apiUrl}/solicitud/pendientes`;
-  
+  private urlActualizar = `${environment.apiUrl}/solicitud/actualizar`;
 
-  listarPendientes() {
+  constructor(private http: HttpClient) {}
 
-    const token = localStorage.getItem('token'); // mismo token que guardaste al loguearte
-
-    const headers = new HttpHeaders({
+  private getHeaders(): HttpHeaders {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
       Authorization: `Bearer ${token}`
     });
+  }
 
-    return this.http.get<any>(this.urlPendientes, { headers });
+  listarPendientes() {
+    return this.http.get<any[]>(this.urlPendientes, {
+      headers: this.getHeaders()
+    });
+  }
+
+  modificaEstado(id: number, estado: 'ACEPTADA' | 'RECHAZADA') {
+    // Construimos la URL dinámicamente
+    const url = `${this.urlActualizar}/${id}`;
+
+    // Usamos HttpParams para el query param
+    const params = new HttpParams().set('nuevoEstado', estado);
+
+    return this.http.put<any>(
+      url,
+      {}, // body vacío
+      {
+        headers: this.getHeaders(),
+        params
+      }
+    );
   }
 }

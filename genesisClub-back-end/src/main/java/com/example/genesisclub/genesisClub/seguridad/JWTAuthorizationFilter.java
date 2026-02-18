@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
-
 import com.example.genesisclub.genesisClub.Modelo.Entidad.UsuarioEntity;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;

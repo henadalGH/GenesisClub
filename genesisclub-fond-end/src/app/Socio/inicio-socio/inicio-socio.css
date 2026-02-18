@@ -1,0 +1,78 @@
+/* contenedor general */
+.inicio-container {
+    padding: 40px;
+    background: #f1f5f9;
+    min-height: calc(100vh - 72px);
+}
+
+/* bienvenida */
+.bienvenida {
+    margin-bottom: 30px;
+}
+
+.bienvenida h1 {
+    font-size: 26px;
+    color: #0f172a;
+}
+
+.bienvenida p {
+    color: #64748b;
+}
+
+
+/* ===== GRID CARDS ===== */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px;
+}
+
+
+/* card */
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(0,0,0,.06);
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    transition: .2s;
+}
+
+.card:hover {
+    transform: translateY(-4px);
+}
+
+/* textos */
+.card h3 {
+    font-size: 18px;
+    color: #0f172a;
+}
+
+.card p {
+    font-size: 13px;
+    color: #64748b;
+}
+
+
+/* botón */
+.card button {
+    margin-top: auto;
+
+    background: #2563eb;
+    color: white;
+
+    border: none;
+    padding: 9px;
+    border-radius: 8px;
+
+    cursor: pointer;
+    transition: .2s;
+}
+
+.card button:hover {
+    background: #1d4ed8;
+}

@@ -29,6 +29,17 @@
         <input type="text" placeholder="Teléfono o celular" required name="contacto" [(ngModel)]="contacto">
       </div>
 
+      <!-- Nueva sección de contraseña -->
+      <div class="campos">
+        <label>Contraseña</label>
+        <input type="password" placeholder="Ingresá tu contraseña" required name="password" [(ngModel)]="password">
+      </div>
+
+      <div class="campos">
+        <label>Confirmar contraseña</label>
+        <input type="password" placeholder="Reingresá tu contraseña" required name="confirmPassword" [(ngModel)]="confirmPassword">
+      </div>
+
       <div class="botones">
         <button type="submit" class="enviar">Enviar</button>
         <button type="button" class="cancelar" [routerLink]="['/inicio']">Cancelar</button>
