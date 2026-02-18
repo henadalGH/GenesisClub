@@ -11,5 +11,6 @@ import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudEntity;
 @Repository
 public interface SolicitudReposistory extends JpaRepository<SolicitudEntity, Long> {
     List<SolicitudEntity> findByEstado(EstadoSolicitudEntity estado);
+    boolean existsByEmail(String email);
 
 }

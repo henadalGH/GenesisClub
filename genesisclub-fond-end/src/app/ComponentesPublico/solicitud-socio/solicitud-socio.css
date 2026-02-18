@@ -1,49 +1,65 @@
-/* Fondo general */
-.contenedor {
-  min-height: 100vh;
+/* ===== CONTENEDOR GENERAL ===== */
+:host {
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 100vh;
 
-  background: linear-gradient(135deg, #1f2937, #374151);
-  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #0f172a, #1e293b);
+  padding: 20px;
+  font-family: "Inter", "Segoe UI", sans-serif;
 }
 
-/* Tarjeta */
+/* ===== CARD ===== */
 .card {
-  background: #ffffff;
   width: 100%;
-  max-width: 420px;
+  max-width: 520px;
+
+  background: #ffffff;
   padding: 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border-radius: 18px;
+
+  box-shadow:
+    0 10px 30px rgba(0,0,0,0.25),
+    0 2px 8px rgba(0,0,0,0.15);
+
+  animation: fadeIn 0.4s ease;
 }
 
-/* Título */
+/* ===== HEADER ===== */
+.header-card {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
 .titulo {
-  text-align: center;
-  margin-bottom: 5px;
   font-size: 26px;
-  font-weight: bold;
-  color: #1f2937;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
 }
 
-/* Descripción */
 .descripcion {
-  text-align: center;
   font-size: 14px;
-  margin-bottom: 25px;
-  color: #6b7280;
+  color: #64748b;
+  line-height: 1.4;
 }
 
-/* Form */
+/* ===== FORM ===== */
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 18px;
 }
 
-/* Campos */
+/* ===== GRID DOS COLUMNAS ===== */
+.grid-campos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+/* ===== CAMPOS ===== */
 .campos {
   display: flex;
   flex-direction: column;
@@ -51,61 +67,129 @@
 
 .campos label {
   font-size: 13px;
-  margin-bottom: 5px;
   font-weight: 600;
-  color: #374151;
+  color: #334155;
+  margin-bottom: 6px;
 }
 
+/* INPUTS MODERNOS */
 .campos input {
-  padding: 10px 12px;
-  border-radius: 8px;
-  border: 1px solid #d1d5db;
-  outline: none;
-  transition: 0.2s;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+
   font-size: 14px;
+
+  transition: all 0.25s ease;
 }
 
+/* hover */
+.campos input:hover {
+  border-color: #94a3b8;
+}
+
+/* focus */
 .campos input:focus {
+  outline: none;
   border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
 }
 
-/* Botones */
+/* ===== BOTONES ===== */
 .botones {
   display: flex;
-  gap: 10px;
+  gap: 12px;
   margin-top: 10px;
 }
 
-/* Enviar */
-.enviar {
+/* BOTÓN PRINCIPAL */
+.btn-enviar {
   flex: 1;
+  padding: 12px;
+
   background: #3b82f6;
   color: white;
+
   border: none;
-  padding: 10px;
-  border-radius: 8px;
-  font-weight: bold;
+  border-radius: 10px;
+
+  font-weight: 600;
   cursor: pointer;
-  transition: 0.2s;
+
+  transition: 0.25s;
 }
 
-.enviar:hover {
+.btn-enviar:hover {
   background: #2563eb;
+  transform: translateY(-1px);
 }
 
-/* Cancelar */
-.cancelar {
+.btn-enviar:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* BOTÓN CANCELAR */
+.btn-cancelar {
   flex: 1;
-  background: #e5e7eb;
-  border: none;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 12px;
+
+  background: transparent;
+  color: #475569;
+
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+
+  font-weight: 600;
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.2s;
+
+  transition: 0.25s;
 }
 
-.cancelar:hover {
-  background: #d1d5db;
+.btn-cancelar:hover {
+  background: #f1f5f9;
+}
+
+/* ===== SPINNER ===== */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,0.4);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 6px;
+
+  animation: spin 0.7s linear infinite;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 600px) {
+  .card {
+    padding: 25px;
+  }
+
+  .grid-campos {
+    grid-template-columns: 1fr;
+  }
+
+  .botones {
+    flex-direction: column;
+  }
+}
+
+/* ===== ANIMACIONES ===== */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

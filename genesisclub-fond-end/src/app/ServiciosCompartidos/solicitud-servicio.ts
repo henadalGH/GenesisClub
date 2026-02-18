@@ -1,29 +1,24 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+
+// Interfaz para saber qué nos responde el Java
+export interface ResponceDTO {
+  mensage: string;
+  numOfErrors: number;
+}
 
 @Injectable({
   providedIn: 'root',
 })
 export class SolicitudServicio {
-
   private urlSolicitud = `${environment.apiUrl}/solicitud/nuevo`;
 
   constructor(private http: HttpClient) {}
 
-  enviarSolicitud(
-    nombre: string,
-    apellido: string,
-    email: string,
-    contacto: string,
-    password: string  // agregado
-  ) {
-    return this.http.post<any>(this.urlSolicitud, {
-      nombre,
-      apellido,
-      email,
-      contacto,
-      password // enviado al backend
-    });
+  // Recibe un solo objeto 'datos' (que contiene nombre, apellido, etc.)
+  enviarSolicitud(datos: any): Observable<ResponceDTO> {
+    return this.http.post<ResponceDTO>(this.urlSolicitud, datos);
   }
 }

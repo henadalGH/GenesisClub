@@ -20,6 +20,7 @@ import com.example.genesisclub.genesisClub.Repositorio.AdminRepository;
 import com.example.genesisclub.genesisClub.Repositorio.JugadorRepository;
 import com.example.genesisclub.genesisClub.Repositorio.RolRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
+import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSocioRepository;
@@ -47,71 +48,83 @@ public class RegistroUsuarioServicioImpl implements RegistroUsuarioServicio {
     @Autowired
     private EstadoSocioRepository estadoSocioRepository;
 
+    @Autowired
+    private SolicitudReposistory solicitudRepository;
+
+    
     @Override
     @Transactional
-    public ResponceDTO registrarUsuario(RegistroDTO usuarioDTO, RolesEnums rolEnum, EstadoSocioEnums estadoSocioEnum) throws Exception {
-        ResponceDTO response = new ResponceDTO();
+public ResponceDTO registrarUsuario(RegistroDTO usuarioDTO, RolesEnums rolEnum, EstadoSocioEnums estadoSocioEnum) throws Exception {
+    ResponceDTO response = new ResponceDTO();
 
-        // Validación: email único
-        if (usuarioRepository.existsByEmail(usuarioDTO.getEmail())) {
-            response.setNumOfErrors(1);
-            response.setMensage("El email ya existe");
-            return response;
-        }
+    // 1️⃣ VALIDACIÓN DE SEGURIDAD AMBIGUA
+    // Chequeamos en la tabla de Usuarios Y en la tabla de Solicitudes
+    boolean existeEnUsuarios = usuarioRepository.existsByEmail(usuarioDTO.getEmail());
+    boolean existeEnSolicitudes = solicitudRepository.existsByEmail(usuarioDTO.getEmail());
 
-        // 1️⃣ Crear usuario
-        UsuarioEntity nuevoUsuario = new UsuarioEntity();
-        nuevoUsuario.setNombre(usuarioDTO.getNombre());
-        nuevoUsuario.setApellido(usuarioDTO.getApellido());
-        nuevoUsuario.setEmail(usuarioDTO.getEmail());
-        nuevoUsuario.setFechaCreacion(LocalDate.now());
-
-        // Encriptar password
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
-        nuevoUsuario.setPassword(encoder.encode(usuarioDTO.getPassword()));
-
-        // 2️⃣ Asignar rol
-        RolEntity rol = rolRepository.findByNombre(rolEnum)
-                .orElseThrow(() -> new Exception("Rol no encontrado: " + rolEnum));
-        nuevoUsuario.setRol(rol);
-
-        // 3️⃣ Guardar usuario primero
-        usuarioRepository.save(nuevoUsuario);
-
-        // 4️⃣ Crear relación según el rol
-        switch (rolEnum) {
-            case ADMIN:
-                AdminEntity admin = new AdminEntity();
-                admin.setUsuario(nuevoUsuario);
-                adminRepository.save(admin);
-                break;
-
-            case JUGADOR:
-                JugadorEntity jugador = new JugadorEntity();
-                jugador.setUsuario(nuevoUsuario);
-                jugadorRepository.save(jugador);
-                break;
-
-            case SOCIO:
-                // Si no se pasa estado, usar ACTIVO por defecto
-                EstadoSocioEnums estadoEnum = (estadoSocioEnum != null) ? estadoSocioEnum : EstadoSocioEnums.ACTIVO;
-
-                // Buscar la entidad correspondiente
-                EstadoSocioEnitity estadoEntity = estadoSocioRepository
-                        .findByEstado(estadoEnum)
-                        .orElseThrow(() -> new Exception("Estado no encontrado: " + estadoEnum));
-
-                SocioEntity socio = new SocioEntity();
-                socio.setUsuario(nuevoUsuario);
-                socio.setEstado(estadoEntity);
-                socioRepository.save(socio);
-                break;
-
-            default:
-                throw new Exception("Rol no soportado: " + rolEnum);
-        }
-
-        response.setMensage("Usuario registrado correctamente");
+    if (existeEnUsuarios || existeEnSolicitudes) {
+        response.setNumOfErrors(1);
+        // Mensaje idéntico para ambos casos para evitar rastreo de cuentas
+        response.setMensage("El correo electrónico ya está vinculado a una cuenta o tiene una solicitud pendiente.");
         return response;
     }
+
+    // 2️⃣ CREAR ENTIDAD USUARIO
+    UsuarioEntity nuevoUsuario = new UsuarioEntity();
+    nuevoUsuario.setNombre(usuarioDTO.getNombre());
+    nuevoUsuario.setApellido(usuarioDTO.getApellido());
+    nuevoUsuario.setEmail(usuarioDTO.getEmail());
+    nuevoUsuario.setFechaCreacion(LocalDate.now());
+
+    // 3️⃣ TRATAMIENTO DE PASSWORD (Evita doble encriptación)
+    String passwordRecibida = usuarioDTO.getPassword();
+    BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(12);
+
+    if (passwordRecibida.startsWith("$2a$") || passwordRecibida.startsWith("$2b$") || passwordRecibida.startsWith("$2y$")) {
+        nuevoUsuario.setPassword(passwordRecibida);
+    } else {
+        nuevoUsuario.setPassword(encoder.encode(passwordRecibida));
+    }
+
+    // 4️⃣ ASIGNAR ROL
+    RolEntity rol = rolRepository.findByNombre(rolEnum)
+            .orElseThrow(() -> new Exception("Rol no encontrado: " + rolEnum));
+    nuevoUsuario.setRol(rol);
+
+    // 5️⃣ GUARDAR USUARIO BASE
+    usuarioRepository.save(nuevoUsuario);
+
+    // 6️⃣ CREAR ENTIDAD ESPECÍFICA SEGÚN ROL
+    switch (rolEnum) {
+        case ADMIN:
+            AdminEntity admin = new AdminEntity();
+            admin.setUsuario(nuevoUsuario);
+            adminRepository.save(admin);
+            break;
+
+        case JUGADOR:
+            JugadorEntity jugador = new JugadorEntity();
+            jugador.setUsuario(nuevoUsuario);
+            jugadorRepository.save(jugador);
+            break;
+
+        case SOCIO:
+            EstadoSocioEnums estadoEnum = (estadoSocioEnum != null) ? estadoSocioEnum : EstadoSocioEnums.ACTIVO;
+            EstadoSocioEnitity estadoEntity = estadoSocioRepository
+                    .findByEstado(estadoEnum)
+                    .orElseThrow(() -> new Exception("Estado no encontrado: " + estadoEnum));
+
+            SocioEntity socio = new SocioEntity();
+            socio.setUsuario(nuevoUsuario);
+            socio.setEstado(estadoEntity);
+            socioRepository.save(socio);
+            break;
+
+        default:
+            throw new Exception("Rol no soportado: " + rolEnum);
+    }
+
+    response.setMensage("Usuario registrado correctamente");
+    return response;
+}
 }

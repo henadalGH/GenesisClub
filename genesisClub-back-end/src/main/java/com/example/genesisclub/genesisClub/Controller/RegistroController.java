@@ -24,16 +24,21 @@ public class RegistroController {
     private RegistroUsuarioServicio registroService;
 
     @PostMapping("/nuevo")
-public ResponseEntity<ResponceDTO> nuevoUsuario(
-        @RequestBody RegistroDTO registroDTO,
-        @RequestParam RolesEnums rolesEnum,
-        @RequestParam(required = false) EstadoSocioEnums estado
+    public ResponseEntity<ResponceDTO> nuevoUsuario(
+            @RequestBody RegistroDTO registroDTO,
+            @RequestParam RolesEnums rolesEnum,
+            @RequestParam(required = false) EstadoSocioEnums estado
     ) throws Exception {
 
-    return new ResponseEntity<>(
-            registroService.registrarUsuario(registroDTO, rolesEnum, estado),
-            HttpStatus.CREATED
-    );
-}
+        ResponceDTO response = registroService.registrarUsuario(registroDTO, rolesEnum, estado);
 
+        // Si el servicio detectó un email duplicado o cualquier otro error de negocio
+        if (response.getNumOfErrors() > 0) {
+            // Devolvemos 400 (Bad Request) para que Angular entre por el bloque 'error' del subscribe
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        // Si todo salió bien, devolvemos 201 (Created)
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }

@@ -19,6 +19,7 @@ import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.RolesEnums;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSolicitudRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
+import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Servicio.IEmailService;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
@@ -41,40 +42,60 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     @Autowired
     private RegistroUsuarioServicio registroService; // Servicio que registra usuarios
 
+    @Autowired
+    private UsuarioRepository usuarioRepository;
+
     // ------------------ Crear solicitud ------------------
     @Override
-    public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
-        ResponceDTO response = new ResponceDTO();
+public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
+    ResponceDTO response = new ResponceDTO();
 
-        try {
-            SolicitudEntity solicitudN = new SolicitudEntity();
-            solicitudN.setNombre(solicitudDTO.getNombre());
-            solicitudN.setApellido(solicitudDTO.getApellido());
-            solicitudN.setEmail(solicitudDTO.getEmail());
-            solicitudN.setContacto(solicitudDTO.getContacto());
-            solicitudN.setFechaSolicitud(LocalDate.now());
+    // 1️⃣ VALIDACIÓN DE SEGURIDAD (Doble chequeo)
+    // Usamos el mismo mensaje que en 'registrarUsuario' para proteger la privacidad
+    boolean existeComoUsuario = usuarioRepository.existsByEmail(solicitudDTO.getEmail());
+    boolean existeComoSolicitud = solicitudRepository.existsByEmail(solicitudDTO.getEmail());
 
-            // Guardar contraseña encriptada
-            solicitudN.setPassword(passwordEncoder.encode(solicitudDTO.getPassword()));
-
-            EstadoSolicitudEnums estadoEnum = (estadoSolicitud != null) ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
-            EstadoSolicitudEntity estadoEntity = estadoSolicitudRepository
-                    .findByEstado(estadoEnum)
-                    .orElseThrow(() -> new RuntimeException("Estado no encontrado: " + estadoEnum));
-
-            solicitudN.setEstado(estadoEntity);
-            solicitudRepository.save(solicitudN);
-
-            response.setNumOfErrors(0);
-            response.setMensage("Solicitud creada correctamente");
-
-        } catch (RuntimeException e) {
-            response.setNumOfErrors(1);
-            response.setMensage("Error al crear solicitud: " + e.getMessage());
-        }
-
+    if (existeComoUsuario || existeComoSolicitud) {
+        response.setNumOfErrors(1);
+        response.setMensage("El correo electrónico ya está vinculado a una cuenta o tiene una solicitud pendiente.");
         return response;
     }
+
+    try {
+        // 2️⃣ CREAR ENTIDAD SOLICITUD
+        SolicitudEntity solicitudN = new SolicitudEntity();
+        solicitudN.setNombre(solicitudDTO.getNombre());
+        solicitudN.setApellido(solicitudDTO.getApellido());
+        solicitudN.setEmail(solicitudDTO.getEmail());
+        solicitudN.setContacto(solicitudDTO.getContacto());
+        solicitudN.setFechaSolicitud(LocalDate.now());
+
+        // 3️⃣ ENCRIPTAR CONTRASEÑA
+        // Aquí no hace falta validar si ya está encriptada porque este método 
+        // siempre recibe texto plano desde el formulario web de registro.
+        solicitudN.setPassword(passwordEncoder.encode(solicitudDTO.getPassword()));
+
+        // 4️⃣ ASIGNAR ESTADO
+        EstadoSolicitudEnums estadoEnum = (estadoSolicitud != null) ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
+        EstadoSolicitudEntity estadoEntity = estadoSolicitudRepository
+                .findByEstado(estadoEnum)
+                .orElseThrow(() -> new RuntimeException("Estado no encontrado: " + estadoEnum));
+
+        solicitudN.setEstado(estadoEntity);
+        
+        // 5️⃣ GUARDAR
+        solicitudRepository.save(solicitudN);
+
+        response.setNumOfErrors(0);
+        response.setMensage("Solicitud creada correctamente");
+
+    } catch (RuntimeException e) {
+        response.setNumOfErrors(1);
+        response.setMensage("Error al procesar la solicitud: " + e.getMessage());
+    }
+
+    return response;
+}
 
     // ------------------ Listar solicitudes pendientes ------------------
     @Override

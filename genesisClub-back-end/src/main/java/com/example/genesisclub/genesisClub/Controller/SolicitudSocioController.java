@@ -33,8 +33,19 @@ public class SolicitudSocioController {
 
     @PostMapping("/nuevo")
     public ResponseEntity<ResponceDTO> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
-        return new ResponseEntity<>(solicitudSerSocioService.crearSolicitud(solicitud, null), HttpStatus.OK);
+        
+        ResponceDTO response = solicitudSerSocioService.crearSolicitud(solicitud, null);
+
+        // Si el Service detectó que el email ya existe (Usuario o Solicitud)
+        if (response.getNumOfErrors() > 0) {
+            // Devolvemos 400 Bad Request para que Angular sepa que es un error de validación
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        // Si se creó correctamente, devolvemos 201 Created (es más preciso que OK para creaciones)
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 
     @GetMapping("/pendientes")
 @PreAuthorize("hasRole('ADMIN')") // solo admin puede acceder

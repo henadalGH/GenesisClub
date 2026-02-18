@@ -1,22 +1,26 @@
 <div class="contenedor">
 
   <div class="card">
+    
+    <div class="header-card">
+      <h2 class="titulo">Solicitud de Registro</h2>
+      <p class="descripcion">
+        Completá tus datos para unirte. Nuestro equipo revisará tu solicitud a la brevedad.
+      </p>
+    </div>
 
-    <h2 class="titulo">Solicitud de Registro</h2>
-    <p class="descripcion">
-      Completá tus datos para continuar con el proceso.
-    </p>
+    <form class="formulario" (ngSubmit)="enviarSolicitud()" #solicitudForm="ngForm">
 
-    <form class="formulario" (ngSubmit)="enviarSolicitud()">
+      <div class="grid-campos">
+        <div class="campos">
+          <label>Nombre</label>
+          <input type="text" placeholder="Ej: Juan" required name="nombre" [(ngModel)]="nombre">
+        </div>
 
-      <div class="campos">
-        <label>Nombre</label>
-        <input type="text" placeholder="Ingresá tu nombre" required name="nombre" [(ngModel)]="nombre">
-      </div>
-
-      <div class="campos">
-        <label>Apellido</label>
-        <input type="text" placeholder="Ingresá tu apellido" required name="apellido" [(ngModel)]="apellido">
+        <div class="campos">
+          <label>Apellido</label>
+          <input type="text" placeholder="Ej: Pérez" required name="apellido" [(ngModel)]="apellido">
+        </div>
       </div>
 
       <div class="campos">
@@ -25,24 +29,34 @@
       </div>
 
       <div class="campos">
-        <label>Contacto</label>
-        <input type="text" placeholder="Teléfono o celular" required name="contacto" [(ngModel)]="contacto">
+        <label>Número de Contacto</label>
+        <input type="text" placeholder="WhatsApp o teléfono fijo" required name="contacto" [(ngModel)]="contacto">
       </div>
 
-      <!-- Nueva sección de contraseña -->
-      <div class="campos">
-        <label>Contraseña</label>
-        <input type="password" placeholder="Ingresá tu contraseña" required name="password" [(ngModel)]="password">
-      </div>
+      <div class="grid-campos">
+        <div class="campos">
+          <label>Contraseña</label>
+          <input type="password" placeholder="Creá una clave" required name="password" [(ngModel)]="password">
+        </div>
 
-      <div class="campos">
-        <label>Confirmar contraseña</label>
-        <input type="password" placeholder="Reingresá tu contraseña" required name="confirmPassword" [(ngModel)]="confirmPassword">
+        <div class="campos">
+          <label>Confirmar contraseña</label>
+          <input type="password" placeholder="Repetí tu clave" required name="confirmPassword" [(ngModel)]="confirmPassword">
+        </div>
       </div>
 
       <div class="botones">
-        <button type="submit" class="enviar">Enviar</button>
-        <button type="button" class="cancelar" [routerLink]="['/inicio']">Cancelar</button>
+        <button type="submit" class="btn-enviar" [disabled]="cargando || !solicitudForm.valid">
+          @if (cargando) {
+            <span class="spinner"></span> Procesando...
+          } @else {
+            Enviar Solicitud
+          }
+        </button>
+        
+        <button type="button" class="btn-cancelar" [routerLink]="['/inicio']">
+          Cancelar
+        </button>
       </div>
 
     </form>
