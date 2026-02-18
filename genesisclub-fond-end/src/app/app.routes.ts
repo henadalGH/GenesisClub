@@ -9,6 +9,9 @@ import { HeaderAdmin } from './Administrador/header-admin/header-admin';
 import { Invitaciones } from './Administrador/invitaciones/invitaciones';
 import { SolicitudesPendientes } from './Administrador/solicitudes-pendientes/solicitudes-pendientes';
 import { ListaSocio } from './Administrador/lista-socio/lista-socio';
+import { InicioRubros } from './Rubros/inicio-rubros/inicio-rubros';
+import { HeraderSocio } from './Socio/herader-socio/herader-socio';
+import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
 
 export const routes: Routes = [
 
@@ -17,9 +20,12 @@ export const routes: Routes = [
     {path:"login", component: Login},
     {path: "solicitud", component: SolicitudSocio},
     {path:'', redirectTo: '/inicio', pathMatch: 'full'},
+    {path: "inicioRubro", component: InicioRubros},
 
     //Rutas Socios
-    {path:"inicioSocio", component: InicioSocio}, 
+    {path:"inicioSocio", component: InicioSocio},
+    {path:"headerSocio", component: HeraderSocio},
+    {path:"invitaciones", component: InvitacionesSocio},
     
     //Rutas jugador
     {path:"inicioJugador", component: IncioJugador},
