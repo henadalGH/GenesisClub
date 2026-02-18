@@ -41,7 +41,7 @@ export class AuthServicio {
     localStorage.removeItem('rol');
     localStorage.removeItem('email');
     this.loggedIn.next(false);
-    this.router.navigate(['/login']);
+    this.router.navigate(['/inicio']);
   }
 
   // ========================
