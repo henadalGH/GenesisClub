@@ -13,12 +13,12 @@ import com.example.genesisclub.genesisClub.Servicio.InvitacionService;
 public class InvitacionController {
 
     @Autowired
-    private InvitacionService invitacionService;
+    private InvitacionService invitacionService; 
 
     // SOLO SOCIOS LOGUEADOS
     @Secured({"ROLE_SOCIO","ROLE_ADMIN"})
     @PostMapping("/crear/{socioId}")
-    public ResponseEntity<?> crear(
+    public ResponseEntity<?> crearInvitacion(
             @PathVariable Long socioId,
             @RequestBody InvitacionRequestDTO dto) {
 

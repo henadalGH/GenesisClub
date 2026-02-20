@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Observable, tap } from 'rxjs';
 import { LoginServicio } from './login-servicio';
+import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root',
@@ -82,5 +83,15 @@ export class AuthServicio {
       default:
         this.router.navigate(['/inicio']);
     }
+  }
+
+    getUserId(): number | null {
+    const token = localStorage.getItem('token');
+
+    if (!token) return null;
+
+    const decoded: any = jwtDecode(token);
+
+    return decoded.sub || decoded.id;
   }
 }

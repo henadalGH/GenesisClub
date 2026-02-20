@@ -58,7 +58,7 @@
       <h2>Enviar invitación</h2>
       <p class="subtitulo">Ingresá el email del invitado</p>
 
-      <form>
+      <form (ngSubmit)="enviarInvitacion()">
         <input type="email" placeholder="correo@mail.com" />
 
         <button type="submit">Enviar invitación</button>
