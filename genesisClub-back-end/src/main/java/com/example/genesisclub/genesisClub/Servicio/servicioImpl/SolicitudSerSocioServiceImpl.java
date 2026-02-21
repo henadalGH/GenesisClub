@@ -20,7 +20,7 @@ import com.example.genesisclub.genesisClub.Modelo.Enums.RolesEnums;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSolicitudRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
-import com.example.genesisclub.genesisClub.Servicio.IEmailService;
+import com.example.genesisclub.genesisClub.Servicio.EmailService;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
 
@@ -37,7 +37,7 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
-    private IEmailService emailService;
+    private EmailService emailService;
 
     @Autowired
     private RegistroUsuarioServicio registroService; // Servicio que registra usuarios

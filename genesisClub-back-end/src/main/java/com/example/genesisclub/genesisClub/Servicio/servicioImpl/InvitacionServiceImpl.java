@@ -14,9 +14,8 @@ import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoinvitacionEnums;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoInvitacionRepository;
 import com.example.genesisclub.genesisClub.Repositorio.InvitacionRepository;
-import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
+import com.example.genesisclub.genesisClub.Servicio.EmailService;
 import com.example.genesisclub.genesisClub.Servicio.InvitacionService;
-
 
 @Service
 public class InvitacionServiceImpl implements InvitacionService {
@@ -25,27 +24,25 @@ public class InvitacionServiceImpl implements InvitacionService {
     private InvitacionRepository invitacionRepository;
 
     @Autowired
-    private SocioRepository socioRepository;
-
-    @Autowired
     private EstadoInvitacionRepository estadoRepository;
 
+    @Autowired
+    private EmailService emailService;
+
     @Override
-    public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO dto) {
+    public InvitacionResponseDTO crearInvitacion(
+            SocioEntity socioOrigen,
+            InvitacionRequestDTO dto) {
 
-        // 1️⃣ validar socio origen
-        SocioEntity socioOrigen = socioRepository.findById(socioId)
-                .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
-
-        // 2️⃣ buscar estado PENDIENTE
+        // 1️⃣ estado PENDIENTE
         EstadoInvitacionEntity estado = estadoRepository
                 .findByEstado(EstadoinvitacionEnums.PENDIENTE)
                 .orElseThrow(() -> new RuntimeException("Estado no configurado"));
 
-        // 3️⃣ generar token único
+        // 2️⃣ token único
         String token = UUID.randomUUID().toString();
 
-        // 4️⃣ crear entidad
+        // 3️⃣ crear invitación
         InvitacionEntity invitacion = new InvitacionEntity();
         invitacion.setSocioOrigen(socioOrigen);
         invitacion.setEmailDestino(dto.getEmailDestino());
@@ -55,11 +52,15 @@ public class InvitacionServiceImpl implements InvitacionService {
 
         invitacionRepository.save(invitacion);
 
-        // 5️⃣ mapear respuesta
+        // 4️⃣ enviar mail
+        String link = "http://localhost:4200/registro-invitado?token=" + token;
+        emailService.enviarInvitacion(dto.getEmailDestino(), link);
+
+        // 5️⃣ response
         InvitacionResponseDTO response = new InvitacionResponseDTO();
         response.setId(invitacion.getId());
         response.setEmailDestino(invitacion.getEmailDestino());
-        response.setToken(invitacion.getToken());
+        response.setToken(token);
         response.setEstado(estado.getEstado().name());
 
         return response;
@@ -71,32 +72,27 @@ public class InvitacionServiceImpl implements InvitacionService {
         InvitacionEntity invitacion = invitacionRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("Invitación no válida"));
 
-        // validar expiración
         if (invitacion.getFechaExpiracion().isBefore(LocalDateTime.now())) {
             throw new RuntimeException("La invitación expiró");
         }
 
-        // validar estado
         if (!invitacion.getEstado().getEstado().equals(EstadoinvitacionEnums.PENDIENTE)) {
             throw new RuntimeException("La invitación ya fue usada");
         }
 
-        // buscar estado ACEPTADA
         EstadoInvitacionEntity estadoAceptado = estadoRepository
                 .findByEstado(EstadoinvitacionEnums.ACEPTADA)
                 .orElseThrow();
 
         invitacion.setEstado(estadoAceptado);
-
         invitacionRepository.save(invitacion);
 
         InvitacionResponseDTO response = new InvitacionResponseDTO();
         response.setId(invitacion.getId());
         response.setEmailDestino(invitacion.getEmailDestino());
-        response.setToken(invitacion.getToken());
+        response.setToken(token);
         response.setEstado("ACEPTADA");
 
         return response;
     }
-
 }
