@@ -8,17 +8,19 @@ import { environment } from '../../environments/environment';
 export class SocioServicio {
 
   private urlObtener = `${environment.apiUrl}/socio/todos`;
+  private utlVerSocio = `${environment.apiUrl}/socio`;
 
   constructor(private http: HttpClient) {}
 
   obtenerSocio() {
 
-    const token = localStorage.getItem('token');
 
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-
-    return this.http.get(this.urlObtener, { headers });
+    return this.http.get(this.urlObtener);
   }
+
+  verSocio(id: number) {
+  const url = `${this.utlVerSocio}/${id}`;
+
+  return this.http.get<any>(url);
+}
 }

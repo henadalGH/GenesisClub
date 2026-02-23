@@ -50,6 +50,7 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/socio/todos").hasRole("ADMIN")
+                .requestMatchers("/api/socio/**").hasRole("ADMIN")
                 .requestMatchers("/api/invitacion/**").authenticated()
 
                 .anyRequest().authenticated()
