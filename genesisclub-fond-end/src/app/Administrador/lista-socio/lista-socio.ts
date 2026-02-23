@@ -17,7 +17,7 @@ export class ListaSocio implements OnInit {
 
   constructor(
     private socioServicio: SocioServicio,
-    private ruter: Router,
+    private router: Router,
     private cdr: ChangeDetectorRef // 2. Inyectar el detector
   ) {}
 
@@ -38,5 +38,9 @@ export class ListaSocio implements OnInit {
         console.error('Error al obtener socios:', err);
       }
     });
+  }
+
+  verSocio(id: number) {
+    this.router.navigate(['/verSocio', id])
   }
 }

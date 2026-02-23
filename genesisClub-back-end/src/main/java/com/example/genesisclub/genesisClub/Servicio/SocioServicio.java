@@ -9,4 +9,5 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.SocioDTO;
 public interface SocioServicio {
 
     List<SocioDTO> obtenerSocio();
+    public SocioDTO obtenerPorId(Long id);
 }
