@@ -12,6 +12,7 @@ import { ListaSocio } from './Administrador/lista-socio/lista-socio';
 import { InicioRubros } from './Rubros/inicio-rubros/inicio-rubros';
 import { HeraderSocio } from './Socio/herader-socio/herader-socio';
 import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
+import { VerSocio } from './Administrador/ver-socio/ver-socio';
 
 export const routes: Routes = [
 
@@ -35,5 +36,6 @@ export const routes: Routes = [
     {path: "headerAdmin", component: HeaderAdmin},
     {path: "invitaciones", component: Invitaciones},
     {path:"solicitudesPendientes", component: SolicitudesPendientes},
-    {path:"listaSocios", component: ListaSocio}
+    {path:"listaSocios", component: ListaSocio},
+    {path:"verSocio/:id", component: VerSocio}
 ];

@@ -52,6 +52,9 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 .requestMatchers("/api/socio/todos").hasRole("ADMIN")
                 .requestMatchers("/api/invitacion/**").authenticated()
 
+                //rutas para el admin
+                .requestMatchers("/api/socio/**").hasRole("ADMIN")
+
                 .anyRequest().authenticated()
 )
 

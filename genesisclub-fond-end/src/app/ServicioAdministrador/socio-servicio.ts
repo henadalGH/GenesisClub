@@ -8,6 +8,7 @@ import { environment } from '../../environments/environment';
 export class SocioServicio {
 
   private urlObtener = `${environment.apiUrl}/socio/todos`;
+  private urlVer = `${environment.apiUrl}/socio`;
 
   constructor(private http: HttpClient) {}
 
@@ -20,5 +21,17 @@ export class SocioServicio {
     });
 
     return this.http.get(this.urlObtener, { headers });
+  }
+
+
+  verSocio(id: number){
+      const token = localStorage.getItem('token');
+
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+
+    return this.http.get<any>(`this.urlVer/${id}`, {headers});
+
   }
 }

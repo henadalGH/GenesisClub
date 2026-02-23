@@ -1,5 +1,7 @@
 package com.example.genesisclub.genesisClub.Modelo.DTO;
 
+import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,5 +14,6 @@ public class SocioDTO {
     private String nombre;
     private String apellido;
     private String email;
+    private EstadoSocioEnums estado;
 }
 
