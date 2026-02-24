@@ -1,0 +1,51 @@
+<app-header-admin></app-header-admin>
+
+<div class="container">
+
+  @if (cargando()) {
+    <div class="spinner-container">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+  } @else if (socio()) {
+    <div class="card">
+      <div class="card-header">
+        <i class="bi bi-person-badge"></i> Perfil del Socio
+      </div>
+
+      <div class="card-body">
+        <h2 class="socio-name">{{ socio().nombre }} {{ socio().apellido }}</h2>
+        <p class="socio-email">{{ socio().email }}</p>
+
+        <div class="details-list">
+          <div class="detail-item">
+            <span class="label">ID Socio:</span>
+            <span class="value">#{{ socio().id }}</span>
+          </div>
+
+          <div class="detail-item">
+            <span class="label">Estado Actual:</span>
+            <span class="status-badge" 
+              [class.status-activo]="socio().estado_socio?.nombre === 'ACTIVO'"
+              [class.status-bloqueado]="socio().estado_socio?.nombre === 'BLOQUEADO'"
+              [class.status-suspendido]="socio().estado_socio?.nombre === 'SUSPENDIDO'">
+              {{ socio().estado_socio?.nombre || 'SIN ESTADO' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-footer">
+        <button class="btn-return" [routerLink]="['/listaSocios']">
+          ← Volver al Listado
+        </button>
+      </div>
+    </div>
+  } @else {
+    <div class="error-msg">
+      <p>No se pudo encontrar la información de este socio.</p>
+      <button class="btn-return" [routerLink]="['/listaSocios']">Volver</button>
+    </div>
+  }
+
+</div>
