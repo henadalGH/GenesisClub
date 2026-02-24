@@ -1,9 +1,8 @@
 package com.example.genesisclub.genesisClub.Modelo.Entidad;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -25,6 +24,16 @@ public class SocioEntity {
     @Column(name = "id_socio")
     private Long id;
 
+    @Column(name = "cantidad_invitaciones")
+    private Integer cantidadInvitaciones;
+
+    @Column(name = "numero_postulaciones")
+    private Integer numPostulaciones;
+
+    @Column(name = "ultimo_movimieto")
+    private LocalDate ultimoMovimiento;
+
+
     @ManyToOne
     @JoinColumn(name = "id_estado")
     private EstadoSocioEnitity estado;
@@ -33,7 +42,16 @@ public class SocioEntity {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
-    @OneToMany(mappedBy = "socioOrigen")
+    @OneToMany(mappedBy = "socioOrig")
     private List<InvitacionEntity> invitacion = new ArrayList<>();
 
+
+    @OneToMany(mappedBy = "socio")
+    private List<RelacionUsuarioEntity> relacion = new ArrayList<>();
+
+    @OneToMany(mappedBy = "socio")
+    private List<SolicitudEntity> solicitud = new ArrayList<>();
+
+    @OneToMany(mappedBy = "socio")
+    private List<RubroSocioEntity> socioRubro = new ArrayList<>();
 }

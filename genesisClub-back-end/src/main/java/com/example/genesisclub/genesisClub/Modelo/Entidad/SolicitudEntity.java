@@ -40,14 +40,22 @@ public class SolicitudEntity {
     @Column(name = "fecha_solicitud")
     private LocalDate fechaSolicitud;
 
+    @Column(name = "fecha_modificacion")
+    private LocalDate fechaModificacion;
+
     @ManyToOne
     @JoinColumn(name = "id_estado")
     private EstadoSolicitudEntity estado;
 
-
     @ManyToOne
     @JoinColumn(name = "id_invitacion")
     private InvitacionEntity invitacion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_socio_referencia")
+    private SocioEntity socio;
+
+
 
 
 }

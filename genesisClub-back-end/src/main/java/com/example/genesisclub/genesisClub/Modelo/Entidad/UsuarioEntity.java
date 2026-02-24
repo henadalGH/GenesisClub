@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -38,8 +37,6 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "nombre")
     private String nombre;
 
-    
-
     @Column(name = "email")
     private String email;
 
@@ -48,6 +45,15 @@ public class UsuarioEntity implements UserDetails {
 
     @Column(name = "fecha_creacion")
     private LocalDate fechaCreacion;
+
+    @Column(name = "fecha_modificacion")
+    private LocalDate fechaModificacion;
+
+    @Column(name = "ultimo_login")
+    private LocalDate ultimoLogin;
+
+    @Column(name = "verificacion_email")
+    private boolean verificacionEmail;
 
     @ManyToOne
     @JoinColumn(name = "id_rol")
@@ -62,6 +68,15 @@ public class UsuarioEntity implements UserDetails {
 
     @OneToMany(mappedBy = "usuario")
     private List<JugadorEntity> jugador = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario")
+    private List<PerfilEntity> perfil = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario")
+    private List<NotificacionEntity> notificacion = new ArrayList<>();
+
+    @OneToMany(mappedBy = "contacto")
+    private List<RelacionUsuarioEntity> relacion = new ArrayList<>();
 
     //Metodos de UserDetails
 
