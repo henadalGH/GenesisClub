@@ -18,8 +18,6 @@ public class RegistroDTO {
     private String password;
     private LocalDate fechaCreacion;
     private RolesEnums rol;
-
-    
     private EstadoSocioEnums estado;
     
     }
