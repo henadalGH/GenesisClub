@@ -30,12 +30,11 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "id_usuario")
     private Long id;
 
-    @Column(name = "apellido")
-    private String apellido;
-
-    
     @Column(name = "nombre")
     private String nombre;
+
+    @Column(name = "apellido")
+    private String apellido;
 
     @Column(name = "email")
     private String email;
