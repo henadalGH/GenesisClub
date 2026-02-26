@@ -3,15 +3,8 @@ package com.example.genesisclub.genesisClub.Modelo.Entidad;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
@@ -20,19 +13,22 @@ import lombok.Data;
 public class SocioEntity {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_socio")
     private Long id;
 
-    @Column(name = "cantidad_invitaciones")
+    @Column(name = "cantidad_invitaciones", nullable = false)
     private Integer cantidadInvitaciones;
 
-    @Column(name = "numero_postulaciones")
+    @Column(name = "numero_postulaciones", nullable = false)
     private Integer numPostulaciones;
 
-    @Column(name = "ultimo_movimieto")
+    @Column(name = "ultimo_movimiento")
     private LocalDate ultimoMovimiento;
 
+    // ===============================
+    // RELACIONES
+    // ===============================
 
     @ManyToOne
     @JoinColumn(name = "id_estado")
@@ -45,7 +41,6 @@ public class SocioEntity {
     @OneToMany(mappedBy = "socioOrig")
     private List<InvitacionEntity> invitacion = new ArrayList<>();
 
-
     @OneToMany(mappedBy = "socio")
     private List<RelacionUsuarioEntity> relacion = new ArrayList<>();
 
@@ -54,4 +49,15 @@ public class SocioEntity {
 
     @OneToMany(mappedBy = "socio")
     private List<RubroSocioEntity> socioRubro = new ArrayList<>();
+
+
+    // ======================================================
+    // 🔥 INICIALIZACIÓN AUTOMÁTICA (LA PARTE IMPORTANTE)
+    // ======================================================
+    @PrePersist
+    public void prePersist() {
+        this.cantidadInvitaciones = 0;
+        this.numPostulaciones = 0;
+        this.ultimoMovimiento = LocalDate.now();
+    }
 }

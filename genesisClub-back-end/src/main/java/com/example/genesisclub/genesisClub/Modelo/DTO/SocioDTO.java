@@ -1,5 +1,7 @@
 package com.example.genesisclub.genesisClub.Modelo.DTO;
 
+import java.time.LocalDate;
+
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
 
 import lombok.AllArgsConstructor;
@@ -15,5 +17,8 @@ public class SocioDTO {
     private String apellido;
     private String email;
     private EstadoSocioEnums estado;
+    private Integer cantidadInvitaciones;
+    private Integer numeroPostulaciones;
+    private LocalDate ultimoMovimiento;
 }
 

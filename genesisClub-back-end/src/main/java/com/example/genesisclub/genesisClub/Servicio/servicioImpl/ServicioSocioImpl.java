@@ -54,7 +54,10 @@ public class ServicioSocioImpl implements SocioServicio {
                 s.getUsuario().getNombre(),
                 s.getUsuario().getApellido(),
                 s.getUsuario().getEmail(),
-                s.getEstado().getEstado()
+                s.getEstado().getEstado(),
+                s.getCantidadInvitaciones(),
+                s.getNumPostulaciones(),
+                s.getUltimoMovimiento()
         );
     }
 }
