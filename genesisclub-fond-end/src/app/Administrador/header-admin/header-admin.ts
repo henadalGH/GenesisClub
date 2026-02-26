@@ -19,4 +19,11 @@ export class HeaderAdmin {
 
     menuAbierto = false;
 
+toggleMenu() {
+  this.menuAbierto = !this.menuAbierto;
+}
+
+cerrarMenu() {
+  this.menuAbierto = false;
+}
 }

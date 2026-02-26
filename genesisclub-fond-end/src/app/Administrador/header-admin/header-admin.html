@@ -4,34 +4,37 @@
     <h2>Panel Admin</h2>
   </div>
 
-  <!-- Botón hamburguesa (solo mobile) -->
-  <button class="menu-toggle" (click)="menuAbierto = !menuAbierto">
+  <!-- ☰ Hamburguesa (solo mobile) -->
+  <button class="menu-toggle" (click)="toggleMenu()">
     ☰
   </button>
 
   <nav class="nav-buttons" [class.open]="menuAbierto">
 
-    <button class="nav-btn" [routerLink]="['/solicitudesPendientes']">
+    <button class="nav-btn" [routerLink]="['/solicitudesPendientes']" (click)="cerrarMenu()">
       Solicitudes
     </button>
 
-    <button class="nav-btn" [routerLink]="['/invitaciones']">
+    <button class="nav-btn" [routerLink]="['/invitaciones']" (click)="cerrarMenu()">
       Invitaciones
     </button>
 
-    <button class="nav-btn" [routerLink]="['/listaSocios']">
+    <button class="nav-btn" [routerLink]="['/listaSocios']" (click)="cerrarMenu()">
       Socios
     </button>
 
-    <button class="logout mobile-logout" (click)="logout()">
+    <!-- logout mobile -->
+    <button class="logout mobile-only" (click)="logout()">
       Cerrar sesión
     </button>
 
   </nav>
 
-  <!-- Logout solo desktop -->
+  <!-- logout desktop -->
   <div class="acciones desktop-only">
-    <button class="logout" (click)="logout()">Cerrar sesión</button>
+    <button class="logout" (click)="logout()">
+      Cerrar sesión
+    </button>
   </div>
 
 </header>
