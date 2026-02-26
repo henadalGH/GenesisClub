@@ -1,56 +1,132 @@
+/* ===== HEADER BASE ===== */
 .admin-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  background: #1e293b;
-  padding: 12px 30px;
+  justify-content: space-between;
+
+  padding: 14px 28px;
+
+  background: linear-gradient(135deg, #1e293b, #0f172a);
   color: white;
-  height: 70px;
+
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-/* Logo */
+/* ===== LOGO ===== */
 .logo h2 {
   margin: 0;
+  font-size: 20px;
   font-weight: 600;
+  letter-spacing: 1px;
 }
 
-/* Botones centrales */
+/* ===== NAV BUTTONS ===== */
 .nav-buttons {
   display: flex;
-  gap: 15px;
+  gap: 14px;
 }
 
-.nav-buttons button {
+/* Botones principales */
+.nav-btn {
   background: #334155;
-  border: none;
   color: white;
+
+  border: none;
   padding: 10px 18px;
-  border-radius: 8px;
+
+  border-radius: 10px;
   cursor: pointer;
-  transition: 0.2s;
+
+  font-size: 14px;
+  font-weight: 500;
+
+  transition: 0.25s ease;
 }
 
-.nav-buttons button:hover {
+/* Hover */
+.nav-btn:hover {
   background: #475569;
+  transform: translateY(-2px);
 }
 
-/* Logout */
+/* Active click */
+.nav-btn:active {
+  transform: scale(0.96);
+}
+
+/* ===== LOGOUT ===== */
 .logout {
-  background: #dc2626;
-  border: none;
-  padding: 10px 18px;
-  border-radius: 8px;
+  background: #ef4444;
   color: white;
+
+  border: none;
+  padding: 10px 16px;
+
+  border-radius: 10px;
   cursor: pointer;
+
+  font-weight: bold;
+
+  transition: 0.25s;
 }
 
 .logout:hover {
-  background: #b91c1c;
+  background: #dc2626;
+  transform: translateY(-2px);
 }
 
-/* Responsive */
-@media (max-width: 768px) {
+
+/* =====================================
+   📱 RESPONSIVE (TABLET)
+===================================== */
+@media (max-width: 900px) {
+
+  .admin-header {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .nav-buttons {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .acciones {
+    order: 2;
+  }
+}
+
+
+/* =====================================
+   📱 MOBILE
+===================================== */
+@media (max-width: 600px) {
+
+  .admin-header {
+    flex-direction: column;
+    align-items: stretch;
+    text-align: center;
+  }
+
   .nav-buttons {
     flex-direction: column;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .nav-btn,
+  .logout {
+    width: 100%;
+  }
+
+  .logout {
+    margin-top: 8px;
   }
 }
