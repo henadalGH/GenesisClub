@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "socio")
+@Table(name = "socio") // 🚫 SIN schema → portable (local + Aiven)
 public class SocioEntity {
 
     @Id
@@ -18,23 +18,21 @@ public class SocioEntity {
     private Long id;
 
     @Column(name = "cantidad_invitaciones", nullable = false)
-    private Integer cantidadInvitaciones;
+    private Integer cantidadInvitaciones = 0;
 
     @Column(name = "numero_postulaciones", nullable = false)
-    private Integer numPostulaciones;
+    private Integer numPostulaciones = 0;
 
     @Column(name = "ultimo_movimiento")
     private LocalDate ultimoMovimiento;
 
-    // ===============================
-    // RELACIONES
-    // ===============================
+    // ================= RELACIONES =================
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_estado")
     private EstadoSocioEnitity estado;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
@@ -50,14 +48,12 @@ public class SocioEntity {
     @OneToMany(mappedBy = "socio")
     private List<RubroSocioEntity> socioRubro = new ArrayList<>();
 
+    // ================= AUTO INIT =================
 
-    // ======================================================
-    // 🔥 INICIALIZACIÓN AUTOMÁTICA (LA PARTE IMPORTANTE)
-    // ======================================================
     @PrePersist
     public void prePersist() {
-        this.cantidadInvitaciones = 0;
-        this.numPostulaciones = 0;
-        this.ultimoMovimiento = LocalDate.now();
+        if (ultimoMovimiento == null) {
+            ultimoMovimiento = LocalDate.now();
+        }
     }
 }
