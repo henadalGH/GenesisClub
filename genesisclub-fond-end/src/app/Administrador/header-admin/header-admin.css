@@ -84,7 +84,7 @@
 
 
 /* =====================================
-   📱 MOBILE
+   📱 MOBILE FIX REAL
 ===================================== */
 @media (max-width: 768px) {
 
@@ -96,7 +96,10 @@
     display: none;
   }
 
+  /* OCULTO REAL */
   .nav-buttons {
+    display: none;
+
     position: absolute;
     top: 60px;
     left: 0;
@@ -108,13 +111,11 @@
 
     padding: 18px;
     gap: 12px;
-
-    transform: translateY(-120%);
-    transition: .3s ease;
   }
 
+  /* SOLO cuando está abierto */
   .nav-buttons.open {
-    transform: translateY(0);
+    display: flex;
   }
 
   .nav-btn,
