@@ -1,5 +1,6 @@
 package com.example.genesisclub.genesisClub.Modelo.Entidad;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,18 +33,29 @@ public class InvitacionEntity {
     @Column(name = "email_destino", nullable = false)
     private String emailDestino;
 
+    @Column(name = "fecha_envio")
+    private LocalDate fechaEnvio;
+
+    @Column(name = "fecha_repuesta")
+    private LocalDate fechaRepusta;
+
     @Column(name = "token", nullable = false, unique = true)
     private String token;
 
     @Column(name = "fecha_expiracion", nullable = false)
     private LocalDateTime fechaExpiracion;
 
-    @OneToMany(mappedBy = "invitacion")
-    private List<SolicitudEntity> solicitud = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(name = "id_estado_invitacion")
     private EstadoInvitacionEntity estado;
+
+    @ManyToOne
+    @JoinColumn(name = "id_origen_socio")
+    private SocioEntity socioOrig;
+
+    @OneToMany(mappedBy = "invitacion")
+    private List<SolicitudEntity> solicitud = new ArrayList<>();
 
 
 

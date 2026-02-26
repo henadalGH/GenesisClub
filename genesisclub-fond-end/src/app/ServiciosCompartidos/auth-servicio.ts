@@ -9,7 +9,8 @@ import { jwtDecode } from 'jwt-decode';
 })
 export class AuthServicio {
 
-  private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.hasToken());
+  private loggedIn: BehaviorSubject<boolean> =
+    new BehaviorSubject<boolean>(this.hasToken());
 
   constructor(
     private router: Router,
@@ -17,14 +18,13 @@ export class AuthServicio {
   ) {}
 
   // ========================
-  // LOGIN
+  // 🔐 LOGIN
   // ========================
   login(email: string, password: string): Observable<any> {
     return this.loginServicio.login(email, password).pipe(
       tap((resp: any) => {
-        if (resp && resp.token) {
+        if (resp?.token) {
           localStorage.setItem('token', resp.token);
-          localStorage.setItem('rol', resp.rol);
           localStorage.setItem('email', email);
           this.loggedIn.next(true);
         } else {
@@ -34,20 +34,21 @@ export class AuthServicio {
     );
   }
 
+
   // ========================
-  // LOGOUT
+  // 🚪 LOGOUT
   // ========================
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('rol');
-    localStorage.removeItem('email');
+    localStorage.clear();
     this.loggedIn.next(false);
     this.router.navigate(['/inicio']);
   }
 
+
   // ========================
-  // HELPERS
+  // ✅ HELPERS
   // ========================
+
   isLogged(): boolean {
     return this.hasToken();
   }
@@ -56,42 +57,82 @@ export class AuthServicio {
     return this.loggedIn.asObservable();
   }
 
-  getRol(): string | null {
-    return localStorage.getItem('rol');
-  }
-
   getToken(): string | null {
     return localStorage.getItem('token');
   }
 
-  private hasToken(): boolean {
-    return !!localStorage.getItem('token');
-  }
 
-  redirectByRole(rol: string): void {
-    switch (rol) {
-      case 'ADMIN':
-        this.router.navigate(['/inicioAdmin']);
-        break;
-      case 'SOCIO':
-        this.router.navigate(['/inicioSocio']);
-        break;
+  // 🔥🔥🔥 MÉTODO CLAVE ARREGLADO
+  // Lee rol del JWT + normaliza a ROLE_XXX
+  getRol(): string | null {
 
-      case 'JUGADOR':
-        this.router.navigate(['/inicioJugador']);
-      break;
-      default:
-        this.router.navigate(['/inicio']);
-    }
-  }
-
-    getUserId(): number | null {
-    const token = localStorage.getItem('token');
-
+    const token = this.getToken();
     if (!token) return null;
 
     const decoded: any = jwtDecode(token);
 
-    return decoded.sub || decoded.id;
+
+    let role =
+      decoded.authorities?.[0] ||
+      decoded.roles?.[0] ||
+      decoded.role ||
+      decoded.rol ||
+      null;
+
+    if (!role) return null;
+
+    // ✅ Normalizamos formato
+    // ADMIN -> ROLE_ADMIN
+    if (!role.startsWith('ROLE_')) {
+      role = `ROLE_${role}`;
+    }
+
+    return role;
+  }
+
+
+  // ========================
+  // 🔥 ID desde JWT
+  // ========================
+  getUserId(): number | null {
+
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded: any = jwtDecode(token);
+
+    return decoded.sub || decoded.id || null;
+  }
+
+
+  private hasToken(): boolean {
+    return !!this.getToken();
+  }
+
+
+  // ========================
+  // 🔁 REDIRECCIÓN POR ROL
+  // ========================
+  redirectByRole(): void {
+
+    const rol = this.getRol();
+
+    switch (rol) {
+
+      case 'ROLE_ADMIN':
+        this.router.navigate(['/inicioAdmin']);
+        break;
+
+      case 'ROLE_SOCIO':
+        this.router.navigate(['/inicioSocio']);
+        break;
+
+      case 'ROLE_JUGADOR':
+        this.router.navigate(['/inicioJugador']);
+        break;
+
+      default:
+        this.router.navigate(['/inicio']);
+    }
   }
 }

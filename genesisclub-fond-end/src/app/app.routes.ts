@@ -13,32 +13,98 @@ import { InicioRubros } from './Rubros/inicio-rubros/inicio-rubros';
 import { HeraderSocio } from './Socio/herader-socio/herader-socio';
 import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
 import { VerSocio } from './Administrador/ver-socio/ver-socio';
+import { AuthGuard } from './ServiciosCompartidos/auth-guard-servicio';
+
 
 export const routes: Routes = [
 
-  // Rutas públicas
+  // =========================
+  // 🌍 RUTAS PÚBLICAS
+  // =========================
   { path: '', redirectTo: '/inicio', pathMatch: 'full' },
   { path: 'inicio', component: Inicio },
   { path: 'login', component: Login },
   { path: 'solicitud', component: SolicitudSocio },
   { path: 'inicioRubro', component: InicioRubros },
 
-  // Rutas Socios
-  { path: 'inicioSocio', component: InicioSocio },
-  { path: 'headerSocio', component: HeraderSocio },
-  { path: 'invitaciones-socio', component: InvitacionesSocio },
 
-  // Rutas Jugador
-  { path: 'inicioJugador', component: IncioJugador },
+  // =========================
+  // 👤 RUTAS SOCIO
+  // =========================
+  {
+    path: 'inicioSocio',
+    component: InicioSocio,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_SOCIO'] }
+  },
+  {
+    path: 'headerSocio',
+    component: HeraderSocio,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_SOCIO'] }
+  },
+  {
+    path: 'invitaciones-socio',
+    component: InvitacionesSocio,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_SOCIO'] }
+  },
 
-  // Rutas Administrador
-  { path: 'inicioAdmin', component: InicioAdmin },
-  { path: 'headerAdmin', component: HeaderAdmin },
-  { path: 'invitaciones-admin', component: Invitaciones },
-  { path: 'solicitudesPendientes', component: SolicitudesPendientes },
-  { path: 'listaSocios', component: ListaSocio },
-  { path: 'verSocio/:id', component: VerSocio },
 
-  // Ruta comodín (opcional)
+  // =========================
+  // ⚽ RUTAS JUGADOR
+  // =========================
+  {
+    path: 'inicioJugador',
+    component: IncioJugador,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_JUGADOR'] }
+  },
+
+
+  // =========================
+  // 🛠 RUTAS ADMIN
+  // =========================
+  {
+    path: 'inicioAdmin',
+    component: InicioAdmin,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'headerAdmin',
+    component: HeaderAdmin,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'invitaciones-admin',
+    component: Invitaciones,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'solicitudesPendientes',
+    component: SolicitudesPendientes,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'listaSocios',
+    component: ListaSocio,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'verSocio/:id',
+    component: VerSocio,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+
+
+  // =========================
+  // ❌ COMODÍN
+  // =========================
   { path: '**', redirectTo: '/inicio' }
 ];

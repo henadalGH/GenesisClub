@@ -1,0 +1,85 @@
+<app-header-admin></app-header-admin>
+
+<div class="page">
+
+  @if (cargando()) {
+
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+
+  } @else if (socio()) {
+
+    <section class="profile-card">
+
+      <!-- Header -->
+      <header class="profile-header">
+        <i class="bi bi-person-circle avatar"></i>
+
+        <div>
+          <h2>{{ socio().nombre }} {{ socio().apellido }}</h2>
+          <span class="email">{{ socio().email }}</span>
+        </div>
+      </header>
+
+
+      <!-- Info -->
+      <div class="info-grid">
+
+        <div class="info-item">
+          <span>ID Socio</span>
+          <strong>#{{ socio().id }}</strong>
+        </div>
+
+        <div class="info-item">
+          <span>Estado</span>
+
+          <span
+            class="badge"
+            [class.activo]="socio().estado_socio?.nombre === 'ACTIVO'"
+            [class.bloqueado]="socio().estado_socio?.nombre === 'BLOQUEADO'"
+            [class.suspendido]="socio().estado_socio?.nombre === 'SUSPENDIDO'">
+
+            {{ socio().estado_socio?.nombre || 'SIN ESTADO' }}
+          </span>
+        </div>
+
+      </div>
+
+
+      <!-- Stats -->
+      <div class="stats">
+
+        <div class="stat">
+          <i class="bi bi-envelope"></i>
+          <h3>{{ socio().cantidadInvitaciones }}</h3>
+          <p>Invitaciones</p>
+        </div>
+
+        <div class="stat">
+          <i class="bi bi-file-earmark-text"></i>
+          <h3>{{ socio().numeroPostulaciones }}</h3>
+          <p>Postulaciones</p>
+        </div>
+
+        <div class="stat">
+          <i class="bi bi-clock-history"></i>
+          <h3 class="small">{{ socio().ultimoMovimiento }}</h3>
+          <p>Último movimiento</p>
+        </div>
+
+      </div>
+
+
+      <!-- Botón -->
+      <footer class="actions">
+        <button class="btn" [routerLink]="['/listaSocios']">
+          ← Volver al listado
+        </button>
+      </footer>
+
+    </section>
+
+  }
+</div>

@@ -29,7 +29,7 @@ export class Login {
     this.authServicio.login(this.email, this.password).subscribe({
       next: (resp: any) => {
         // Redirige según rol usando el método del servicio
-        this.authServicio.redirectByRole(resp.rol);
+        this.authServicio.redirectByRole();
       },
       error: (err: any) => {
         alert(err.message || 'Usuario o contraseña incorrectos');
