@@ -17,4 +17,6 @@ export class HeaderAdmin {
       this.authServicio.logout();
     }
 
+    menuAbierto = false;
+
 }

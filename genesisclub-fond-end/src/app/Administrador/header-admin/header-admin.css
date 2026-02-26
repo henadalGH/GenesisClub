@@ -1,132 +1,127 @@
-/* ===== HEADER BASE ===== */
+/* ===== HEADER ===== */
 .admin-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
 
-  padding: 14px 28px;
+  padding: 14px 24px;
 
   background: linear-gradient(135deg, #1e293b, #0f172a);
   color: white;
 
-  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
-
   position: sticky;
   top: 0;
   z-index: 1000;
+
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
 }
 
 /* ===== LOGO ===== */
 .logo h2 {
   margin: 0;
   font-size: 20px;
-  font-weight: 600;
-  letter-spacing: 1px;
 }
 
-/* ===== NAV BUTTONS ===== */
+/* ===== NAV DESKTOP ===== */
 .nav-buttons {
   display: flex;
-  gap: 14px;
+  gap: 12px;
+  align-items: center;
 }
 
-/* Botones principales */
+/* ===== BOTONES ===== */
 .nav-btn {
   background: #334155;
   color: white;
-
   border: none;
-  padding: 10px 18px;
 
+  padding: 10px 16px;
   border-radius: 10px;
+
   cursor: pointer;
-
-  font-size: 14px;
-  font-weight: 500;
-
-  transition: 0.25s ease;
+  transition: .25s;
 }
 
-/* Hover */
 .nav-btn:hover {
   background: #475569;
   transform: translateY(-2px);
 }
 
-/* Active click */
-.nav-btn:active {
-  transform: scale(0.96);
-}
-
 /* ===== LOGOUT ===== */
 .logout {
   background: #ef4444;
-  color: white;
-
   border: none;
-  padding: 10px 16px;
-
+  padding: 10px 14px;
   border-radius: 10px;
-  cursor: pointer;
-
+  color: white;
   font-weight: bold;
-
-  transition: 0.25s;
+  cursor: pointer;
 }
 
 .logout:hover {
   background: #dc2626;
-  transform: translateY(-2px);
 }
 
+/* ===== HAMBURGUESA ===== */
+.menu-toggle {
+  display: none;
+  font-size: 26px;
+  background: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
 
-/* =====================================
-   📱 RESPONSIVE (TABLET)
-===================================== */
-@media (max-width: 900px) {
+/* Ocultar elementos según dispositivo */
+.desktop-only {
+  display: block;
+}
 
-  .admin-header {
-    flex-wrap: wrap;
-    gap: 12px;
-    padding: 16px;
-  }
-
-  .nav-buttons {
-    order: 3;
-    width: 100%;
-    justify-content: center;
-    flex-wrap: wrap;
-  }
-
-  .acciones {
-    order: 2;
-  }
+.mobile-logout {
+  display: none;
 }
 
 
 /* =====================================
    📱 MOBILE
 ===================================== */
-@media (max-width: 600px) {
+@media (max-width: 768px) {
 
-  .admin-header {
-    flex-direction: column;
-    align-items: stretch;
-    text-align: center;
+  .menu-toggle {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
   }
 
   .nav-buttons {
-    flex-direction: column;
-    gap: 10px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+
     width: 100%;
+    flex-direction: column;
+
+    background: #0f172a;
+
+    padding: 16px;
+    gap: 12px;
+
+    transform: translateY(-120%);
+    transition: .3s ease;
+  }
+
+  .nav-buttons.open {
+    transform: translateY(0);
   }
 
   .nav-btn,
-  .logout {
+  .mobile-logout {
     width: 100%;
   }
 
-  .logout {
-    margin-top: 8px;
+  .mobile-logout {
+    display: block;
   }
 }

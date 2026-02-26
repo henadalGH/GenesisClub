@@ -1,15 +1,37 @@
 <header class="admin-header">
+
   <div class="logo">
     <h2>Panel Admin</h2>
   </div>
 
-  <nav class="nav-buttons">
-    <button [routerLink]="['/solicitudesPendientes']">Solicitudes</button>
-    <button [routerLink]="['/invitaciones']">Invitaciones</button>
-    <button [routerLink]="['/listaSocios']">Socios</button>
+  <!-- Botón hamburguesa (solo mobile) -->
+  <button class="menu-toggle" (click)="menuAbierto = !menuAbierto">
+    ☰
+  </button>
+
+  <nav class="nav-buttons" [class.open]="menuAbierto">
+
+    <button class="nav-btn" [routerLink]="['/solicitudesPendientes']">
+      Solicitudes
+    </button>
+
+    <button class="nav-btn" [routerLink]="['/invitaciones']">
+      Invitaciones
+    </button>
+
+    <button class="nav-btn" [routerLink]="['/listaSocios']">
+      Socios
+    </button>
+
+    <button class="logout mobile-logout" (click)="logout()">
+      Cerrar sesión
+    </button>
+
   </nav>
 
-  <div class="acciones">
+  <!-- Logout solo desktop -->
+  <div class="acciones desktop-only">
     <button class="logout" (click)="logout()">Cerrar sesión</button>
   </div>
+
 </header>
