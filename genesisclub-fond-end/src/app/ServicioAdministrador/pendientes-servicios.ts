@@ -26,19 +26,11 @@ export class PendientesServicios {
   }
 
   modificaEstado(id: number, estado: 'ACEPTADA' | 'RECHAZADA') {
-    // Construimos la URL dinámicamente
     const url = `${this.urlActualizar}/${id}`;
-
-    // Usamos HttpParams para el query param
     const params = new HttpParams().set('nuevoEstado', estado);
 
-    return this.http.put<any>(
-      url,
-      {}, // body vacío
-      {
-        headers: this.getHeaders(),
-        params
-      }
-    );
-  }
+    // Eliminamos 'headers: this.getHeaders()'
+    // El interceptor se encargará de inyectar el token automáticamente
+    return this.http.put<any>(url, {}, { params });
+}
 }

@@ -8,10 +8,7 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,36 +49,19 @@ public class SolicitudSocioController {
 public ResponseEntity<?> obtenerSolicitudesPendientes() {
     List<SolicitudDTO> pendientes = solicitudSerSocioService.obtenerSolicitudesPendientes();
 
-    if (pendientes.isEmpty()) {
-        // Devolver un mensaje si no hay solicitudes pendientes
-        Map<String, String> response = new HashMap<>();
-        response.put("mensaje", "No hay solicitudes pendientes en este momento.");
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
-    // Si hay solicitudes pendientes, devolver la lista
     return new ResponseEntity<>(pendientes, HttpStatus.OK);
 }
 
 
     @PutMapping("/actualizar/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+@PreAuthorize("hasRole('ADMIN')")
 public ResponseEntity<ResponceDTO> actualizarEstadoSolicitud(
         @PathVariable Long id,
-        @RequestParam String nuevoEstado
+        @RequestParam EstadoSolicitudEnums nuevoEstado // 1. Tipado directo
 ) {
-    EstadoSolicitudEnums estadoEnum;
-
-    try {
-        estadoEnum = EstadoSolicitudEnums.valueOf(nuevoEstado.toUpperCase());
-    } catch (IllegalArgumentException e) {
-        ResponceDTO error = new ResponceDTO();
-        error.setNumOfErrors(1);
-        error.setMensage("Estado inválido: " + nuevoEstado);
-        return ResponseEntity.badRequest().body(error);
-    }
-
-    ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, estadoEnum);
+    // 2. Lógica simplificada
+    ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
+    
     return ResponseEntity.ok(response);
 }
 

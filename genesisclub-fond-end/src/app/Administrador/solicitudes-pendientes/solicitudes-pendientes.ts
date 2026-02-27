@@ -33,6 +33,7 @@ export class SolicitudesPendientes implements OnInit {
     this.cargando = true;
     this.pendientesServicios.listarPendientes().subscribe({
       next: (resp: any) => {
+        console.log('Respuesta del servidor:', resp);
         // 2. Usamos el spread operator para asegurar que Angular detecte el nuevo array
         this.pendiente = [...resp];
         this.cargando = false;
