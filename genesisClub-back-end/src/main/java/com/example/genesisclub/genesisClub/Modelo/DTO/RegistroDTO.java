@@ -15,7 +15,7 @@ public class RegistroDTO {
     private String nombre;
     private String apellido;
     private String email;
-    private String password;
+    private String password; 
     private LocalDate fechaCreacion;
     private RolesEnums rol;
     private EstadoSocioEnums estado;

@@ -43,7 +43,7 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
                 // públicas
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/registro/**").permitAll()
+                .requestMatchers("/api/usuario/registro").permitAll()
                 .requestMatchers("/api/solicitud/nuevo").permitAll()
 
                 // protegidas
