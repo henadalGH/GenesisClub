@@ -65,7 +65,7 @@ public ResponseEntity<?> obtenerSolicitudesPendientes() {
 
 
     @PutMapping("/actualizar/{id}")
-@PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
 public ResponseEntity<ResponceDTO> actualizarEstadoSolicitud(
         @PathVariable Long id,
         @RequestParam String nuevoEstado
