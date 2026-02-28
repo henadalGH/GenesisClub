@@ -17,6 +17,7 @@ bin/
 # Bloquea los archivos de propiedades con claves reales
 src/main/resources/application-prod.properties
 src/main/resources/application-dev.properties
+src/main/resources/mail.properties
 
 # --- IDEs (Configuraciones locales) ---
 # VS Code
@@ -52,3 +53,4 @@ desktop.ini
 
 # --- DOCUMENTACIÓN ---
 HELP.md
+
