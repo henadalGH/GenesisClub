@@ -1,12 +1,22 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    
-    <title>Correo de pureva</title>
+    <meta charset="UTF-8">
+    <title>Correo de Prueba</title>
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        .container { padding: 20px; border: 1px solid #ddd; border-radius: 8px; }
+        h1 { color: #2c3e50; }
+    </style>
 </head>
 <body>
-    
-    <h1>Hola usaurio</h1>
-    <p th:text="${mensaje}"></p>
+    <div class="container">
+        <h1>¡Hola, usuario!</h1>
+        <p>Has recibido un nuevo mensaje desde <strong>GenesisClub</strong>:</p>
+        <hr>
+        <p th:text="${mensaje}"></p>
+        <hr>
+        <small>Este es un correo automático, por favor no lo respondas.</small>
+    </div>
 </body>
 </html>

@@ -23,35 +23,41 @@ public class EmailServiceImpl implements EmailService {
     private TemplateEngine templateEngine;
 
     @Override
-    public void enviarCorreo(EmailDTO emailDTO) { // Quitamos el throws para manejarlo aquí mismo
-
+    public void enviarCorreo(EmailDTO emailDTO) {
         try {
+            // 1. Crear el mensaje MIME (permite HTML)
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            
+            // true indica que es un mensaje multipart (necesario para HTML)
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
 
             helper.setTo(emailDTO.getDestinatario());
             helper.setSubject(emailDTO.getAsunto());
 
-            // Procesar la plantilla HTML
+            // 2. Preparar el contexto de Thymeleaf
             Context context = new Context();
             context.setVariable("mensaje", emailDTO.getMensaje());
             
-            // "email" debe coincidir con el nombre de tu archivo en /templates/email.html
-            String htmlContent = templateEngine.process("email", context);
+            // 3. Procesar la plantilla
+            // IMPORTANTE: Cambiado a "mail" porque tu archivo es mail.html
+            String htmlContent = templateEngine.process("mail", context);
 
+            // true indica que el texto es HTML
             helper.setText(htmlContent, true);
 
-            // Intentar enviar el correo
+            // 4. Enviar
             javaMailSender.send(mimeMessage);
-            System.out.println("Correo enviado con éxito a: " + emailDTO.getDestinatario());
+            
+            System.out.println("✅ Correo enviado con éxito a: " + emailDTO.getDestinatario());
 
         } catch (MessagingException e) {
-            // Error específico de la estructura del correo (destinatario, asunto, etc.)
-            System.err.println("Error al construir el mensaje de correo: " + e.getMessage());
-            // Aquí podrías lanzar una excepción personalizada si lo necesitas
+            System.err.println("❌ Error en la estructura del correo: " + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
-            // Error genérico (servidor caído, error en la plantilla Thymeleaf, etc.)
-            System.err.println("Error inesperado al enviar el correo: " + e.getMessage());
+            System.err.println("❌ Error crítico al enviar correo: " + e.getClass().getSimpleName());
+            System.err.println("Causa: " + e.getMessage());
+            // Esto te mostrará en la consola si el archivo mail.html no existe
+            e.printStackTrace(); 
         }
     }
 }
