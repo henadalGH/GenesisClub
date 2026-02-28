@@ -45,6 +45,7 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/usuario/registro").permitAll()
                 .requestMatchers("/api/solicitud/nuevo").permitAll()
+                .requestMatchers("/email/**").permitAll()
 
                 // protegidas
                 .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
