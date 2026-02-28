@@ -36,7 +36,7 @@ public class SocioEntity {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
-    @OneToMany(mappedBy = "socioOrig")
+    @OneToMany(mappedBy = "socioOrigen")
     private List<InvitacionEntity> invitacion = new ArrayList<>();
 
     @OneToMany(mappedBy = "socio")

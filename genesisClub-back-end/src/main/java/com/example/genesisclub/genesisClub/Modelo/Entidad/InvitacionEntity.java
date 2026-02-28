@@ -1,6 +1,6 @@
 package com.example.genesisclub.genesisClub.Modelo.Entidad;
 
-import java.time.LocalDate;
+
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +26,19 @@ public class InvitacionEntity {
     @Column(name = "id_invitacion")
     private Long id;
 
+    // Relación principal con el socio que invita
     @ManyToOne
-    @JoinColumn(name = "socio_origen_id", nullable = false)
+    @JoinColumn(name = "id_socio_origen", nullable = false)
     private SocioEntity socioOrigen;
 
     @Column(name = "email_destino", nullable = false)
     private String emailDestino;
 
     @Column(name = "fecha_envio")
-    private LocalDate fechaEnvio;
+    private LocalDateTime fechaEnvio; // Cambiado a LocalDateTime para tener la hora exacta
 
-    @Column(name = "fecha_repuesta")
-    private LocalDate fechaRepusta;
+    @Column(name = "fecha_respuesta")
+    private LocalDateTime fechaRespuesta; // Corregido el nombre
 
     @Column(name = "token", nullable = false, unique = true)
     private String token;
@@ -45,18 +46,12 @@ public class InvitacionEntity {
     @Column(name = "fecha_expiracion", nullable = false)
     private LocalDateTime fechaExpiracion;
 
-
     @ManyToOne
     @JoinColumn(name = "id_estado_invitacion")
     private EstadoInvitacionEntity estado;
 
-    @ManyToOne
-    @JoinColumn(name = "id_origen_socio")
-    private SocioEntity socioOrig;
-
+    // Relación con solicitudes si el registro genera una solicitud previa a ser socio
     @OneToMany(mappedBy = "invitacion")
     private List<SolicitudEntity> solicitud = new ArrayList<>();
-
-
 
 }

@@ -11,15 +11,7 @@ export class InvitacionServicio {
     private http: HttpClient
   ){}
 
-  private urlInvitaciones = `${environment.apiUrl}/api/invitacion/crear`;
-
-
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-  }
+  private urlInvitaciones = `${environment.apiUrl}/api/invitacion/crear`
 
   crearInvitacion(id: number, email: string){
 
