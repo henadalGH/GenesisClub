@@ -45,6 +45,7 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/usuario/registro").permitAll()
                 .requestMatchers("/api/solicitud/nuevo").permitAll()
+                .requestMatchers("/api/solicitud/registro-invitado").permitAll()
                 .requestMatchers("/email/**").permitAll()
                 .requestMatchers("/api/invitacion/aceptar/**").permitAll()
 
