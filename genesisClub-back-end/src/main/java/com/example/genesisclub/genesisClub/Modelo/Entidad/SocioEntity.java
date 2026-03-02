@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "socio") // 🚫 SIN schema → portable (local + Aiven)
+@Table(name = "socio") 
 public class SocioEntity {
 
     @Id

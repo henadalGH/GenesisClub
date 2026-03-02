@@ -14,6 +14,7 @@ import { HeraderSocio } from './Socio/herader-socio/herader-socio';
 import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
 import { VerSocio } from './Administrador/ver-socio/ver-socio';
 import { AuthGuard } from './ServiciosCompartidos/auth-guard-servicio';
+import { RegistroInvitado } from './ComponentesPublico/registro-invitado/registro-invitado';
 
 
 export const routes: Routes = [
@@ -26,6 +27,7 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'solicitud', component: SolicitudSocio },
   { path: 'inicioRubro', component: InicioRubros },
+  { path: "registroInvitado", component: RegistroInvitado},
 
 
   // =========================

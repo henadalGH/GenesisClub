@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core'; // Usamos inject para ser más modernos
 import { AuthServicio } from '../../ServiciosCompartidos/auth-servicio';
 import { RouterLink } from "@angular/router";
 import { InvitacionServicio } from '../../ServicioAdministrador/invitacion-servicio';
@@ -6,23 +6,23 @@ import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-herader-socio',
-  imports: [RouterLink, FormsModule],
+  standalone: true,
+  imports: [RouterLink, FormsModule], // Limpio, sin CommonModule
   templateUrl: './herader-socio.html',
   styleUrl: './herader-socio.css',
 })
-export class HeraderSocio implements OnInit{
+export class HeraderSocio implements OnInit {
+  // Inyecciones modernas con inject()
+  private authServicio = inject(AuthServicio);
+  private invitacionServicio = inject(InvitacionServicio);
 
-
-  modalAbierto = false;   // 👈 estado del popup
-
-  constructor(private authServicio: AuthServicio,
-    private invitacionServicio: InvitacionServicio
-  ) {}
-
+  modalAbierto = false;
+  emailInvitado = '';
+  cargando = false;
 
   ngOnInit(): void {
     const id = this.authServicio.getUserId();
-  console.log('ID usuario:', id);
+    console.log('ID socio activo:', id);
   }
 
   logout() {
@@ -31,14 +31,30 @@ export class HeraderSocio implements OnInit{
 
   abrirModal() {
     this.modalAbierto = true;
+    this.emailInvitado = '';
   }
 
   cerrarModal() {
     this.modalAbierto = false;
   }
 
+  enviarInvitacion() {
+    const socioId = this.authServicio.getUserId();
 
-    enviarInvitacion() {
-      throw new Error('Method not implemented.');
-    }
+    if (!socioId || !this.emailInvitado) return;
+
+    this.cargando = true;
+
+    this.invitacionServicio.crearInvitacion(socioId, this.emailInvitado).subscribe({
+      next: (res) => {
+        alert('Invitación enviada correctamente.');
+        this.cerrarModal();
+        this.cargando = false;
+      },
+      error: (err) => {
+        this.cargando = false;
+        alert(err.error?.mensage || 'Error al enviar invitación');
+      }
+    });
+  }
 }
