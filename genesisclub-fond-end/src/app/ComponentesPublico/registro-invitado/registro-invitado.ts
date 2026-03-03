@@ -8,20 +8,21 @@ import { SolicitudServicio } from '../../ServiciosCompartidos/solicitud-servicio
   standalone: true,
   imports: [FormsModule],
   templateUrl: './registro-invitado.html',
-  styleUrl: './registro-invitado.css'
+  styleUrls: ['./registro-invitado.css'] // corregido
 })
 export class RegistroInvitado implements OnInit {
   
   token: string | null = null;
   cargando = false;
 
-  // Objeto para los datos del formulario
+  // Objeto para los datos del formulario, incluyendo password
   datos = {
     nombre: '',
     apellido: '',
     dni: '',
     telefono: '',
-    email: ''
+    email: '',
+    password: ''   // ✨ importante para el registro
   };
 
   constructor(
@@ -31,10 +32,8 @@ export class RegistroInvitado implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Capturamos el token de la URL: ?token=xxxx
     this.token = this.route.snapshot.queryParamMap.get('token');
     
-    // Si no hay token, lo mandamos al login por seguridad
     if (!this.token) {
       alert('Enlace de invitación no válido.');
       this.router.navigate(['/inicioSocio']);
@@ -44,15 +43,20 @@ export class RegistroInvitado implements OnInit {
   registrar() {
     if (!this.token) return;
 
+    if (!this.datos.password) {
+      alert('Debes ingresar una contraseña');
+      return;
+    }
+
     this.cargando = true;
-    
-    // Llamamos al servicio con los datos y el token
+
     this.solicitudService.registrarInvitado(this.datos, this.token).subscribe({
-      next: (res: any) => {
-        alert('¡Registro exitoso! Ya podés ingresar.');
+      next: (res) => {
+        this.cargando = false;
+        alert(res.mensage || '¡Registro exitoso! Ya podés ingresar.');
         this.router.navigate(['/login']);
       },
-      error: (err: any) => {
+      error: (err) => {
         this.cargando = false;
         alert(err.error?.mensage || 'Error al procesar el registro');
       }

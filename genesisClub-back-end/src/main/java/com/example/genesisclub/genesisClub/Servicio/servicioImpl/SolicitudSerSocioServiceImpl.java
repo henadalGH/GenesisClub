@@ -33,75 +33,57 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     @Autowired private EstadoSolicitudRepository estadoSolicitudRepository;
     @Autowired private SolicitudReposistory solicitudRepository;
     @Autowired private PasswordEncoder passwordEncoder;
-    @Autowired private RegistroUsuarioServicio registroService;
     @Autowired private UsuarioRepository usuarioRepository;
-    
-    // Repositorio necesario para validar el token de invitación
+    @Autowired private RegistroUsuarioServicio registroService;
     @Autowired private InvitacionRepository invitacionRepository;
 
-    // =========================================
-    // CREAR SOLICITUD (REGISTRO NORMAL)
-    // =========================================
     @Override
     public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
         ResponceDTO response = new ResponceDTO();
-
-        if (validarEmailExistente(solicitudDTO.getEmail(), response)) {
-            return response;
-        }
+        if (validarEmailExistente(solicitudDTO.getEmail(), response)) return response;
 
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
 
-        EstadoSolicitudEnums estadoEnum = 
-                estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
-
-        EstadoSolicitudEntity estado = estadoSolicitudRepository
-                .findByEstado(estadoEnum)
+        EstadoSolicitudEnums estadoEnum = estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
+        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(estadoEnum)
                 .orElseThrow(() -> new RuntimeException("Estado de solicitud no configurado"));
 
         solicitud.setEstado(estado);
         solicitudRepository.save(solicitud);
-
         response.setMensage("Solicitud creada correctamente");
         return response;
     }
 
-    // =========================================
-    // CREAR SOLICITUD DESDE INVITACIÓN (NUEVO)
-    // =========================================
     @Override
     public ResponceDTO crearSolicitudDesdeInvitacion(SolicitudDTO solicitudDTO, String token) {
         ResponceDTO response = new ResponceDTO();
 
-        // 1. Validar Token
         InvitacionEntity invitacion = invitacionRepository.findByToken(token)
                 .orElseThrow(() -> new RuntimeException("El token de invitación no existe o es inválido."));
 
-        // 2. Validar Expiración
         if (invitacion.getFechaExpiracion().isBefore(LocalDateTime.now())) {
             response.setNumOfErrors(1);
             response.setMensage("La invitación ha expirado. Solicita una nueva a tu socio referente.");
             return response;
         }
 
-        // 3. Validar Email
-        if (validarEmailExistente(solicitudDTO.getEmail(), response)) {
+        if (validarEmailExistente(solicitudDTO.getEmail(), response)) return response;
+
+        if (solicitudDTO.getPassword() == null || solicitudDTO.getPassword().isEmpty()) {
+            response.setNumOfErrors(1);
+            response.setMensage("Debe ingresar un password para completar el registro.");
             return response;
         }
 
-        // 4. Crear Solicitud vinculada
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
-        
-        // RELACIÓN CLAVE: Vinculamos la solicitud con la invitación y el socio que invitó
+
         solicitud.setInvitacion(invitacion);
         solicitud.setSocio(invitacion.getSocioOrigen());
 
-        EstadoSolicitudEntity estado = estadoSolicitudRepository
-                .findByEstado(EstadoSolicitudEnums.PENDIENTE)
+        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
                 .orElseThrow();
-
         solicitud.setEstado(estado);
         solicitudRepository.save(solicitud);
 
@@ -109,27 +91,24 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         return response;
     }
 
-    // =========================================
-    // ACTUALIZAR ESTADO (APROBAR / RECHAZAR)
-    // =========================================
     @Override
     public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEnums nuevoEstado) {
+        ResponceDTO response = new ResponceDTO();
         SolicitudEntity solicitud = solicitudRepository.findById(solicitudId)
                 .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
 
-        EstadoSolicitudEntity estado = estadoSolicitudRepository
-                .findByEstado(nuevoEstado)
+        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(nuevoEstado)
                 .orElseThrow();
 
         solicitud.setEstado(estado);
-        solicitud.setFechaModificacion(LocalDate.now());
+        solicitud.setFechaSolicitud(LocalDate.now());
 
         if (nuevoEstado == EstadoSolicitudEnums.ACEPTADA) {
             RegistroDTO registroDTO = new RegistroDTO();
             registroDTO.setNombre(solicitud.getNombre());
             registroDTO.setApellido(solicitud.getApellido());
             registroDTO.setEmail(solicitud.getEmail());
-            registroDTO.setPassword(solicitud.getPassword()); // Ya está encriptada
+            registroDTO.setPassword(solicitud.getPassword());
             registroDTO.setRol(RolesEnums.SOCIO);
             registroDTO.setEstado(EstadoSocioEnums.ACTIVO);
 
@@ -137,27 +116,20 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         }
 
         solicitudRepository.save(solicitud);
-
-        ResponceDTO response = new ResponceDTO();
         response.setMensage("Estado de la solicitud actualizado a: " + nuevoEstado);
         return response;
     }
 
     @Override
     public List<SolicitudDTO> obtenerSolicitudesPendientes() {
-        EstadoSolicitudEntity pendiente = estadoSolicitudRepository
-                .findByEstado(EstadoSolicitudEnums.PENDIENTE)
+        EstadoSolicitudEntity pendiente = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
                 .orElseThrow();
-
-        return solicitudRepository.findByEstado(pendiente)
-                .stream()
+        return solicitudRepository.findByEstado(pendiente).stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    // =========================================
-    // MÉTODOS DE APOYO (HELPERS)
-    // =========================================
+    // =================== Helpers ===================
 
     private void mapearDatosBasicos(SolicitudEntity entidad, SolicitudDTO dto) {
         entidad.setNombre(dto.getNombre());
@@ -171,7 +143,6 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     private boolean validarEmailExistente(String email, ResponceDTO response) {
         boolean existeUsuario = usuarioRepository.existsByEmail(email);
         boolean existeSolicitud = solicitudRepository.existsByEmail(email);
-
         if (existeUsuario || existeSolicitud) {
             response.setNumOfErrors(1);
             response.setMensage("El correo electrónico ya está registrado o tiene una solicitud en curso.");
