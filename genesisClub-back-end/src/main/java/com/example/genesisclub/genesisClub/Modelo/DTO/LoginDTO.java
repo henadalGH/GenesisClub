@@ -1,5 +1,8 @@
 package com.example.genesisclub.genesisClub.Modelo.DTO;
 
+import lombok.Data;
+
+@Data
 public class LoginDTO {
 
     private String email;
@@ -13,8 +16,4 @@ public class LoginDTO {
     public String getPassword() {
         return password;
     }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 }
