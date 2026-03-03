@@ -9,7 +9,7 @@ import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "socio") // 🚫 SIN schema → portable (local + Aiven)
+@Table(name = "socio")
 public class SocioEntity {
 
     @Id
@@ -28,11 +28,11 @@ public class SocioEntity {
 
     // ================= RELACIONES =================
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_estado")
     private EstadoSocioEnitity estado;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
