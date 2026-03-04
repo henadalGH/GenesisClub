@@ -25,52 +25,55 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-        throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain)
+            throws ServletException, IOException {
 
-    String path = request.getRequestURI();
-    String method = request.getMethod();
+        String path = request.getRequestURI();
+        String method = request.getMethod();
 
-    // 1. 🚀 DEJAR PASAR PETICIONES "OPTIONS" (CORS PREFLIGHT)
-    // Si no hacés esto, Angular nunca va a poder hacer el POST
-    if ("OPTIONS".equalsIgnoreCase(method)) {
-        response.setStatus(HttpServletResponse.SC_OK);
-        return;
-    }
-
-    // 2. 🚀 CLÁUSULA DE ESCAPE PARA RUTAS PÚBLICAS
-    if (path.contains("/api/solicitud/nuevo") || path.contains("/api/auth") || path.contains("/api/usuario/registro")) {
-        filterChain.doFilter(request, response);
-        return;
-    }
-
-    String header = request.getHeader("Authorization");
-
-    // 3. ✅ FILTRAR BASURA DE ANGULAR (Bearer null/undefined)
-    if (header == null || !header.startsWith("Bearer ") || 
-        header.equalsIgnoreCase("Bearer null") || 
-        header.equalsIgnoreCase("Bearer undefined")) {
-        
-        filterChain.doFilter(request, response);
-        return;
-    }
-
-    // ... resto de tu lógica de token ...
-    try {
-        String token = header.substring(7);
-        JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
-        Long userId = Long.parseLong(claims.getSubject());
-        UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
-
-        if (usuario != null) {
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-                    usuario, null, usuario.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        // ✅ dejar pasar SIEMPRE preflight
+        if ("OPTIONS".equalsIgnoreCase(method)) {
+            filterChain.doFilter(request, response);
+            return;
         }
-    } catch (Exception e) {
-        SecurityContextHolder.clearContext();
-    }
 
-    filterChain.doFilter(request, response);
-}
+        // ✅ rutas públicas
+        if (path.startsWith("/api/solicitud/nuevo")
+                || path.startsWith("/api/auth")
+                || path.startsWith("/api/usuario/registro")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        String header = request.getHeader("Authorization");
+
+        // ✅ si no hay token → dejar pasar (Spring decide luego)
+        if (header == null || !header.startsWith("Bearer ")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
+
+        try {
+            String token = header.substring(7);
+            JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
+
+            Long userId = Long.parseLong(claims.getSubject());
+            UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
+
+            if (usuario != null) {
+                UsernamePasswordAuthenticationToken auth =
+                        new UsernamePasswordAuthenticationToken(
+                                usuario, null, usuario.getAuthorities());
+
+                SecurityContextHolder.getContext().setAuthentication(auth);
+            }
+
+        } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+        }
+
+        filterChain.doFilter(request, response);
+    }
 }

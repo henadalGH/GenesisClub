@@ -1,7 +1,12 @@
 package com.example.genesisclub.genesisClub.Configuracion;
 
+import java.util.List;
+
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 
@@ -11,18 +16,24 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class CrossConfig implements WebMvcConfigurer {
 
     
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
+    @Bean
+public CorsConfigurationSource corsConfigurationSource() {
 
-        registry.addMapping("/**")
-                .allowedOriginPatterns(
-                        "http://localhost:4200",   // desarrollo
-                        "https://genesisclub-frontend.onrender.com/"   // cualquier deploy de render
-                )
-                .allowedMethods("*")
-                .allowedHeaders("*")
-                .allowCredentials(true)
-                .maxAge(3600);
-    }
+    CorsConfiguration config = new CorsConfiguration();
+
+    config.setAllowedOrigins(List.of(
+            "http://localhost:4200",
+            "https://genesisclub-frontend.onrender.com"
+    ));
+
+    config.setAllowedMethods(List.of("*"));
+    config.setAllowedHeaders(List.of("*"));
+    config.setAllowCredentials(true);
+
+    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+    source.registerCorsConfiguration("/**", config);
+
+    return source;
+}
 }
 
