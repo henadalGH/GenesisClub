@@ -19,7 +19,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     private final JWTUtilityService jwtUtilityService;
     private final UsuarioRepository usuarioRepository;
 
-    // ✅ Pasamos ambos al constructor para que funcionen siempre en Render
     public JWTAuthorizationFilter(JWTUtilityService jwtUtilityService, UsuarioRepository usuarioRepository) {
         this.jwtUtilityService = jwtUtilityService;
         this.usuarioRepository = usuarioRepository;
@@ -31,6 +30,14 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
+
+        // 🚀 CLÁUSULA DE ESCAPE PARA RENDER
+        // Si la ruta es para crear una solicitud, saltamos todo el filtro de inmediato.
+        String path = request.getRequestURI();
+        if (path.contains("/api/solicitud/nuevo") || path.contains("/api/auth") || path.contains("/api/usuario/registro")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
 
         String header = request.getHeader("Authorization");
 
@@ -49,7 +56,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
             Long userId = Long.parseLong(claims.getSubject());
             
-            // Usamos el repositorio pasado por el constructor
             UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
 
             if (usuario != null) {
@@ -64,7 +70,6 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
             }
 
         } catch (Exception e) {
-            // Si el token falla, limpiamos y seguimos (permitiendo rutas permitAll)
             SecurityContextHolder.clearContext();
         }
 
