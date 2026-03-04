@@ -14,7 +14,7 @@ public void init() {
 }
 
 	public static void main(String[] args) {
-		SpringApplication.run(GenesisClubApplication.class, args);
+		SpringApplication.run(GenesisClubApplication.class, args); 
 	}
 
 }
