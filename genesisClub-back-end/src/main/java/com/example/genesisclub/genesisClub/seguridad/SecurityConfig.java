@@ -30,7 +30,6 @@ public class SecurityConfig {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    // ✅ Actualizado: Ahora le pasamos el repositorio al filtro
     @Bean
     public JWTAuthorizationFilter jwtAuthorizationFilter() {
         return new JWTAuthorizationFilter(jwtUtilityService, usuarioRepository);
@@ -39,46 +38,53 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-            // ✅ CAMBIO: Habilitamos CORS por defecto (importante para producción)
+            // 1. CORS: Usa la configuración de tu archivo CrossConfig
             .cors(Customizer.withDefaults()) 
+            
+            // 2. CSRF: Deshabilitado para APIs REST (Stateless)
             .csrf(csrf -> csrf.disable())
 
+            // 3. GESTIÓN DE PETICIONES (Rutas)
             .authorizeHttpRequests(auth -> auth
+                // Permitir siempre las peticiones de verificación de CORS (OPTIONS)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 
-                // 1. RUTAS PÚBLICAS
+                // --- RUTAS PÚBLICAS ---
                 .requestMatchers(
                     "/api/auth/**", 
                     "/api/usuario/registro", 
-                    "/api/solicitud/nuevo", 
+                    "/api/solicitud/nuevo/**", // Agregamos /** para ser más tolerantes en Render
                     "/email/**", 
                     "/api/invitacion/aceptar/**"
                 ).permitAll()
 
-                // 2. RUTAS DE ADMINISTRADOR
-                .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
+                // --- RUTAS DE ADMINISTRADOR ---
+                .requestMatchers("/api/solicitud/pendientes/**").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
 
-                // 3. RUTAS AUTENTICADAS (Cualquier rol)
+                // --- RUTAS AUTENTICADAS ---
                 .requestMatchers("/api/invitacion/**").authenticated()
 
-                // 4. RESTO DE LAS PETICIONES
+                // --- EL RESTO REQUIERE LOGIN ---
                 .anyRequest().authenticated()
             )
 
+            // 4. POLÍTICA SIN ESTADO (No guardamos sesiones en el servidor)
             .sessionManagement(session -> 
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
+            // 5. FILTRO JWT: Se ejecuta antes del filtro de usuario/password
             .addFilterBefore(
                 jwtAuthorizationFilter(), 
                 UsernamePasswordAuthenticationFilter.class
             )
 
+            // 6. MANEJO DE ERRORES: Personalizamos el 401
             .exceptionHandling(ex -> 
                 ex.authenticationEntryPoint((req, res, authEx) -> {
-                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
+                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado - Token inválido o ruta protegida");
                 })
             )
 

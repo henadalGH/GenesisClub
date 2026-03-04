@@ -17,7 +17,7 @@ public class CrossConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOriginPatterns(
                         "http://localhost:4200",   // desarrollo
-                        "https://*.onrender.com"   // cualquier deploy de render
+                        "https://genesisclub-frontend.onrender.com/"   // cualquier deploy de render
                 )
                 .allowedMethods("*")
                 .allowedHeaders("*")
