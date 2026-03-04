@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .requestMatchers(
                         "/api/auth/**",
                         "/api/usuario/registro",
-                        "/api/solicitud/nuevo/**",
+                        "/api/solicitud/nuevo",
                         "/email/**",
                         "/api/invitacion/aceptar/**"
                 ).permitAll()
