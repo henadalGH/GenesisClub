@@ -19,102 +19,102 @@
         import jakarta.servlet.http.HttpServletResponse;
 
         @Configuration
-        @EnableWebSecurity
-        @EnableMethodSecurity
-        public class SecurityConfig {
+@EnableWebSecurity
+@EnableMethodSecurity
+public class SecurityConfig {
 
-        private final JWTUtilityService jwtUtilityService;
-        private final UsuarioRepository usuarioRepository;
+    private final JWTUtilityService jwtUtilityService;
+    private final UsuarioRepository usuarioRepository;
 
-        public SecurityConfig(
-                JWTUtilityService jwtUtilityService,
-                UsuarioRepository usuarioRepository) {
-                this.jwtUtilityService = jwtUtilityService;
-                this.usuarioRepository = usuarioRepository;
-        }
+    public SecurityConfig(
+            JWTUtilityService jwtUtilityService,
+            UsuarioRepository usuarioRepository) {
+        this.jwtUtilityService = jwtUtilityService;
+        this.usuarioRepository = usuarioRepository;
+    }
 
-        // =========================================================
-        // 🔥 JWT FILTER
-        // =========================================================
-        @Bean
-        public JWTAuthorizationFilter jwtAuthorizationFilter() {
-                return new JWTAuthorizationFilter(jwtUtilityService, usuarioRepository);
-        }
+    // =========================================================
+    // 🔥 JWT FILTER
+    // =========================================================
+    @Bean
+    public JWTAuthorizationFilter jwtAuthorizationFilter() {
+        return new JWTAuthorizationFilter(jwtUtilityService, usuarioRepository);
+    }
 
-        // =========================================================
-        // 🔥 SECURITY PRINCIPAL
-        // =========================================================
-        @Bean
-        public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    // =========================================================
+    // 🔥 SECURITY PRINCIPAL
+    // =========================================================
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-                http
-                // CORS
-                .cors(Customizer.withDefaults())
+        http
+            // CORS
+            .cors(Customizer.withDefaults())
 
-                // SIN CSRF (API REST)
-                .csrf(csrf -> csrf.disable())
+            // SIN CSRF (API REST)
+            .csrf(csrf -> csrf.disable())
 
-                // Stateless (JWT)
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+            // Stateless (JWT)
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
 
-                // =================================================
-                // 🔥 AUTORIZACIÓN
-                // =================================================
-                .authorizeHttpRequests(auth -> auth
+            // =================================================
+            // 🔥 AUTORIZACIÓN
+            // =================================================
+            .authorizeHttpRequests(auth -> auth
 
-                        // preflight
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // preflight
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                        // ===============================
-                        // 🔓 PUBLICAS
-                        // ===============================
-                        .requestMatchers(
-                                "/api/auth/**",
-                                "/api/usuario/registro",
-                                "/api/solicitud/nuevo/**",
-                                "/email/**",
-                                "/api/invitacion/aceptar/**"
-                        ).permitAll()
+                // ===============================
+                // 🔓 PUBLICAS
+                // ===============================
+                .requestMatchers(
+                        "/api/auth/**",
+                        "/api/usuario/registro",
+                        "/api/solicitud/nuevo/**",
+                        "/email/**",
+                        "/api/invitacion/aceptar/**"
+                ).permitAll()
 
-                        // ===============================
-                        // 🔐 ADMIN
-                        // ===============================
-                        .requestMatchers("/api/solicitud/pendientes/**").hasRole("ADMIN")
-                        .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
-                        .requestMatchers("/api/socio/**").hasRole("ADMIN")
+                // ===============================
+                // 🔐 ADMIN
+                // ===============================
+                .requestMatchers("/api/solicitud/pendientes/**").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
+                .requestMatchers("/api/socio/**").hasRole("ADMIN")
 
-                        // ===============================
-                        // 🔐 LOGUEADOS
-                        // ===============================
-                        .requestMatchers("/api/invitacion/**").authenticated()
+                // ===============================
+                // 🔐 LOGUEADOS
+                // ===============================
+                .requestMatchers("/api/invitacion/**").authenticated()
 
-                        // resto protegido
-                        .anyRequest().authenticated()
-                )
+                // resto protegido
+                .anyRequest().authenticated()
+            )
 
-                // JWT filter
-                .addFilterBefore(
-                        jwtAuthorizationFilter(),
-                        UsernamePasswordAuthenticationFilter.class
-                )
+            // JWT filter
+            .addFilterBefore(
+                    jwtAuthorizationFilter(),
+                    UsernamePasswordAuthenticationFilter.class
+            )
 
-                // 401 custom
-                .exceptionHandling(ex ->
-                        ex.authenticationEntryPoint((req, res, e) ->
-                                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado")
-                        )
-                );
+            // 401 custom
+            .exceptionHandling(ex ->
+                    ex.authenticationEntryPoint((req, res, e) ->
+                            res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado")
+                    )
+            );
 
-                return http.build();
-        }
+        return http.build();
+    }
 
-        // =========================================================
-        // 🔥 PASSWORD
-        // =========================================================
-        @Bean
-        public PasswordEncoder passwordEncoder() {
-                return new BCryptPasswordEncoder();
-        }
-        }
+    // =========================================================
+    // 🔥 PASSWORD
+    // =========================================================
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+}

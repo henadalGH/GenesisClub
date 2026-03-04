@@ -7,33 +7,31 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-
-
 
 
 @Configuration
-public class CrossConfig implements WebMvcConfigurer {
+public class CrossConfig {
 
-    
     @Bean
-public CorsConfigurationSource corsConfigurationSource() {
+    public CorsConfigurationSource corsConfigurationSource() {
 
-    CorsConfiguration config = new CorsConfiguration();
+        CorsConfiguration config = new CorsConfiguration();
 
-    config.setAllowedOrigins(List.of(
-            "http://localhost:4200",
-            "https://genesisclub-frontend.onrender.com"
-    ));
+        config.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "https://genesisclub-frontend.onrender.com"
+        ));
 
-    config.setAllowedMethods(List.of("*"));
-    config.setAllowedHeaders(List.of("*"));
-    config.setAllowCredentials(true);
+        config.setAllowedMethods(List.of("*"));
+        config.setAllowedHeaders(List.of("*"));
+        config.setAllowCredentials(true);
 
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    source.registerCorsConfiguration("/**", config);
+        UrlBasedCorsConfigurationSource source =
+                new UrlBasedCorsConfigurationSource();
 
-    return source;
-}
+        source.registerCorsConfiguration("/**", config);
+
+        return source;
+    }
 }
 
