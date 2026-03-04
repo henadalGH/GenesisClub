@@ -57,85 +57,70 @@ public class RegistroUsuarioServicioImpl implements RegistroUsuarioServicio {
     // MÉTODO CENTRAL
     // =============================
     private ResponceDTO registrar(RegistroDTO dto, boolean desdeSolicitud) {
-
         ResponceDTO response = new ResponceDTO();
 
-        // =============================
-        // VALIDAR EMAIL
-        // =============================
+        // 1. Validar Email
         if (usuarioRepository.existsByEmail(dto.getEmail())) {
             response.setNumOfErrors(1);
             response.setMensage("El email ya está registrado");
             return response;
         }
 
-        // =============================
-        // CREAR USUARIO BASE
-        // =============================
+        // 2. Crear y persistir Usuario Base
         UsuarioEntity usuario = new UsuarioEntity();
         usuario.setNombre(dto.getNombre());
         usuario.setApellido(dto.getApellido());
         usuario.setEmail(dto.getEmail());
         usuario.setFechaCreacion(LocalDate.now());
 
-        // 🔥 SOLUCIÓN CONTRASEÑA
         if (desdeSolicitud) {
-            // ya viene encriptada
             usuario.setPassword(dto.getPassword());
         } else {
-            // registro normal
             usuario.setPassword(encoder.encode(dto.getPassword()));
         }
 
+        // IMPORTANTE: Asegúrate que dto.getRol() coincida con el tipo de dato que espera findByNombre
         RolEntity rol = rolRepository
                 .findByNombre(dto.getRol())
-                .orElseThrow();
+                .orElseThrow(() -> new RuntimeException("Rol no encontrado: " + dto.getRol()));
 
         usuario.setRol(rol);
+        
+        // Guardamos el usuario y obtenemos la entidad persistida (con ID)
+        UsuarioEntity usuarioGuardado = usuarioRepository.save(usuario);
 
-        usuarioRepository.save(usuario);
+        // 3. CREAR ENTIDAD POR ROL (Revisar tipos de Enum aquí)
+        // Usamos el nombre del rol para el switch si dto.getRol() es un String
+        String nombreRol = rol.getNombre().name(); // Asumiendo que RolEntity.getNombre() devuelve un Enum
 
-        // =============================
-        // CREAR ENTIDAD POR ROL
-        // =============================
-        switch (dto.getRol()) {
-
-            case ADMIN -> {
+        switch (nombreRol) {
+            case "ADMIN" -> {
                 AdminEntity admin = new AdminEntity();
-                admin.setUsuario(usuario);
+                admin.setUsuario(usuarioGuardado);
                 adminRepository.save(admin);
             }
-
-            case JUGADOR -> {
+            case "JUGADOR" -> {
                 JugadorEntity jugador = new JugadorEntity();
-                jugador.setUsuario(usuario);
+                jugador.setUsuario(usuarioGuardado);
                 jugadorRepository.save(jugador);
             }
-
-            case SOCIO -> {
-
+            case "SOCIO" -> {
                 EstadoSocioEnitity estado = estadoSocioRepository
-                        .findByEstado(
-                                dto.getEstado() != null
-                                        ? dto.getEstado()
-                                        : EstadoSocioEnums.ACTIVO
-                        )
-                        .orElseThrow();
+                        .findByEstado(dto.getEstado() != null ? dto.getEstado() : EstadoSocioEnums.ACTIVO)
+                        .orElseThrow(() -> new RuntimeException("Estado de socio no encontrado"));
 
                 SocioEntity socio = new SocioEntity();
-                socio.setUsuario(usuario);
+                socio.setUsuario(usuarioGuardado);
                 socio.setEstado(estado);
-
-                // 🔥 INICIALIZAR CONTADORES
                 socio.setCantidadInvitaciones(0);
                 socio.setNumPostulaciones(0);
                 socio.setUltimoMovimiento(LocalDate.now());
-
                 socioRepository.save(socio);
             }
+            default -> throw new RuntimeException("El rol " + nombreRol + " no tiene una entidad asociada definida en el switch.");
         }
 
-        response.setMensage("Usuario creado correctamente");
+        response.setMensage("Usuario creado correctamente con rol: " + nombreRol);
         return response;
     }
 }
