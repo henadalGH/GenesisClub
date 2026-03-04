@@ -1,8 +1,7 @@
 package com.example.genesisclub.genesisClub.Servicio.servicioImpl;
 
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.security.KeyFactory;
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -30,10 +29,10 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     @Value("classpath:jwtKeys/public_key.pem")
     private Resource publicResource;
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 4; // 4 horas
+    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 4;
 
     // ======================================================
-    // 🔥 GENERAR TOKEN (USER + ROL)
+    // GENERAR TOKEN
     // ======================================================
     @Override
     public String generateJWT(Long userId, String rol) throws Exception {
@@ -45,7 +44,7 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
 
         JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
                 .subject(userId.toString())
-                .claim("rol", rol)   // 🔥 CLAIM PERSONALIZADO
+                .claim("rol", rol)
                 .issueTime(now)
                 .expirationTime(new Date(now.getTime() + EXPIRATION_TIME))
                 .build();
@@ -61,7 +60,7 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     }
 
     // ======================================================
-    // 🔥 PARSEAR Y VALIDAR TOKEN
+    // VALIDAR TOKEN
     // ======================================================
     @Override
     public JWTClaimsSet parseJWT(String jwt) throws Exception {
@@ -85,25 +84,16 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
         return claims;
     }
 
-    // ======================================================
-    // 🔥 OBTENER USER ID
-    // ======================================================
     @Override
     public Long getUserId(String jwt) throws Exception {
         return Long.parseLong(parseJWT(jwt).getSubject());
     }
 
-    // ======================================================
-    // 🔥 OBTENER ROL
-    // ======================================================
     @Override
     public String getRol(String jwt) throws Exception {
         return parseJWT(jwt).getStringClaim("rol");
     }
 
-    // ======================================================
-    // 🔥 VALIDACIÓN SIMPLE
-    // ======================================================
     @Override
     public boolean isTokenValid(String jwt) {
         try {
@@ -115,40 +105,37 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     }
 
     // ======================================================
-    // 🔥 CARGAR PRIVATE KEY
+    // 🔥 FIX REAL: leer desde InputStream (NO Path)
     // ======================================================
     private PrivateKey loadPrivateKey(Resource resource) throws Exception {
 
-        byte[] keyBytes = Files.readAllBytes(Path.of(resource.getURI()));
+        try (InputStream is = resource.getInputStream()) {
 
-        String key = new String(keyBytes, StandardCharsets.UTF_8)
-                .replace("-----BEGIN PRIVATE KEY-----", "")
-                .replace("-----END PRIVATE KEY-----", "")
-                .replaceAll("\\s", "");
+            String key = new String(is.readAllBytes(), StandardCharsets.UTF_8)
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replace("-----END PRIVATE KEY-----", "")
+                    .replaceAll("\\s", "");
 
-        byte[] decoded = Base64.getDecoder().decode(key);
+            byte[] decoded = Base64.getDecoder().decode(key);
 
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-        return keyFactory.generatePrivate(new PKCS8EncodedKeySpec(decoded));
+            return KeyFactory.getInstance("RSA")
+                    .generatePrivate(new PKCS8EncodedKeySpec(decoded));
+        }
     }
 
-    // ======================================================
-    // 🔥 CARGAR PUBLIC KEY
-    // ======================================================
     private PublicKey loadPublicKey(Resource resource) throws Exception {
 
-        byte[] keyBytes = Files.readAllBytes(Path.of(resource.getURI()));
+        try (InputStream is = resource.getInputStream()) {
 
-        String key = new String(keyBytes, StandardCharsets.UTF_8)
-                .replace("-----BEGIN PUBLIC KEY-----", "")
-                .replace("-----END PUBLIC KEY-----", "")
-                .replaceAll("\\s", "");
+            String key = new String(is.readAllBytes(), StandardCharsets.UTF_8)
+                    .replace("-----BEGIN PUBLIC KEY-----", "")
+                    .replace("-----END PUBLIC KEY-----", "")
+                    .replaceAll("\\s", "");
 
-        byte[] decoded = Base64.getDecoder().decode(key);
+            byte[] decoded = Base64.getDecoder().decode(key);
 
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-
-        return keyFactory.generatePublic(new X509EncodedKeySpec(decoded));
+            return KeyFactory.getInstance("RSA")
+                    .generatePublic(new X509EncodedKeySpec(decoded));
+        }
     }
 }
