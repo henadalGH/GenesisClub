@@ -1,6 +1,5 @@
 package com.example.genesisclub.genesisClub.seguridad;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,76 +20,111 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JWTUtilityService jwtUtilityService;
+    private final JWTUtilityService jwtUtilityService;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
+    public SecurityConfig(
+            JWTUtilityService jwtUtilityService,
+            UsuarioRepository usuarioRepository) {
+        this.jwtUtilityService = jwtUtilityService;
+        this.usuarioRepository = usuarioRepository;
+    }
 
+    // =========================================================
+    // 🔥 JWT FILTER
+    // =========================================================
     @Bean
     public JWTAuthorizationFilter jwtAuthorizationFilter() {
         return new JWTAuthorizationFilter(jwtUtilityService, usuarioRepository);
     }
 
+    // =========================================================
+    // 🔥 SECURITY PRINCIPAL
+    // =========================================================
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http
-            // 1. CORS: Usa la configuración de tu archivo CrossConfig
-            .cors(Customizer.withDefaults()) 
-            
-            // 2. CSRF: Deshabilitado para APIs REST (Stateless)
+
+            // ✅ CORS (usa tu CrossConfig)
+            .cors(Customizer.withDefaults())
+
+            // ✅ API REST sin CSRF
             .csrf(csrf -> csrf.disable())
 
-            // 3. GESTIÓN DE PETICIONES (Rutas)
+            // ✅ Sin sesiones
+            .sessionManagement(session ->
+                    session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+
+            // =================================================
+            // 🔥 AUTORIZACIÓN DE RUTAS
+            // =================================================
             .authorizeHttpRequests(auth -> auth
-                // Permitir siempre las peticiones de verificación de CORS (OPTIONS)
+
+                // preflight
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                
-                // --- RUTAS PÚBLICAS ---
+
+                // ===============================
+                // 🔥 RUTAS PÚBLICAS
+                // ===============================
                 .requestMatchers(
-                    "/api/auth/**", 
-                    "/api/usuario/registro", 
-                    "/api/solicitud/nuevo/**", // Agregamos /** para ser más tolerantes en Render
-                    "/email/**", 
-                    "/api/invitacion/aceptar/**"
+                        "/api/auth/**",
+                        "/api/usuario/registro",
+
+                        // 👇 LA CLAVE (ambas)
+                        "/api/solicitud/nuevo",
+                        "/api/solicitud/nuevo/**",
+
+                        "/email/**",
+                        "/api/invitacion/aceptar/**"
                 ).permitAll()
 
-                // --- RUTAS DE ADMINISTRADOR ---
+                // ===============================
+                // 🔥 ADMIN
+                // ===============================
                 .requestMatchers("/api/solicitud/pendientes/**").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
 
-                // --- RUTAS AUTENTICADAS ---
+                // ===============================
+                // 🔥 LOGUEADOS
+                // ===============================
                 .requestMatchers("/api/invitacion/**").authenticated()
 
-                // --- EL RESTO REQUIERE LOGIN ---
+                // resto protegido
                 .anyRequest().authenticated()
             )
 
-            // 4. POLÍTICA SIN ESTADO (No guardamos sesiones en el servidor)
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-
-            // 5. FILTRO JWT: Se ejecuta antes del filtro de usuario/password
+            // =================================================
+            // 🔥 JWT antes del login filter
+            // =================================================
             .addFilterBefore(
-                jwtAuthorizationFilter(), 
-                UsernamePasswordAuthenticationFilter.class
+                    jwtAuthorizationFilter(),
+                    UsernamePasswordAuthenticationFilter.class
             )
 
-            // 6. MANEJO DE ERRORES: Personalizamos el 401
-            .exceptionHandling(ex -> 
-                ex.authenticationEntryPoint((req, res, authEx) -> {
-                    res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado - Token inválido o ruta protegida");
-                })
+            // =================================================
+            // 🔥 401 personalizado
+            // =================================================
+            .exceptionHandling(ex ->
+                    ex.authenticationEntryPoint((req, res, e) ->
+                            res.sendError(
+                                    HttpServletResponse.SC_UNAUTHORIZED,
+                                    "No autorizado"
+                            )
+                    )
             )
 
             .build();
     }
 
+    // =========================================================
+    // 🔥 PASSWORD
+    // =========================================================
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
