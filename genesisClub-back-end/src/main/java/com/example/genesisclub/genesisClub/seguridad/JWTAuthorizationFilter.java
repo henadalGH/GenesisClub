@@ -1,8 +1,6 @@
 package com.example.genesisclub.genesisClub.seguridad;
 
 import java.io.IOException;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -18,59 +16,58 @@ import jakarta.servlet.http.HttpServletResponse;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private JWTUtilityService jwtUtilityService;
+    private final JWTUtilityService jwtUtilityService;
+    private final UsuarioRepository usuarioRepository;
 
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-
-    public JWTAuthorizationFilter(JWTUtilityService jwtUtilityService) {
+    // ✅ Pasamos ambos al constructor para que funcionen siempre en Render
+    public JWTAuthorizationFilter(JWTUtilityService jwtUtilityService, UsuarioRepository usuarioRepository) {
         this.jwtUtilityService = jwtUtilityService;
+        this.usuarioRepository = usuarioRepository;
     }
 
     @Override
-protected void doFilterInternal(
-        HttpServletRequest request,
-        HttpServletResponse response,
-        FilterChain filterChain)
-        throws ServletException, IOException {
+    protected void doFilterInternal(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            FilterChain filterChain)
+            throws ServletException, IOException {
 
-    String header = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
-    // ✅ MEJORA: Validar si el header es nulo, no empieza con Bearer o contiene "null"/"undefined"
-    if (header == null || !header.startsWith("Bearer ") || 
-        header.equalsIgnoreCase("Bearer null") || 
-        header.equalsIgnoreCase("Bearer undefined")) {
-        
-        filterChain.doFilter(request, response);
-        return;
-    }
-
-    String token = header.substring(7);
-
-    try {
-        JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
-        Long userId = Long.parseLong(claims.getSubject());
-        UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
-
-        if (usuario != null) {
-            UsernamePasswordAuthenticationToken authenticationToken =
-                    new UsernamePasswordAuthenticationToken(
-                            usuario,
-                            null,
-                            usuario.getAuthorities()
-                    );
-
-            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        // ✅ Filtramos la "basura" de Angular
+        if (header == null || !header.startsWith("Bearer ") || 
+            header.equalsIgnoreCase("Bearer null") || 
+            header.equalsIgnoreCase("Bearer undefined")) {
+            
+            filterChain.doFilter(request, response);
+            return;
         }
 
-    } catch (Exception e) {
-        // ✅ MEJORA: No lances RuntimeException aquí. 
-        // Si el token es inválido, simplemente no autentiques y deja que 
-        // SecurityConfig decida si la ruta requiere auth o es permitAll().
-        SecurityContextHolder.clearContext();
-    }
+        String token = header.substring(7);
 
-    filterChain.doFilter(request, response);
-}
+        try {
+            JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
+            Long userId = Long.parseLong(claims.getSubject());
+            
+            // Usamos el repositorio pasado por el constructor
+            UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
+
+            if (usuario != null) {
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(
+                                usuario,
+                                null,
+                                usuario.getAuthorities()
+                        );
+
+                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+            }
+
+        } catch (Exception e) {
+            // Si el token falla, limpiamos y seguimos (permitiendo rutas permitAll)
+            SecurityContextHolder.clearContext();
+        }
+
+        filterChain.doFilter(request, response);
+    }
 }
