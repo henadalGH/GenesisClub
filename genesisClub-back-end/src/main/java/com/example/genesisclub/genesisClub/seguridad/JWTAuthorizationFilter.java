@@ -1,9 +1,6 @@
 package com.example.genesisclub.genesisClub.seguridad;
 
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,47 +29,48 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
     }
 
     @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain)
-            throws ServletException, IOException {
+protected void doFilterInternal(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        FilterChain filterChain)
+        throws ServletException, IOException {
 
-        String header = request.getHeader("Authorization");
+    String header = request.getHeader("Authorization");
 
-        if (header == null || !header.startsWith("Bearer ")) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        String token = header.substring(7);
-
-        try {
-            JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
-
-            Long userId = Long.parseLong(claims.getSubject());
-
-            UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
-
-            if (usuario != null) {
-                UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(
-                                usuario,
-                                null,
-                                usuario.getAuthorities() // roles de la DB
-                        );
-
-                SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-            }
-
-        } catch (ParseException e) {
-            throw new RuntimeException("Error al analizar el JWT", e);
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new RuntimeException("Error en la configuración de la clave JWT", e);
-        } catch (Exception e) {
-            throw new RuntimeException("Error inesperado al validar el JWT", e);
-        }
-
+    // ✅ MEJORA: Validar si el header es nulo, no empieza con Bearer o contiene "null"/"undefined"
+    if (header == null || !header.startsWith("Bearer ") || 
+        header.equalsIgnoreCase("Bearer null") || 
+        header.equalsIgnoreCase("Bearer undefined")) {
+        
         filterChain.doFilter(request, response);
+        return;
     }
+
+    String token = header.substring(7);
+
+    try {
+        JWTClaimsSet claims = jwtUtilityService.parseJWT(token);
+        Long userId = Long.parseLong(claims.getSubject());
+        UsuarioEntity usuario = usuarioRepository.findById(userId).orElse(null);
+
+        if (usuario != null) {
+            UsernamePasswordAuthenticationToken authenticationToken =
+                    new UsernamePasswordAuthenticationToken(
+                            usuario,
+                            null,
+                            usuario.getAuthorities()
+                    );
+
+            SecurityContextHolder.getContext().setAuthentication(authenticationToken);
+        }
+
+    } catch (Exception e) {
+        // ✅ MEJORA: No lances RuntimeException aquí. 
+        // Si el token es inválido, simplemente no autentiques y deja que 
+        // SecurityConfig decida si la ruta requiere auth o es permitAll().
+        SecurityContextHolder.clearContext();
+    }
+
+    filterChain.doFilter(request, response);
+}
 }

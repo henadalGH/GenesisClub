@@ -39,24 +39,34 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
             .authorizeHttpRequests(authRequest ->
         authRequest
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+    // 1. GESTIÓN DE CORS (Preflight)
+    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // públicas
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/usuario/registro").permitAll()
-                .requestMatchers("/api/solicitud/nuevo").permitAll()
-                .requestMatchers("/email/**").permitAll()
-                .requestMatchers("/api/invitacion/aceptar/**").permitAll()
+    // 2. RUTAS PÚBLICAS (Sin token)
+    // Agrupamos auth, registro y la creación de solicitudes
+    .requestMatchers("/api/auth/**").permitAll()
+    .requestMatchers("/api/usuario/registro").permitAll()
+    .requestMatchers("/api/solicitud/nuevo").permitAll() 
+    .requestMatchers("/email/**").permitAll()
+    
+    // IMPORTANTE: Esta debe ir ANTES que la regla general de /api/invitacion/**
+    .requestMatchers("/api/invitacion/aceptar/**").permitAll()
 
-                // protegidas
-                .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
-                .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
-                .requestMatchers("/api/socio/todos").hasRole("ADMIN")
-                .requestMatchers("/api/socio/**").hasRole("ADMIN")
-                .requestMatchers("/api/invitacion/**").authenticated()
+    // 3. RUTAS DE ADMINISTRADOR (Rol específico)
+    // Todo lo que sea gestión de socios o revisión de solicitudes
+    .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
+    .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
+    .requestMatchers("/api/socio/**").hasRole("ADMIN") 
+    // Nota: /api/socio/** ya cubre /api/socio/todos, así que ahorramos una línea
 
-                .anyRequest().authenticated()
+    // 4. RUTAS DE USUARIO AUTENTICADO (Cualquier rol)
+    // Aquí entran las funciones de invitación que NO son el "aceptar" público
+    .requestMatchers("/api/invitacion/**").authenticated()
+
+    // 5. BLOQUEO POR DEFECTO
+    .anyRequest().authenticated()
 )
+
 
 
             .sessionManagement(sessionM ->

@@ -23,10 +23,8 @@ import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSocioRepository;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 
-import jakarta.transaction.Transactional;
 
 @Service
-@Transactional
 public class RegistroUsuarioServicioImpl implements RegistroUsuarioServicio {
 
     @Autowired private UsuarioRepository usuarioRepository;
