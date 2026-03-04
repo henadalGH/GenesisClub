@@ -2,11 +2,9 @@ package com.example.genesisclub.genesisClub.seguridad;
 
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
-import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,7 +21,6 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JWTUtilityService jwtUtilityService;
@@ -42,48 +39,27 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // 1. CORS: Configuración explícita para producción
+            // 1. ELIMINAR EL BLOQUEO DE NAVEGADOR (CORS)
             .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-            
-            // 2. CSRF: Deshabilitado para APIs REST
             .csrf(csrf -> csrf.disable())
-
-            // 3. Estado: Sin sesión (JWT puro)
-            .sessionManagement(session -> 
-                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            )
-
-            // 4. RUTAS: Configuración de permisos
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            
             .authorizeHttpRequests(auth -> auth
-                // Permitir siempre el Preflight (OPTIONS)
+                // 2. PERMITIR "PREFLIGHT" (Lo que fallaba en tu imagen)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // RUTAS PÚBLICAS (Exactas, sin asteriscos conflictivos)
-                .requestMatchers("/api/auth/login").permitAll()
-                .requestMatchers("/api/auth/registro").permitAll()
-                .requestMatchers("/api/usuario/registro").permitAll()
-                .requestMatchers("/api/solicitud/nuevo").permitAll()
-                .requestMatchers("/api/solicitud/nuevo/").permitAll()
-                .requestMatchers("/email/enviar").permitAll()
                 
-                // RUTAS DE ADMIN (Asegúrate de que el usuario tenga ROLE_ADMIN en DB)
+                // 3. RUTAS LIBRES (Con comodines para que no falle por una barra)
+                .requestMatchers("/api/auth/**").permitAll()
+                .requestMatchers("/api/usuario/registro/**").permitAll()
+                .requestMatchers("/api/solicitud/nuevo/**").permitAll()
+                .requestMatchers("/email/enviar/**").permitAll()
+                
+                // 4. SEGURIDAD PARA EL RESTO
                 .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
-                .requestMatchers("/api/solicitud/actualizar").hasRole("ADMIN")
-                .requestMatchers("/api/socio/**").hasRole("ADMIN")
-
-                // Todo lo demás requiere estar logueado
                 .anyRequest().authenticated()
             )
-
-            // 5. FILTROS: JWT antes que el de usuario/password
-            .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-
-            // 6. MANEJO DE ERRORES: Si algo falla, devuelve 401 limpio
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((request, response, authException) -> {
-                    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
-                })
-            );
+            // 5. TU FILTRO JWT
+            .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -91,20 +67,12 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        
-        // Orígenes permitidos (Local + Render)
-        config.setAllowedOrigins(List.of(
-            "http://localhost:4200", 
-            "https://genesisclub-frontend.onrender.com"
-        ));
-        
-        // Métodos y Headers
-        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept", "X-Requested-With"));
-        config.setExposedHeaders(List.of("Authorization"));
+        // Permitimos todo para que Render deje de rebotar la conexión
+        config.setAllowedOriginPatterns(List.of("*")); 
+        config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Accept"));
         config.setAllowCredentials(true);
-        config.setMaxAge(3600L);
-
+        
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
