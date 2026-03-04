@@ -1,24 +1,27 @@
-        package com.example.genesisclub.genesisClub.seguridad;
+package com.example.genesisclub.genesisClub.seguridad;
 
-        import org.springframework.context.annotation.Bean;
-        import org.springframework.context.annotation.Configuration;
-        import org.springframework.http.HttpMethod;
-        import org.springframework.security.config.Customizer;
-        import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-        import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-        import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-        import org.springframework.security.config.http.SessionCreationPolicy;
-        import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-        import org.springframework.security.crypto.password.PasswordEncoder;
-        import org.springframework.security.web.SecurityFilterChain;
-        import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-        import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
-        import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
+import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
+import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
 
-        import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletResponse;
+import java.util.List;
 
-        @Configuration
+@Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
@@ -33,43 +36,32 @@ public class SecurityConfig {
         this.usuarioRepository = usuarioRepository;
     }
 
-    // =========================================================
-    // 🔥 JWT FILTER
-    // =========================================================
     @Bean
     public JWTAuthorizationFilter jwtAuthorizationFilter() {
         return new JWTAuthorizationFilter(jwtUtilityService, usuarioRepository);
     }
 
-    // =========================================================
-    // 🔥 SECURITY PRINCIPAL
-    // =========================================================
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-            // CORS
-            .cors(Customizer.withDefaults())
+            // 1. CORS: Debe configurarse explícitamente aquí
+            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
 
-            // SIN CSRF (API REST)
+            // 2. Desactivar CSRF para APIs REST
             .csrf(csrf -> csrf.disable())
 
-            // Stateless (JWT)
+            // 3. Manejo de sesión sin estado (JWT)
             .sessionManagement(session ->
                     session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
 
-            // =================================================
-            // 🔥 AUTORIZACIÓN
-            // =================================================
+            // 4. Autorización de rutas
             .authorizeHttpRequests(auth -> auth
-
-                // preflight
+                // Permitir todas las opciones (Preflight)
                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // ===============================
-                // 🔓 PUBLICAS
-                // ===============================
+                // Rutas públicas
                 .requestMatchers(
                         "/api/auth/**",
                         "/api/usuario/registro",
@@ -78,29 +70,25 @@ public class SecurityConfig {
                         "/api/invitacion/aceptar/**"
                 ).permitAll()
 
-                // ===============================
-                // 🔐 ADMIN
-                // ===============================
+                // Rutas de ADMIN
                 .requestMatchers("/api/solicitud/pendientes/**").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
 
-                // ===============================
-                // 🔐 LOGUEADOS
-                // ===============================
+                // Rutas para usuarios logueados
                 .requestMatchers("/api/invitacion/**").authenticated()
 
-                // resto protegido
+                // Cualquier otra ruta requiere autenticación
                 .anyRequest().authenticated()
             )
 
-            // JWT filter
+            // 5. Filtro JWT antes del de usuario/password
             .addFilterBefore(
                     jwtAuthorizationFilter(),
                     UsernamePasswordAuthenticationFilter.class
             )
 
-            // 401 custom
+            // 6. Manejo de errores de autenticación
             .exceptionHandling(ex ->
                     ex.authenticationEntryPoint((req, res, e) ->
                             res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado")
@@ -111,8 +99,38 @@ public class SecurityConfig {
     }
 
     // =========================================================
-    // 🔥 PASSWORD
+    // 🔥 CONFIGURACIÓN CORS INTEGRADA
     // =========================================================
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        
+        // Orígenes permitidos
+        config.setAllowedOrigins(List.of(
+                "http://localhost:4200",
+                "https://genesisclub-frontend.onrender.com"
+        ));
+        
+        // Métodos permitidos
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
+        
+        // Headers permitidos
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
+        
+        // Headers expuestos (necesario para que el front vea el Token si lo mandas en el header)
+        config.setExposedHeaders(List.of("Authorization"));
+        
+        // Permitir envío de credenciales/cookies
+        config.setAllowCredentials(true);
+        
+        // Tiempo de caché para el preflight (opcional, ayuda al rendimiento)
+        config.setMaxAge(3600L);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
