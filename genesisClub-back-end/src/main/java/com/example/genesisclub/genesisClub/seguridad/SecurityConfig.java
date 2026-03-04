@@ -22,6 +22,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
+    // ✅ RECOMENDACIÓN: Inyectar vía constructor o directamente en el Bean
     @Autowired
     private JWTUtilityService jwtUtilityService;
 
@@ -31,65 +32,30 @@ public class SecurityConfig {
     }
 
     @Bean
-SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-    return http
-            .cors(cors -> {}) // 🔥 HABILITA CORS (OBLIGATORIO)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+            .cors(cors -> cors.disable()) // Render a veces se pelea con esto si el front es local
             .csrf(csrf -> csrf.disable())
-
-            .authorizeHttpRequests(authRequest ->
-        authRequest
-    // 1. GESTIÓN DE CORS (Preflight)
-    .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-    // 2. RUTAS PÚBLICAS (Sin token)
-    // Agrupamos auth, registro y la creación de solicitudes
-    .requestMatchers("/api/auth/**").permitAll()
-    .requestMatchers("/api/usuario/registro").permitAll()
-    .requestMatchers("/api/solicitud/nuevo").permitAll() 
-    .requestMatchers("/email/**").permitAll()
-    
-    // IMPORTANTE: Esta debe ir ANTES que la regla general de /api/invitacion/**
-    .requestMatchers("/api/invitacion/aceptar/**").permitAll()
-
-    // 3. RUTAS DE ADMINISTRADOR (Rol específico)
-    // Todo lo que sea gestión de socios o revisión de solicitudes
-    .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
-    .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
-    .requestMatchers("/api/socio/**").hasRole("ADMIN") 
-    // Nota: /api/socio/** ya cubre /api/socio/todos, así que ahorramos una línea
-
-    // 4. RUTAS DE USUARIO AUTENTICADO (Cualquier rol)
-    // Aquí entran las funciones de invitación que NO son el "aceptar" público
-    .requestMatchers("/api/invitacion/**").authenticated()
-
-    // 5. BLOQUEO POR DEFECTO
-    .anyRequest().authenticated()
-)
-
-
-
-            .sessionManagement(sessionM ->
-                    sessionM.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                // PÚBLICAS
+                .requestMatchers("/api/auth/**", "/api/usuario/registro", "/api/solicitud/nuevo", "/email/**", "/api/invitacion/aceptar/**").permitAll()
+                // ADMIN
+                .requestMatchers("/api/solicitud/pendientes", "/api/solicitud/actualizar/**", "/api/socio/**").hasRole("ADMIN")
+                // AUTH
+                .requestMatchers("/api/invitacion/**").authenticated()
+                .anyRequest().authenticated()
             )
-
-            .addFilterBefore(
-                    jwtAuthorizationFilter(),
-                    UsernamePasswordAuthenticationFilter.class
-            )
-
-            .exceptionHandling(exceptionHandling ->
-                    exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
-                    })
-            )
-
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(ex -> ex.authenticationEntryPoint((req, res, authEx) -> {
+                res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
+            }))
             .build();
-}
-
+    }
 
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }
