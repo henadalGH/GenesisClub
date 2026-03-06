@@ -23,13 +23,12 @@
         </div>
       </header>
 
-
       <!-- Info -->
       <div class="info-grid">
 
         <div class="info-item">
-          <span>ID Socio</span>
-          <strong>#{{ socio().id }}</strong>
+          <span>Numero de Socio</span>
+          <strong>{{ socio().id }}</strong>
         </div>
 
         <div class="info-item">
@@ -37,16 +36,16 @@
 
           <span
             class="badge"
-            [class.activo]="socio().estado_socio?.nombre === 'ACTIVO'"
-            [class.bloqueado]="socio().estado_socio?.nombre === 'BLOQUEADO'"
-            [class.suspendido]="socio().estado_socio?.nombre === 'SUSPENDIDO'">
+            [class.activo]="socio().estado === 'ACTIVO'"
+            [class.bloqueado]="socio().estado === 'BLOQUEADO'"
+            [class.suspendido]="socio().estado === 'SUSPENDIDO'">
 
-            {{ socio().estado_socio?.nombre || 'SIN ESTADO' }}
+            {{ socio().estado || 'SIN ESTADO' }}
           </span>
+
         </div>
 
       </div>
-
 
       <!-- Stats -->
       <div class="stats">
@@ -71,7 +70,6 @@
 
       </div>
 
-
       <!-- Botón -->
       <footer class="actions">
         <button class="btn" [routerLink]="['/listaSocios']">
@@ -82,4 +80,5 @@
     </section>
 
   }
+
 </div>
