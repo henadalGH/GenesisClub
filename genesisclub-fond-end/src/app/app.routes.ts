@@ -15,6 +15,8 @@ import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio
 import { VerSocio } from './Administrador/ver-socio/ver-socio';
 import { AuthGuard } from './ServiciosCompartidos/auth-guard-servicio';
 import { RegistroInvitado } from './ComponentesPublico/registro-invitado/registro-invitado';
+import { CrearRubros } from './Administrador/Rubros/crear-rubros/crear-rubros';
+import { ListarRubros } from './Administrador/Rubros/listar-rubros/listar-rubros';
 
 
 export const routes: Routes = [
@@ -28,6 +30,8 @@ export const routes: Routes = [
   { path: 'solicitud', component: SolicitudSocio },
   { path: 'inicioRubro', component: InicioRubros },
   { path: "registroInvitado", component: RegistroInvitado},
+  {path: "listaRubros", component: ListarRubros},
+  {path: "crearRubros", component: CrearRubros},
 
 
   // =========================

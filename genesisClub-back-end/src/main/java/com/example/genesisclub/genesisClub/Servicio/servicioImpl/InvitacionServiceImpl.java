@@ -60,6 +60,7 @@ public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO 
     invitacion.setSocioOrigen(socioOrigen);
     invitacion.setEmailDestino(dto.getEmailDestino());
     invitacion.setToken(token);
+    invitacion.setFechaEnvio(LocalDateTime.now());
     invitacion.setFechaExpiracion(LocalDateTime.now().plusDays(2));
     invitacion.setEstado(estado);
 
