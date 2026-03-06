@@ -15,5 +15,6 @@ public class SolicitudDTO {
     private String contacto;
     private LocalDate fechaSolicitud;
     private EstadoSolicitudEnums estado;
+    private String token;
 
 }

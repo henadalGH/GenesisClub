@@ -2,7 +2,7 @@ package com.example.genesisclub.genesisClub.Controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.Reques.InvitacionRequestDTO;
@@ -23,7 +23,7 @@ public class InvitacionController {
      * Acceso: Solo SOCIOS o ADMINS logueados.
      * @throws MessagingException 
      */
-    @Secured({"ROLE_SOCIO", "ROLE_ADMIN"})
+    @PreAuthorize("hasRole('SOCIO')")
     @PostMapping("/crear/{socioId}")
     public ResponseEntity<InvitacionResponseDTO> crearInvitacion(
             @PathVariable Long socioId,

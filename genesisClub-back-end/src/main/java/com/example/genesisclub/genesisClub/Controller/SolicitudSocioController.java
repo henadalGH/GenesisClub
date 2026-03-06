@@ -20,7 +20,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 @RequestMapping("/api/solicitud")
 public class SolicitudSocioController {
@@ -28,42 +27,55 @@ public class SolicitudSocioController {
     @Autowired
     private SolicitudSerSocioService solicitudSerSocioService;
 
+    // ======================================================
+    // REGISTRO NORMAL (PÚBLICO)
+    // ======================================================
     @PostMapping("/nuevo")
     public ResponseEntity<ResponceDTO> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
-        
         ResponceDTO response = solicitudSerSocioService.crearSolicitud(solicitud, null);
 
-        // Si el Service detectó que el email ya existe (Usuario o Solicitud)
         if (response.getNumOfErrors() > 0) {
-            // Devolvemos 400 Bad Request para que Angular sepa que es un error de validación
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 
-        // Si se creó correctamente, devolvemos 201 Created (es más preciso que OK para creaciones)
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    // ======================================================
+    // REGISTRO POR INVITACIÓN (PÚBLICO)
+    // ======================================================
+    @PostMapping("/registro-invitado")
+    public ResponseEntity<ResponceDTO> registrarConInvitacion(
+            @RequestBody SolicitudDTO solicitud,
+            @RequestParam String token) { // Recibe el token desde la URL (?token=...)
 
+        ResponceDTO response = solicitudSerSocioService.crearSolicitudDesdeInvitacion(solicitud, token);
+
+        if (response.getNumOfErrors() > 0) {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // ======================================================
+    // GESTIÓN DEL ADMINISTRADOR (PROTEGIDO)
+    // ======================================================
+    
     @GetMapping("/pendientes")
-@PreAuthorize("hasRole('ADMIN')") // solo admin puede acceder
-public ResponseEntity<?> obtenerSolicitudesPendientes() {
-    List<SolicitudDTO> pendientes = solicitudSerSocioService.obtenerSolicitudesPendientes();
-
-    return new ResponseEntity<>(pendientes, HttpStatus.OK);
-}
-
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<List<SolicitudDTO>> obtenerSolicitudesPendientes() {
+        List<SolicitudDTO> pendientes = solicitudSerSocioService.obtenerSolicitudesPendientes();
+        return new ResponseEntity<>(pendientes, HttpStatus.OK);
+    }
 
     @PutMapping("/actualizar/{id}")
-@PreAuthorize("hasRole('ADMIN')")
-public ResponseEntity<ResponceDTO> actualizarEstadoSolicitud(
-        @PathVariable Long id,
-        @RequestParam EstadoSolicitudEnums nuevoEstado // 1. Tipado directo
-) {
-    // 2. Lógica simplificada
-    ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
-    
-    return ResponseEntity.ok(response);
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ResponceDTO> actualizarEstadoSolicitud(
+            @PathVariable Long id,
+            @RequestParam EstadoSolicitudEnums nuevoEstado
+    ) {
+        ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
+        return ResponseEntity.ok(response);
+    }
 }
-
-}
-

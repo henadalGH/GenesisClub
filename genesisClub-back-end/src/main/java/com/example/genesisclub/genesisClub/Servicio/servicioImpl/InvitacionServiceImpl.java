@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.Reques.InvitacionRequestDTO;
@@ -19,6 +20,8 @@ import com.example.genesisclub.genesisClub.Servicio.EmailService;
 import com.example.genesisclub.genesisClub.Servicio.InvitacionService;
 
 import jakarta.mail.MessagingException;
+import org.springframework.transaction.annotation.Transactional;
+
 
 
 @Service
@@ -36,22 +39,23 @@ public class InvitacionServiceImpl implements InvitacionService {
     @Autowired
     private EmailService emailService;
 
+    @Value("${app.front.url}")
+    private String frontUrl;
+
+    @Transactional
     @Override
 public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO dto) throws MessagingException {
 
-    // 1️⃣ validar socio origen
-    SocioEntity socioOrigen = socioRepository.findById(socioId)
+    // ✅ buscar socio por usuarioId (NO por id de socio)
+    SocioEntity socioOrigen = socioRepository.findByUsuario_Id(socioId)
             .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
 
-    // 2️⃣ buscar estado PENDIENTE
     EstadoInvitacionEntity estado = estadoRepository
             .findByEstado(EstadoinvitacionEnums.PENDIENTE)
             .orElseThrow(() -> new RuntimeException("Estado no configurado"));
 
-    // 3️⃣ generar token único
     String token = UUID.randomUUID().toString();
 
-    // 4️⃣ crear entidad
     InvitacionEntity invitacion = new InvitacionEntity();
     invitacion.setSocioOrigen(socioOrigen);
     invitacion.setEmailDestino(dto.getEmailDestino());
@@ -61,12 +65,9 @@ public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO 
 
     invitacionRepository.save(invitacion);
 
-    // 🚀 CORRECCIÓN AQUÍ: Accedemos al nombre a través de la relación con Usuario
-    // Asegúrate de que los nombres de los métodos coincidan con tus entidades
-    String nombreUsuario = socioOrigen.getUsuario().getNombre(); 
+    String nombreUsuario = socioOrigen.getUsuario().getNombre();
     enviarEmailInvitacion(invitacion, nombreUsuario);
 
-    // 5️⃣ mapear respuesta
     InvitacionResponseDTO response = new InvitacionResponseDTO();
     response.setId(invitacion.getId());
     response.setEmailDestino(invitacion.getEmailDestino());
@@ -80,7 +81,7 @@ public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO 
     
     private void enviarEmailInvitacion(InvitacionEntity invitacion, String nombreSocio) throws MessagingException {
         // Ajusta esta URL a la ruta de tu Front-end o Controller de registro
-        String urlRegistro = "http://localhost:8080/api/usuario/registro?token=" + invitacion.getToken();
+        String urlRegistro = frontUrl + "/registroInvitado?token=" + invitacion.getToken();
 
         com.example.genesisclub.genesisClub.Modelo.DTO.EmailDTO emailDTO = new com.example.genesisclub.genesisClub.Modelo.DTO.EmailDTO();
         emailDTO.setDestinatario(invitacion.getEmailDestino());

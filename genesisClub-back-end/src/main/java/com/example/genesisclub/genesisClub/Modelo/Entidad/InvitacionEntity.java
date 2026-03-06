@@ -28,7 +28,7 @@ public class InvitacionEntity {
 
     // Relación principal con el socio que invita
     @ManyToOne
-    @JoinColumn(name = "id_socio_origen", nullable = false)
+    @JoinColumn(name = "socio_origen_id", nullable = false)
     private SocioEntity socioOrigen;
 
     @Column(name = "email_destino", nullable = false)

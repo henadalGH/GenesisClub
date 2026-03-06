@@ -11,6 +11,7 @@ public interface SolicitudSerSocioService {
     ResponceDTO crearSolicitud(SolicitudDTO solicitud, EstadoSolicitudEnums estadoSolicitud);
     public List<SolicitudDTO> obtenerSolicitudesPendientes();
     public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEnums nuevoEstado);
+    public ResponceDTO crearSolicitudDesdeInvitacion(SolicitudDTO solicitudDTO, String token);
     
 
 }

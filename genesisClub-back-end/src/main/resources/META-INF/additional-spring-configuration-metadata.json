@@ -13,6 +13,7 @@
     "name": "app.front.url",
     "type": "java.lang.String",
     "description": "A description for 'app.front.url'"
+<<<<<<< HEAD
   },
   {
     "name": "\nspring.main.allow-bean-definition-overridin",
@@ -23,5 +24,7 @@
     "name": "\nspring.autoconfigure.exclud",
     "type": "java.lang.String",
     "description": "A description for '\nspring.autoconfigure.exclud'"
+=======
+>>>>>>> ImplemntacionMail
   }
 ]}

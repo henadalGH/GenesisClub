@@ -12,25 +12,14 @@ export class PendientesServicios {
 
   constructor(private http: HttpClient) {}
 
-  private getHeaders(): HttpHeaders {
-    const token = localStorage.getItem('token');
-    return new HttpHeaders({
-      Authorization: `Bearer ${token}`
-    });
-  }
-
   listarPendientes() {
-    return this.http.get<any[]>(this.urlPendientes, {
-      headers: this.getHeaders()
-    });
+    return this.http.get<any[]>(this.urlPendientes);
   }
 
   modificaEstado(id: number, estado: 'ACEPTADA' | 'RECHAZADA') {
     const url = `${this.urlActualizar}/${id}`;
     const params = new HttpParams().set('nuevoEstado', estado);
 
-    // Eliminamos 'headers: this.getHeaders()'
-    // El interceptor se encargará de inyectar el token automáticamente
     return this.http.put<any>(url, {}, { params });
 }
 }

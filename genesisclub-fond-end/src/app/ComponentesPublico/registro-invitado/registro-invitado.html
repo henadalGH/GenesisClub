@@ -1,0 +1,92 @@
+<div class="registro-wrapper">
+
+  <div class="card">
+
+    <h2 class="titulo">Registro por invitación</h2>
+    <p class="subtitulo">Completá tus datos para crear tu cuenta</p>
+
+    <form (ngSubmit)="registrar()" #form="ngForm">
+
+      <div class="grid">
+
+        <div class="input-group">
+          <label>Nombre</label>
+          <input
+            type="text"
+            [(ngModel)]="datos.nombre"
+            name="nombre"
+            required
+            placeholder="Juan"
+          />
+        </div>
+
+        <div class="input-group">
+          <label>Apellido</label>
+          <input
+            type="text"
+            [(ngModel)]="datos.apellido"
+            name="apellido"
+            required
+            placeholder="Pérez"
+          />
+        </div>
+
+      </div>
+
+      <div class="input-group">
+        <label>DNI</label>
+        <input
+          type="number"
+          [(ngModel)]="datos.dni"
+          name="dni"
+          required
+          placeholder="12345678"
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Teléfono</label>
+        <input
+          type="text"
+          [(ngModel)]="datos.telefono"
+          name="telefono"
+          placeholder="3415551234"
+        />
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input
+          type="email"
+          [(ngModel)]="datos.email"
+          name="email"
+          required
+          placeholder="correo@email.com"
+        />
+      </div>
+
+      <!-- NUEVO: Campo de Password -->
+      <div class="input-group">
+        <label>Contraseña</label>
+        <input
+          type="password"
+          [(ngModel)]="datos.password"
+          name="password"
+          required
+          placeholder="Ingrese su contraseña"
+        />
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="cargando || form.invalid"
+        class="btn"
+      >
+        {{ cargando ? 'Registrando...' : 'Registrarme' }}
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
