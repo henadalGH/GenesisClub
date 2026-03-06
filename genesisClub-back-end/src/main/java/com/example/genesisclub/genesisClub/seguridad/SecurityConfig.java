@@ -1,47 +1,34 @@
 package com.example.genesisclub.genesisClub.seguridad;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
-
-import jakarta.servlet.http.HttpServletResponse;
-
 @Configuration
-@EnableWebSecurity
-@EnableMethodSecurity(securedEnabled = true)
 public class SecurityConfig {
 
-    @Autowired
-    private JWTUtilityService jwtUtilityService;
+    private final JWTUtilityService jwtUtilityService;
 
-    @Bean
-    public JWTAuthorizationFilter jwtAuthorizationFilter() {
-        return new JWTAuthorizationFilter(jwtUtilityService);
+    public SecurityConfig(JWTUtilityService jwtUtilityService) {
+        this.jwtUtilityService = jwtUtilityService;
     }
 
     @Bean
-SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-
-    return http
-            .cors(cors -> {}) // 🔥 HABILITA CORS (OBLIGATORIO)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
             .csrf(csrf -> csrf.disable())
-
-            .authorizeHttpRequests(authRequest ->
-        authRequest
-                .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-
-                // públicas
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                // rutas públicas
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/usuario/registro").permitAll()
                 .requestMatchers("/api/solicitud/nuevo").permitAll()
@@ -49,38 +36,28 @@ SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                 .requestMatchers("/email/**").permitAll()
                 .requestMatchers("/api/invitacion/aceptar/**").permitAll()
 
-                // protegidas
+                // rutas protegidas
                 .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/socio/todos").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
                 .requestMatchers("/api/invitacion/**").authenticated()
-
-                .anyRequest().authenticated()
-)
-
-
-            .sessionManagement(sessionM ->
-                    sessionM.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             )
+            .addFilterBefore(new JWTAuthorizationFilter(jwtUtilityService), 
+                            UsernamePasswordAuthenticationFilter.class);
 
-            .addFilterBefore(
-                    jwtAuthorizationFilter(),
-                    UsernamePasswordAuthenticationFilter.class
-            )
+        return http.build();
+    }
 
-            .exceptionHandling(exceptionHandling ->
-                    exceptionHandling.authenticationEntryPoint((request, response, authException) -> {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "No autorizado");
-                    })
-            )
-
-            .build();
-}
-
-
+    // Para poder inyectar AuthenticationManager si lo necesitás
     @Bean
-    PasswordEncoder passwordEncoder() {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
+
+    // 🔑 Bean que faltaba para que Spring pueda inyectar PasswordEncoder
+    @Bean
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 }

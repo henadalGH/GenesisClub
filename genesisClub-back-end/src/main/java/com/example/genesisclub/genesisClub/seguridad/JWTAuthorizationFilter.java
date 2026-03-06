@@ -38,30 +38,36 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
         }
 
         try {
-
             String token = header.substring(7);
 
+            // Verificar validez del token
             if (!jwtUtilityService.isTokenValid(token)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             Long userId = jwtUtilityService.getUserId(token);
-            String rol = jwtUtilityService.getRol(token);
+            String rol = jwtUtilityService.getRol(token); // Ej: "SOCIO" o "ADMIN"
 
-            SimpleGrantedAuthority authority =
-                    new SimpleGrantedAuthority("ROLE_" + rol);
+            // ⚡ Evitamos duplicar "ROLE_" si ya viene así
+            String roleToUse = rol.startsWith("ROLE_") ? rol : "ROLE_" + rol;
+
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(roleToUse);
 
             UsernamePasswordAuthenticationToken authentication =
                     new UsernamePasswordAuthenticationToken(
-                            userId,
+                            String.valueOf(userId), // principal
                             null,
                             List.of(authority)
                     );
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
+            // 🔹 Debug: muestra rol que Spring ve
+            System.out.println("JWT válido -> userId: " + userId + ", Rol asignado: " + roleToUse);
+
         } catch (Exception e) {
+            e.printStackTrace();
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }
