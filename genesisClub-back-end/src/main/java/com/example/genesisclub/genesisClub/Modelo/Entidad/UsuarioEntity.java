@@ -4,29 +4,22 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "usuario", schema = "genesisclub", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
+@Table(name = "usuario", schema = "genesisclub",
+        uniqueConstraints = {@UniqueConstraint(columnNames = {"email"})})
 public class UsuarioEntity implements UserDetails {
 
     @Id
-    @GeneratedValue( strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
     private Long id;
 
@@ -58,36 +51,31 @@ public class UsuarioEntity implements UserDetails {
     @JoinColumn(name = "id_rol")
     private RolEntity rol;
 
+    @OneToMany(mappedBy = "usuario")
+    private List<SocioEntity> socios = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-    private List<SocioEntity> socio = new ArrayList<>();
+    private List<AdminEntity> admins = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-    private List<AdminEntity> admin = new ArrayList<>();
+    private List<JugadorEntity> jugadores = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-    private List<JugadorEntity> jugador = new ArrayList<>();
+    private List<PerfilEntity> perfiles = new ArrayList<>();
 
     @OneToMany(mappedBy = "usuario")
-    private List<PerfilEntity> perfil = new ArrayList<>();
+    private List<NotificacionEntity> notificaciones = new ArrayList<>();
 
-    @OneToMany(mappedBy = "usuario")
-    private List<NotificacionEntity> notificacion = new ArrayList<>();
-
-    @OneToMany(mappedBy = "contacto")
-    private List<RelacionUsuarioEntity> relacion = new ArrayList<>();
-
-    //Metodos de UserDetails
+    // ================= UserDetails =================
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        
+
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
         authorities.add(new SimpleGrantedAuthority("ROLE_" + this.rol.getNombre()));
 
         return authorities;
     }
-
 
     @Override
     public String getUsername() {
@@ -95,8 +83,7 @@ public class UsuarioEntity implements UserDetails {
     }
 
     @Override
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 

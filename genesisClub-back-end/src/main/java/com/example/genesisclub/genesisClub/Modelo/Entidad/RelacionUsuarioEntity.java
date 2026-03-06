@@ -4,32 +4,25 @@ import java.time.LocalDate;
 
 import com.example.genesisclub.genesisClub.Modelo.Enums.RelacionusuarioEnums;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "relacion_usuario", schema = "genesisclub")
+@Table(name = "relacion_usuario")
 public class RelacionUsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_relacaion")
+    @Column(name = "id_relacion")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "tipo_relacion")
     private RelacionusuarioEnums tipoRelacion;
 
     @Column(name = "fecha")
     private LocalDate fecha;
-
 
     @ManyToOne
     @JoinColumn(name = "id_socio")
@@ -37,6 +30,5 @@ public class RelacionUsuarioEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_contacto")
-    private UsuarioEntity contacto;
-
+    private SocioEntity contacto;
 }
