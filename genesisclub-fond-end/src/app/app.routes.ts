@@ -17,6 +17,7 @@ import { AuthGuard } from './ServiciosCompartidos/auth-guard-servicio';
 import { RegistroInvitado } from './ComponentesPublico/registro-invitado/registro-invitado';
 import { CrearRubros } from './Administrador/Rubros/crear-rubros/crear-rubros';
 import { ListarRubros } from './Administrador/Rubros/listar-rubros/listar-rubros';
+import { VerResPorSocio } from './Administrador/ver-res-por-socio/ver-res-por-socio';
 
 
 export const routes: Routes = [
@@ -32,6 +33,7 @@ export const routes: Routes = [
   { path: "registroInvitado", component: RegistroInvitado},
   {path: "listaRubros", component: ListarRubros},
   {path: "crearRubros", component: CrearRubros},
+  { path: "verRedSocio/:id", component: VerResPorSocio },
 
 
   // =========================

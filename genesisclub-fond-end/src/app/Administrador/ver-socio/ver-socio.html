@@ -13,7 +13,6 @@
 
     <section class="profile-card">
 
-      <!-- Header -->
       <header class="profile-header">
         <i class="bi bi-person-circle avatar"></i>
 
@@ -23,11 +22,10 @@
         </div>
       </header>
 
-      <!-- Info -->
       <div class="info-grid">
 
         <div class="info-item">
-          <span>Numero de Socio</span>
+          <span>Número de Socio</span>
           <strong>{{ socio().id }}</strong>
         </div>
 
@@ -47,7 +45,6 @@
 
       </div>
 
-      <!-- Stats -->
       <div class="stats">
 
         <div class="stat">
@@ -70,10 +67,13 @@
 
       </div>
 
-      <!-- Botón -->
       <footer class="actions">
-        <button class="btn" [routerLink]="['/listaSocios']">
-          ← Volver al listado
+        <button class="btn btn-back" [routerLink]="['/listaSocios']">
+          <i class="bi bi-arrow-left"></i> Volver al listado
+        </button>
+
+        <button class="btn btn-network" [routerLink]="['/verRedSocio', socio().id]">
+          <i class="bi bi-diagram-3"></i> Ver Red de Socio
         </button>
       </footer>
 

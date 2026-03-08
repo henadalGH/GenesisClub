@@ -1,0 +1,38 @@
+    <app-header-admin></app-header-admin>
+    <div class="container-red">
+    <h2><i class="bi bi-diagram-3"></i> Estructura de Red - GenesisClub</h2>
+
+    @if (cargando()) {
+        <div class="spinner-container">
+        <div class="spinner"></div>
+        <p>Cargando red...</p>
+        </div>
+    } @else if (redSocio()) {
+        
+        <div class="arbol-container">
+        <ng-container *ngTemplateOutlet="nodoTemplate; context: { $implicit: redSocio() }"></ng-container>
+        </div>
+
+    } @else {
+        <p class="error">No se encontró información de la red para este socio.</p>
+    }
+    </div>
+
+    <ng-template #nodoTemplate let-nodo>
+    <div class="nodo-socio" [style.margin-left.px]="nodo.nivel * 20">
+        <div class="card-socio">
+        <i class="bi bi-person-circle"></i>
+        <div class="datos">
+            <span class="nombre">{{ nodo.nombreCompleto }}</span>
+            <span class="meta">Nivel: {{ nodo.nivel }} | ID: {{ nodo.idSocioHijo }}</span>
+            <span class="fecha">Ingreso: {{ nodo.fechaIngreso | date:'dd/MM/yyyy' }}</span>
+        </div>
+        </div>
+
+        @if (nodo.descendientes && nodo.descendientes.length > 0) {
+        <div class="hijos-container">
+            @for (hijo of nodo.descendientes; track hijo.idRelacion) {
+            <ng-container *ngTemplateOutlet="nodoTemplate; context: { $implicit: hijo }"></ng-container>
+            }
+        </div>
+        }
