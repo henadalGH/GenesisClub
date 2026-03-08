@@ -74,20 +74,19 @@ public class UsuarioEntity implements UserDetails {
     @OneToMany(mappedBy = "usuario")
     private List<NotificacionEntity> notificacion = new ArrayList<>();
 
-    @OneToMany(mappedBy = "contacto")
-    private List<RelacionUsuarioEntity> relacion = new ArrayList<>();
+    // ⚡ SE ELIMINÓ LA LISTA "relacion" DE AQUÍ PORQUE CAUSABA EL ERROR DE MAPEO
+    // Y PORQUE LA LÓGICA MULTINIVEL PERTENECE A LA ENTIDAD SOCIO.
 
     //Metodos de UserDetails
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_" + this.rol.getNombre()));
-
+        if (this.rol != null && this.rol.getNombre() != null) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + this.rol.getNombre()));
+        }
         return authorities;
     }
-
 
     @Override
     public String getUsername() {
@@ -95,8 +94,7 @@ public class UsuarioEntity implements UserDetails {
     }
 
     @Override
-    public String getPassword()
-    {
+    public String getPassword() {
         return password;
     }
 

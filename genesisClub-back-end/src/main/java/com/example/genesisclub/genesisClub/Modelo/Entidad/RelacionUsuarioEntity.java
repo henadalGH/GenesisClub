@@ -1,42 +1,32 @@
 package com.example.genesisclub.genesisClub.Modelo.Entidad;
 
 import java.time.LocalDate;
-
-import com.example.genesisclub.genesisClub.Modelo.Enums.RelacionusuarioEnums;
-
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
 @Data
-@Table(name = "relacion_usuario", schema = "genesisclub")
+@Table(name = "relacion_usuario")
 public class RelacionUsuarioEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_relacaion")
+    @Column(name = "id_relacaion") // Nombre exacto de tu diagrama
     private Long id;
-
-    @Column(name = "tipo_relacion")
-    private RelacionusuarioEnums tipoRelacion;
 
     @Column(name = "fecha")
     private LocalDate fecha;
 
+    @Column(name = "tipo_relacion")
+    private Integer nivel; // Usado para Nivel 1, 2, 3 en el multinivel
 
-    @ManyToOne
+    // El Sponsor (quien invita) -> id_socio en tu DB
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_socio")
-    private SocioEntity socio;
+    private SocioEntity socioPadre;
 
-    @ManyToOne
+    // El Referido (el invitado) -> id_contacto en tu DB
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_contacto")
-    private UsuarioEntity contacto;
-
+    private SocioEntity socioHijo;
 }

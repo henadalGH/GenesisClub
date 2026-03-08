@@ -16,7 +16,8 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.EstadoSolicitudEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.InvitacionEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudEntity;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity; // Asegúrate de importar tu entidad Socio
+import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.RelacionUsuarioEntity; // IMPORTANTE
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.RolesEnums;
@@ -24,7 +25,8 @@ import com.example.genesisclub.genesisClub.Repositorio.EstadoSolicitudRepository
 import com.example.genesisclub.genesisClub.Repositorio.InvitacionRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
-import com.example.genesisclub.genesisClub.Repositorio.SocioRepository; // Nuevo import
+import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
+import com.example.genesisclub.genesisClub.Repositorio.RelacionUsuarioRepository; // NUEVO
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
 
@@ -38,7 +40,8 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private RegistroUsuarioServicio registroService;
     @Autowired private InvitacionRepository invitacionRepository;
-    @Autowired private SocioRepository socioRepository; // Inyectado para sumar invitaciones
+    @Autowired private SocioRepository socioRepository;
+    @Autowired private RelacionUsuarioRepository relacionRepository; // Inyectado para el multinivel
 
     @Override
     public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
@@ -108,25 +111,7 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
         if (nuevoEstado == EstadoSolicitudEnums.ACEPTADA) {
             
-            // === LÓGICA AGREGADA: SUMAR INVITACIÓN AL SOCIO ORIGEN ===
-            if (solicitud.getSocio() != null) {
-                SocioEntity socioReferente = solicitud.getSocio();
-                
-                // Obtenemos el valor actual y sumamos 1
-                Integer actuales = socioReferente.getCantidadInvitaciones();
-                socioReferente.setCantidadInvitaciones((actuales == null ? 0 : actuales) + 1);
-                
-                socioRepository.save(socioReferente);
-                
-                // Marcamos la invitación como procesada (opcional pero recomendado)
-                if (solicitud.getInvitacion() != null) {
-                    InvitacionEntity inv = solicitud.getInvitacion();
-                    inv.setFechaRespuesta(LocalDateTime.now());
-                    invitacionRepository.save(inv);
-                }
-            }
-            // ========================================================
-
+            // 1. REGISTRAR AL NUEVO SOCIO
             RegistroDTO registroDTO = new RegistroDTO();
             registroDTO.setNombre(solicitud.getNombre());
             registroDTO.setApellido(solicitud.getApellido());
@@ -136,6 +121,36 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
             registroDTO.setEstado(EstadoSocioEnums.ACTIVO);
 
             registroService.registrarDesdeSolicitud(registroDTO);
+
+            // 2. LÓGICA MULTINIVEL: Vincular con el socio referente
+            if (solicitud.getSocio() != null) {
+                SocioEntity socioReferente = solicitud.getSocio();
+                
+                // Sumar invitación al contador del padre
+                Integer actuales = socioReferente.getCantidadInvitaciones();
+                socioReferente.setCantidadInvitaciones((actuales == null ? 0 : actuales) + 1);
+                socioRepository.save(socioReferente);
+                
+                // Buscar al nuevo socio recién creado para establecer la relación
+                SocioEntity nuevoSocioHijo = socioRepository.findByUsuarioEmail(solicitud.getEmail())
+                        .orElseThrow(() -> new RuntimeException("Error al recuperar el nuevo socio creado"));
+
+                // Crear la fila en la tabla relacion_usuario
+                RelacionUsuarioEntity nuevaRelacion = new RelacionUsuarioEntity();
+                nuevaRelacion.setSocioPadre(socioReferente);
+                nuevaRelacion.setSocioHijo(nuevoSocioHijo);
+                nuevaRelacion.setNivel(1); // Nivel 1 por ser directo
+                nuevaRelacion.setFecha(LocalDate.now());
+                
+                relacionRepository.save(nuevaRelacion);
+                
+                // Marcar invitación como respondida
+                if (solicitud.getInvitacion() != null) {
+                    InvitacionEntity inv = solicitud.getInvitacion();
+                    inv.setFechaRespuesta(LocalDateTime.now());
+                    invitacionRepository.save(inv);
+                }
+            }
         }
 
         solicitudRepository.save(solicitud);

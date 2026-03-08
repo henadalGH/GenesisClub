@@ -3,7 +3,6 @@ package com.example.genesisclub.genesisClub.Modelo.Entidad;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -36,19 +35,18 @@ public class SocioEntity {
     @JoinColumn(name = "id_usuario")
     private UsuarioEntity usuario;
 
+    // MULTINIVEL: Lista de personas a las que este socio invitó (Hijos/Contactos)
+    @OneToMany(mappedBy = "socioPadre") 
+    private List<RelacionUsuarioEntity> referidosDirectos = new ArrayList<>();
+
     @OneToMany(mappedBy = "socioOrigen")
     private List<InvitacionEntity> invitacion = new ArrayList<>();
-
-    @OneToMany(mappedBy = "socio")
-    private List<RelacionUsuarioEntity> relacion = new ArrayList<>();
 
     @OneToMany(mappedBy = "socio")
     private List<SolicitudEntity> solicitud = new ArrayList<>();
 
     @OneToMany(mappedBy = "socio")
     private List<RubroSocioEntity> socioRubro = new ArrayList<>();
-
-    // ================= AUTO INIT =================
 
     @PrePersist
     public void prePersist() {

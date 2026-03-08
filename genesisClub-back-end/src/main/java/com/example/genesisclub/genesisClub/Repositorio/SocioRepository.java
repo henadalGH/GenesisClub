@@ -12,5 +12,6 @@ public interface SocioRepository extends JpaRepository<SocioEntity, Long> {
 
     
     Optional<SocioEntity> findByUsuario_Id(Long usuarioId);
+    Optional<SocioEntity> findByUsuarioEmail(String email);
 
 }
