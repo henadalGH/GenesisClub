@@ -77,6 +77,10 @@ public class UsuarioEntity implements UserDetails {
     // ⚡ SE ELIMINÓ LA LISTA "relacion" DE AQUÍ PORQUE CAUSABA EL ERROR DE MAPEO
     // Y PORQUE LA LÓGICA MULTINIVEL PERTENECE A LA ENTIDAD SOCIO.
 
+    @ManyToOne
+    @JoinColumn(name = "id_ubicacion")
+    private UbicacionEntity ubicacion;
+
     //Metodos de UserDetails
 
     @Override

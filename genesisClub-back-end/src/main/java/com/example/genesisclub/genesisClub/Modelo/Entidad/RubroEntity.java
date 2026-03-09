@@ -50,4 +50,14 @@ public class RubroEntity {
 
     @OneToMany(mappedBy = "rubro")
     private List<RubroSocioEntity> rubroSocio = new ArrayList<>();
+
+    @Column(name = "clave_acceso", length = 50, unique = true)
+    private String claveAcceso;
+
+    @Column(name = "fecha_clave_generacion")
+    private LocalDate fechaClaveGeneracion;
+
+    @Column(name = "clave_activa", columnDefinition = "boolean default true")
+    private boolean claveActiva = true;
+
 }
