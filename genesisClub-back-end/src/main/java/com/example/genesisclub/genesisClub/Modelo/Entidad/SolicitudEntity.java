@@ -30,6 +30,7 @@ public class SolicitudEntity {
 
     @Column(name = "apellido")
     private String apellido;
+    
 
     @Column(name = "email")
     private String email;
