@@ -27,8 +27,12 @@ import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.RelacionUsuarioRepository; // NUEVO
+import com.example.genesisclub.genesisClub.Repositorio.VehiculoRepository;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.enums.TipoSolicitud;
 
 @Service
 @Transactional
@@ -42,6 +46,7 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     @Autowired private InvitacionRepository invitacionRepository;
     @Autowired private SocioRepository socioRepository;
     @Autowired private RelacionUsuarioRepository relacionRepository; // Inyectado para el multinivel
+    @Autowired private VehiculoRepository vehiculoRepository;
 
     @Override
     public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
@@ -176,6 +181,60 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         entidad.setContacto(dto.getContacto());
         entidad.setFechaSolicitud(LocalDate.now());
         entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+    // overload for jugador DTO to avoid casting issues
+    private void mapearDatosBasicos(SolicitudEntity entidad, SolicitudJugadorDTO dto) {
+        entidad.setNombre(dto.getNombre());
+        entidad.setApellido(dto.getApellido());
+        entidad.setEmail(dto.getEmail());
+        entidad.setContacto(dto.getContacto());
+        entidad.setFechaSolicitud(LocalDate.now());
+        entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
+    }
+
+    // nuevo método reutilizable para creación/recuperación de vehículos
+    private VehiculoEntity procesarVehiculo(String patente, String marca,
+            String modelo, Integer anio, Boolean tieneGnc) {
+        if (patente == null) {
+            return null;
+        }
+        return vehiculoRepository.findByPatente(patente).orElseGet(() -> {
+            VehiculoEntity v = new VehiculoEntity();
+            v.setPatente(patente);
+            v.setMarca(marca);
+            v.setModelo(modelo);
+            v.setAnio(anio);
+            v.setTieneGnc(tieneGnc != null && tieneGnc);
+            v.setFechaRegistro(LocalDate.now());
+            return vehiculoRepository.save(v);
+        });
+    }
+
+    // nueva operación pública para solicitudes de jugador
+    @Override
+    public ResponceDTO solicitarJugador(SolicitudJugadorDTO dto) {
+        ResponceDTO response = new ResponceDTO();
+        if (validarEmailExistente(dto.getEmail(), response)) return response;
+
+        SolicitudEntity solicitud = new SolicitudEntity();
+        // use overloaded helper for jugador DTO
+        mapearDatosBasicos(solicitud, dto);
+
+        VehiculoEntity veh = procesarVehiculo(dto.getPatente(), dto.getMarca(), dto.getModelo(), dto.getAnio(), dto.getTieneGnc());
+        if (veh != null) {
+            solicitud.setVehiculo(veh);
+        }
+
+        solicitud.setTipoSolicitud(TipoSolicitud.JUGADOR);
+
+        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
+                .orElseThrow(() -> new RuntimeException("Estado de solicitud no configurado"));
+
+        solicitud.setEstado(estado);
+        solicitudRepository.save(solicitud);
+        response.setMensage("Solicitud creada correctamente");
+        return response;
     }
 
     private boolean validarEmailExistente(String email, ResponceDTO response) {

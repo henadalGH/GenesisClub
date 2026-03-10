@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { Inicio } from './ComponentesPublico/inicio/inicio';
 import { Login } from './ComponentesPublico/login/login';
 import { SolicitudSocio } from './ComponentesPublico/solicitud-socio/solicitud-socio';
+import { SolicitudJugador } from './ComponentesPublico/solicitud-jugador/solicitud-jugador';
 import { InicioSocio } from './Socio/inicio-socio/inicio-socio';
 import { InicioAdmin } from './Administrador/inicio-admin/inicio-admin';
 import { IncioJugador } from './Jugador/incio-jugador/incio-jugador';
@@ -29,6 +30,7 @@ export const routes: Routes = [
   { path: 'inicio', component: Inicio },
   { path: 'login', component: Login },
   { path: 'solicitud', component: SolicitudSocio },
+  { path: 'solicitud-jugador', component: SolicitudJugador },
   { path: 'inicioRubro', component: InicioRubros },
   { path: "registroInvitado", component: RegistroInvitado},
   {path: "listaRubros", component: ListarRubros},

@@ -43,7 +43,9 @@ public class SecurityConfig {
                 .requestMatchers("/api/usuario/registro").permitAll()
                 .requestMatchers("/api/solicitud/nuevo").permitAll()
                 .requestMatchers("/api/solicitud/registro-invitado").permitAll()
+                .requestMatchers("/api/solicitud/jugador").permitAll()
                 .requestMatchers("/email/**").permitAll()
+                .requestMatchers("/publico/test-final").permitAll()
                 .requestMatchers("/api/invitacion/aceptar/**").permitAll()
 
                 // --- RUTAS DE ADMINISTRADOR ---
@@ -51,6 +53,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/socio/todos").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
+                .requestMatchers("/api/auth/admin/solo").hasRole("ADMIN")
 
                 // --- RUTAS DEL CONTROLLER RELACION-SOCIO ---
                 .requestMatchers("/api/relacion-socio/mis-invitados/**").hasAnyRole("SOCIO", "ADMIN")

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 
 public interface SolicitudSerSocioService {
@@ -13,5 +14,6 @@ public interface SolicitudSerSocioService {
     public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEnums nuevoEstado);
     public ResponceDTO crearSolicitudDesdeInvitacion(SolicitudDTO solicitudDTO, String token);
     
-
+    // nueva operación para jugadores
+    public ResponceDTO solicitarJugador(SolicitudJugadorDTO dto);
 }

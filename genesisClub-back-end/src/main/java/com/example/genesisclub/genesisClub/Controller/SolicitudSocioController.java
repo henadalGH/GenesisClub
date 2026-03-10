@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
 import java.util.List;
@@ -33,6 +34,18 @@ public class SolicitudSocioController {
     @PostMapping("/nuevo")
     public ResponseEntity<ResponceDTO> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
         ResponceDTO response = solicitudSerSocioService.crearSolicitud(solicitud, null);
+
+        if (response.getNumOfErrors() > 0) {
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    // nuevo endpoint para solicitar como jugador
+    @PostMapping("/jugador")
+    public ResponseEntity<ResponceDTO> crearSolicitudJugador(@RequestBody SolicitudJugadorDTO solicitud) {
+        ResponceDTO response = solicitudSerSocioService.solicitarJugador(solicitud);
 
         if (response.getNumOfErrors() > 0) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);

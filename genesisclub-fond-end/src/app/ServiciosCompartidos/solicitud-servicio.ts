@@ -14,6 +14,7 @@ export interface ResponceDTO {
 })
 export class SolicitudServicio {
   private urlSolicitud = `${environment.apiUrl}/solicitud/nuevo`;
+  private urlSolicitudJugador = `${environment.apiUrl}/solicitud/jugador`;
   private urlInvitado = `${environment.apiUrl}/solicitud/registro-invitado`;
 
   constructor(private http: HttpClient) {}
@@ -21,6 +22,10 @@ export class SolicitudServicio {
   // Recibe un solo objeto 'datos' (que contiene nombre, apellido, etc.)
   enviarSolicitud(datos: any): Observable<ResponceDTO> {
     return this.http.post<ResponceDTO>(this.urlSolicitud, datos);
+  }
+
+  enviarSolicitudJugador(datos: any): Observable<ResponceDTO> {
+    return this.http.post<ResponceDTO>(this.urlSolicitudJugador, datos);
   }
 
 

@@ -25,6 +25,9 @@ public class VehiculoEntity {
     @Column(name = "patente", length = 20, unique = true, nullable = false)
     private String patente;
 
+    @Column(name = "marca", length = 100)
+    private String marca; // nueva columna marca
+
     @Column(name = "tiene_gnc", columnDefinition = "boolean default false")
     private boolean tieneGnc = false;
 
