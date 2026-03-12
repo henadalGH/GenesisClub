@@ -1,5 +1,5 @@
 /* ============================================
-   SOLICITUDES SOCIOS PENDIENTES — GenesisClub
+   SOLICITUDES JUGADORES PENDIENTES — GenesisClub
    ============================================ */
 
 .contenedor {
@@ -67,11 +67,12 @@
   overflow: hidden;
 }
 
+/* Barra de progreso animada */
 .loading-bar::before {
   content: '';
   position: absolute;
   bottom: 0;
-  left: -40%;
+  left: 0;
   width: 40%;
   height: 2px;
   background: linear-gradient(90deg, transparent, #00e5ff, transparent);
@@ -98,17 +99,17 @@
   background: #00e5ff;
   border-radius: 50%;
   margin-right: 0.5rem;
-  animation: dotPulse 1.2s ease-in-out infinite;
+  animation: pulse 1.2s ease-in-out infinite;
   vertical-align: middle;
 }
 
-@keyframes dotPulse {
+@keyframes pulse {
   0%, 100% { opacity: 1; transform: scale(1); }
   50%       { opacity: 0.4; transform: scale(0.7); }
 }
 
 /* ============================================
-   LISTA
+   LISTA DE CARDS
    ============================================ */
 .lista {
   position: relative;
@@ -190,6 +191,7 @@
   line-height: 1.4;
 }
 
+/* Badge de estado */
 .estado-badge {
   display: inline-block;
   font-size: 0.72rem;
@@ -233,26 +235,26 @@
   box-shadow: none !important;
 }
 
-.btn.aceptar {
+.aceptar {
   background: rgba(34, 197, 94, 0.12);
   color: #22c55e;
   border-color: rgba(34, 197, 94, 0.25);
 }
 
-.btn.aceptar:not(:disabled):hover {
+.aceptar:not(:disabled):hover {
   background: rgba(34, 197, 94, 0.2);
   border-color: rgba(34, 197, 94, 0.55);
   box-shadow: 0 0 18px rgba(34, 197, 94, 0.25);
   transform: translateY(-1px);
 }
 
-.btn.rechazar {
+.rechazar {
   background: rgba(239, 68, 68, 0.1);
   color: #ef4444;
   border-color: rgba(239, 68, 68, 0.22);
 }
 
-.btn.rechazar:not(:disabled):hover {
+.rechazar:not(:disabled):hover {
   background: rgba(239, 68, 68, 0.18);
   border-color: rgba(239, 68, 68, 0.5);
   box-shadow: 0 0 18px rgba(239, 68, 68, 0.2);

@@ -16,23 +16,22 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.EstadoSolicitudEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.InvitacionEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudEntity;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.RelacionUsuarioEntity; // IMPORTANTE
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.RolesEnums;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.enums.TipoSolicitud;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSolicitudRepository;
 import com.example.genesisclub.genesisClub.Repositorio.InvitacionRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
-import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
-import com.example.genesisclub.genesisClub.Repositorio.RelacionUsuarioRepository; // NUEVO
 import com.example.genesisclub.genesisClub.Repositorio.VehiculoRepository;
+import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
+import com.example.genesisclub.genesisClub.Repositorio.RelacionUsuarioRepository; 
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
-import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.enums.TipoSolicitud;
 
 @Service
 @Transactional
@@ -46,7 +45,7 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     @Autowired private InvitacionRepository invitacionRepository;
     @Autowired private SocioRepository socioRepository;
     @Autowired private RelacionUsuarioRepository relacionRepository; // Inyectado para el multinivel
-    @Autowired private VehiculoRepository vehiculoRepository;
+    @Autowired private VehiculoRepository vehiculoRepository; // para datos de patente
 
     @Override
     public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
@@ -55,6 +54,16 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
+        solicitud.setTipoSolicitud(TipoSolicitud.SOCIO);
+
+        // procesar vehículo si llegó patente
+        if (solicitudDTO.getPatente() != null) {
+            VehiculoEntity veh = procesarVehiculo(solicitudDTO.getPatente(), solicitudDTO.getMarca(),
+                    solicitudDTO.getModelo(), solicitudDTO.getAnio(), solicitudDTO.getTieneGnc());
+            if (veh != null) {
+                solicitud.setVehiculo(veh);
+            }
+        }
 
         EstadoSolicitudEnums estadoEnum = estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
         EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(estadoEnum)
@@ -89,6 +98,16 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
+        solicitud.setTipoSolicitud(TipoSolicitud.SOCIO);
+
+        // añadir datos de vehículo si existen
+        if (solicitudDTO.getPatente() != null) {
+            VehiculoEntity veh = procesarVehiculo(solicitudDTO.getPatente(), solicitudDTO.getMarca(),
+                    solicitudDTO.getModelo(), solicitudDTO.getAnio(), solicitudDTO.getTieneGnc());
+            if (veh != null) {
+                solicitud.setVehiculo(veh);
+            }
+        }
 
         solicitud.setInvitacion(invitacion);
         solicitud.setSocio(invitacion.getSocioOrigen());
@@ -116,38 +135,51 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
         if (nuevoEstado == EstadoSolicitudEnums.ACEPTADA) {
             
-            // 1. REGISTRAR AL NUEVO SOCIO
+            // Determinar el rol basado en el tipo de solicitud
+            RolesEnums rolAsignado;
+            if (solicitud.getTipoSolicitud() == TipoSolicitud.SOCIO) {
+                rolAsignado = RolesEnums.SOCIO;
+            } else if (solicitud.getTipoSolicitud() == TipoSolicitud.JUGADOR) {
+                rolAsignado = RolesEnums.JUGADOR;
+            } else {
+                rolAsignado = RolesEnums.SOCIO; // default
+            }
+
+            // 1. REGISTRAR AL NUEVO USUARIO
             RegistroDTO registroDTO = new RegistroDTO();
             registroDTO.setNombre(solicitud.getNombre());
             registroDTO.setApellido(solicitud.getApellido());
             registroDTO.setEmail(solicitud.getEmail());
             registroDTO.setPassword(solicitud.getPassword());
-            registroDTO.setRol(RolesEnums.SOCIO);
+            registroDTO.setRol(rolAsignado);
             registroDTO.setEstado(EstadoSocioEnums.ACTIVO);
 
             registroService.registrarDesdeSolicitud(registroDTO);
 
-            // 2. LÓGICA MULTINIVEL: Vincular con el socio referente
-            if (solicitud.getSocio() != null) {
-                SocioEntity socioReferente = solicitud.getSocio();
-                
-                // Sumar invitación al contador del padre
-                Integer actuales = socioReferente.getCantidadInvitaciones();
-                socioReferente.setCantidadInvitaciones((actuales == null ? 0 : actuales) + 1);
-                socioRepository.save(socioReferente);
-                
-                // Buscar al nuevo socio recién creado para establecer la relación
-                SocioEntity nuevoSocioHijo = socioRepository.findByUsuarioEmail(solicitud.getEmail())
-                        .orElseThrow(() -> new RuntimeException("Error al recuperar el nuevo socio creado"));
+            // 2. LÓGICA MULTINIVEL: Solo para SOCIOS
+            if (solicitud.getTipoSolicitud() == TipoSolicitud.SOCIO) {
+                // Vincular con el socio referente
+                if (solicitud.getSocio() != null) {
+                    SocioEntity socioReferente = solicitud.getSocio();
+                    
+                    // Sumar invitación al contador del padre
+                    Integer actuales = socioReferente.getCantidadInvitaciones();
+                    socioReferente.setCantidadInvitaciones((actuales == null ? 0 : actuales) + 1);
+                    socioRepository.save(socioReferente);
+                    
+                    // Buscar al nuevo socio recién creado para establecer la relación
+                    SocioEntity nuevoSocioHijo = socioRepository.findByUsuarioEmail(solicitud.getEmail())
+                            .orElseThrow(() -> new RuntimeException("Error al recuperar el nuevo socio creado"));
 
-                // Crear la fila en la tabla relacion_usuario
-                RelacionUsuarioEntity nuevaRelacion = new RelacionUsuarioEntity();
-                nuevaRelacion.setSocioPadre(socioReferente);
-                nuevaRelacion.setSocioHijo(nuevoSocioHijo);
-                nuevaRelacion.setNivel(1); // Nivel 1 por ser directo
-                nuevaRelacion.setFecha(LocalDate.now());
-                
-                relacionRepository.save(nuevaRelacion);
+                    // Crear la fila en la tabla relacion_usuario
+                    RelacionUsuarioEntity nuevaRelacion = new RelacionUsuarioEntity();
+                    nuevaRelacion.setSocioPadre(socioReferente);
+                    nuevaRelacion.setSocioHijo(nuevoSocioHijo);
+                    nuevaRelacion.setNivel(1); // Nivel 1 por ser directo
+                    nuevaRelacion.setFecha(LocalDate.now());
+                    
+                    relacionRepository.save(nuevaRelacion);
+                }
                 
                 // Marcar invitación como respondida
                 if (solicitud.getInvitacion() != null) {
@@ -183,17 +215,6 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
 
-    // overload for jugador DTO to avoid casting issues
-    private void mapearDatosBasicos(SolicitudEntity entidad, SolicitudJugadorDTO dto) {
-        entidad.setNombre(dto.getNombre());
-        entidad.setApellido(dto.getApellido());
-        entidad.setEmail(dto.getEmail());
-        entidad.setContacto(dto.getContacto());
-        entidad.setFechaSolicitud(LocalDate.now());
-        entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
-    }
-
-    // nuevo método reutilizable para creación/recuperación de vehículos
     private VehiculoEntity procesarVehiculo(String patente, String marca,
             String modelo, Integer anio, Boolean tieneGnc) {
         if (patente == null) {
@@ -205,37 +226,13 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
             v.setMarca(marca);
             v.setModelo(modelo);
             v.setAnio(anio);
-            v.setTieneGnc(tieneGnc != null && tieneGnc);
+            v.setTieneGnc(tieneGnc != null ? tieneGnc : false);
             v.setFechaRegistro(LocalDate.now());
             return vehiculoRepository.save(v);
         });
     }
 
-    // nueva operación pública para solicitudes de jugador
-    @Override
-    public ResponceDTO solicitarJugador(SolicitudJugadorDTO dto) {
-        ResponceDTO response = new ResponceDTO();
-        if (validarEmailExistente(dto.getEmail(), response)) return response;
 
-        SolicitudEntity solicitud = new SolicitudEntity();
-        // use overloaded helper for jugador DTO
-        mapearDatosBasicos(solicitud, dto);
-
-        VehiculoEntity veh = procesarVehiculo(dto.getPatente(), dto.getMarca(), dto.getModelo(), dto.getAnio(), dto.getTieneGnc());
-        if (veh != null) {
-            solicitud.setVehiculo(veh);
-        }
-
-        solicitud.setTipoSolicitud(TipoSolicitud.JUGADOR);
-
-        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
-                .orElseThrow(() -> new RuntimeException("Estado de solicitud no configurado"));
-
-        solicitud.setEstado(estado);
-        solicitudRepository.save(solicitud);
-        response.setMensage("Solicitud creada correctamente");
-        return response;
-    }
 
     private boolean validarEmailExistente(String email, ResponceDTO response) {
         boolean existeUsuario = usuarioRepository.existsByEmail(email);
@@ -257,6 +254,15 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         dto.setContacto(s.getContacto());
         dto.setFechaSolicitud(s.getFechaSolicitud());
         dto.setEstado(s.getEstado().getEstado());
+        dto.setTipoSolicitud(s.getTipoSolicitud());
+        if (s.getVehiculo() != null) {
+            dto.setPatente(s.getVehiculo().getPatente());
+            dto.setMarca(s.getVehiculo().getMarca());
+            dto.setModelo(s.getVehiculo().getModelo());
+            dto.setAnio(s.getVehiculo().getAnio());
+            dto.setTieneGnc(s.getVehiculo().isTieneGnc());
+        }
         return dto;
     }
+
 }

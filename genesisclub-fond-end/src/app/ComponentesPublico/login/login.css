@@ -1,120 +1,217 @@
-/* Contenedor principal del componente */
-:host {
+    /* ============================================
+    LOGIN COMPONENT — GenesisClub
+    ============================================ */
+
+    /* Fondo de página centrado */
+    :host {
     display: flex;
-    justify-content: center;
     align-items: center;
-
+    justify-content: center;
     min-height: 100vh;
+    padding: 2rem 1.25rem;
+    background-color: #060810;
+    font-family: 'DM Sans', sans-serif;
+    }
+
+    /* Fondo con gradiente igual al hero */
+    :host::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 70% 50% at 30% 20%, rgba(124, 58, 237, 0.25) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 60%);
+    z-index: 0;
+    pointer-events: none;
+    }
+
+    /* ============================================
+    CONTENEDOR / CARD
+    ============================================ */
+    .contenedor {
+    position: relative;
+    z-index: 1;
     width: 100%;
-
-    background: linear-gradient(135deg, #0f172a, #1e293b);
-    padding: 20px;
-}
-
-/* ===== Bloque general ===== */
-.titulo {
-    text-align: center;
-    color: rgb(0, 0, 0);
-    margin-bottom: 25px;
-}
-
-.titulo h1 {
-    font-size: 32px;
-    font-weight: 600;
-}
-
-.titulo p {
-    opacity: 0.85;
-    font-size: 14px;
-}
-
-/* ===== Card ===== */
-.contenedor {
-    width: 100%;
-    max-width: 380px;
-
-    background: #ffffff;
-    padding: 40px;
-    border-radius: 16px;
-
+    max-width: 26rem;
+    background: #111827;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1.5rem;
+    padding: 2.5rem 2.25rem;
     box-shadow:
-        0 25px 50px rgba(0,0,0,0.25);
+        0 8px 48px rgba(0, 0, 0, 0.6),
+        0 0 0 1px rgba(0, 229, 255, 0.04);
+    animation: fadeUp 0.6s ease both;
+    }
 
-    animation: fadeIn .4s ease;
-}
+    /* Línea de acento superior */
+    .contenedor::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 2rem;
+    right: 2rem;
+    height: 2px;
+    background: linear-gradient(90deg, #7c3aed, #00e5ff);
+    border-radius: 0 0 4px 4px;
+    }
 
-/* ===== Form ===== */
-.formulario {
+    @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ============================================
+    TÍTULO
+    ============================================ */
+    .titulo {
+    text-align: center;
+    margin-bottom: 2rem;
+    }
+
+    .titulo h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    letter-spacing: 0.06em;
+    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    line-height: 1.1;
+    margin-bottom: 0.4rem;
+    }
+
+    .titulo p {
+    font-size: 0.88rem;
+    color: #8892a4;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    }
+
+    /* ============================================
+    FORMULARIO
+    ============================================ */
+    .formulario {
     display: flex;
     flex-direction: column;
-    gap: 18px;
-}
+    gap: 1.25rem;
+    }
 
-.campos {
+    /* ============================================
+    CAMPOS
+    ============================================ */
+    .campos {
     display: flex;
     flex-direction: column;
-    gap: 6px;
-}
+    gap: 0.4rem;
+    }
 
-.campos label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #334155;
-}
-
-.campos input {
-    padding: 12px;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-    font-size: 14px;
-    transition: .25s;
-}
-
-.campos input:focus {
-    outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,.15);
-}
-
-/* ===== Botones ===== */
-button {
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
+    .campos label {
+    font-size: 0.78rem;
     font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #8892a4;
+    }
+
+    .campos input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: #e8eaf0;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.65rem;
+    padding: 0.75em 1em;
+    outline: none;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+    width: 100%;
+    }
+
+    .campos input::placeholder {
+    color: #4b5563;
+    }
+
+    .campos input:focus {
+    border-color: #00e5ff;
+    background: rgba(0, 229, 255, 0.05);
+    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+    }
+
+    .campos input:focus + .campos label {
+    color: #00e5ff;
+    }
+
+    /* Autofill override para Chrome/Edge */
+    .campos input:-webkit-autofill,
+    .campos input:-webkit-autofill:hover,
+    .campos input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #e8eaf0;
+    -webkit-box-shadow: 0 0 0px 1000px #111827 inset;
+    transition: background-color 5000s ease-in-out 0s;
+    }
+
+    /* ============================================
+    BOTONES
+    ============================================ */
+    .iniciar {
+    margin-top: 0.5rem;
+    width: 100%;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 0.8em 1.5em;
+    border: none;
+    border-radius: 0.65rem;
     cursor: pointer;
-    transition: .25s;
-}
+    background: #00e5ff;
+    color: #060810;
+    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+    }
 
-/* principal */
-.iniciar {
-    background: #2563eb;
-    color: white;
-}
-
-.iniciar:hover {
-    background: #1d4ed8;
+    .iniciar:hover {
+    background: #33eaff;
+    box-shadow: 0 0 28px rgba(0, 229, 255, 0.45);
     transform: translateY(-2px);
-}
-
-/* secundario */
-.cancelar {
-    background: #e2e8f0;
-    color: #334155;
-}
-
-.cancelar:hover {
-    background: #cbd5e1;
-}
-
-/* ===== Animación ===== */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(15px);
     }
-    to {
-        opacity: 1;
-        transform: translateY(0);
+
+    .iniciar:active {
+    transform: translateY(0);
+    box-shadow: none;
     }
-}
+
+    .cancelar {
+    display: block;
+    width: 100%;
+    margin-top: 0.85rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 0.7em 1.5em;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 0.65rem;
+    cursor: pointer;
+    background: transparent;
+    color: #8892a4;
+    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+    }
+
+    .cancelar:hover {
+    color: #ef4444;
+    border-color: rgba(239, 68, 68, 0.4);
+    background: rgba(239, 68, 68, 0.06);
+    }
+
+    /* ============================================
+    RESPONSIVE
+    ============================================ */
+    @media (max-width: 30em) {
+    .contenedor {
+        padding: 2rem 1.5rem;
+        border-radius: 1.25rem;
+    }
+
+    .titulo h1 {
+        font-size: 2rem;
+    }
+    }

@@ -9,7 +9,10 @@ import { IncioJugador } from './Jugador/incio-jugador/incio-jugador';
 import { HeaderAdmin } from './Administrador/header-admin/header-admin';
 import { Invitaciones } from './Administrador/invitaciones/invitaciones';
 import { SolicitudesPendientes } from './Administrador/solicitudes-pendientes/solicitudes-pendientes';
+import { SolicitudesJugadoresPendientes } from './Administrador/solicitudes-jugadores-pendientes/solicitudes-jugadores-pendientes';
 import { ListaSocio } from './Administrador/lista-socio/lista-socio';
+import { ListaJugador } from './Administrador/lista-jugador/lista-jugador';
+import { VerJugador } from './Administrador/ver-jugador/ver-jugador';
 import { InicioRubros } from './Rubros/inicio-rubros/inicio-rubros';
 import { HeraderSocio } from './Socio/herader-socio/herader-socio';
 import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
@@ -100,6 +103,12 @@ export const routes: Routes = [
     data: { role: ['ROLE_ADMIN'] }
   },
   {
+    path: 'solicitudesJugadoresPendientes',
+    component: SolicitudesJugadoresPendientes,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
     path: 'listaSocios',
     component: ListaSocio,
     canActivate: [AuthGuard],
@@ -108,6 +117,18 @@ export const routes: Routes = [
   {
     path: 'verSocio/:id',
     component: VerSocio,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'listaJugadores',
+    component: ListaJugador,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'verJugador/:id',
+    component: VerJugador,
     canActivate: [AuthGuard],
     data: { role: ['ROLE_ADMIN'] }
   },

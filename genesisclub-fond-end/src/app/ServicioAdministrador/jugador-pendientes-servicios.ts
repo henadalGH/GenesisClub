@@ -5,10 +5,10 @@ import { environment } from '../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
-export class PendientesServicios {
+export class JugadorPendientesServicios {
 
-  private urlPendientes = `${environment.apiUrl}/solicitud/socio/pendientes`;
-  private urlActualizar = `${environment.apiUrl}/solicitud/socio/actualizar`;
+  private urlPendientes = `${environment.apiUrl}/solicitud/jugador/pendientes`;
+  private urlActualizar = `${environment.apiUrl}/solicitud/jugador/actualizar`;
 
   constructor(private http: HttpClient) {}
 

@@ -5,9 +5,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
-import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
-import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
+import com.example.genesisclub.genesisClub.Servicio.SolicitudJugadorService;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,35 +21,18 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/solicitud/socio")
-public class SolicitudSocioController {
+@RequestMapping("/api/solicitud/jugador")
+public class SolicitudJugadorController {
 
     @Autowired
-    private SolicitudSerSocioService solicitudSerSocioService;
+    private SolicitudJugadorService solicitudJugadorService;
 
     // ======================================================
-    // REGISTRO NORMAL (PÚBLICO)
+    // REGISTRO JUGADOR (PÚBLICO)
     // ======================================================
-    @PostMapping("/nuevo")
-    public ResponseEntity<ResponceDTO> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
-        ResponceDTO response = solicitudSerSocioService.crearSolicitud(solicitud, null);
-
-        if (response.getNumOfErrors() > 0) {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    // ======================================================
-    // REGISTRO POR INVITACIÓN (PÚBLICO)
-    // ======================================================
-    @PostMapping("/registro-invitado")
-    public ResponseEntity<ResponceDTO> registrarConInvitacion(
-            @RequestBody SolicitudDTO solicitud,
-            @RequestParam String token) { // Recibe el token desde la URL (?token=...)
-
-        ResponceDTO response = solicitudSerSocioService.crearSolicitudDesdeInvitacion(solicitud, token);
+    @PostMapping
+    public ResponseEntity<ResponceDTO> crearSolicitudJugador(@RequestBody SolicitudJugadorDTO solicitud) {
+        ResponceDTO response = solicitudJugadorService.solicitarJugador(solicitud);
 
         if (response.getNumOfErrors() > 0) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
@@ -61,11 +44,11 @@ public class SolicitudSocioController {
     // ======================================================
     // GESTIÓN DEL ADMINISTRADOR (PROTEGIDO)
     // ======================================================
-    
+
     @GetMapping("/pendientes")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<SolicitudDTO>> obtenerSolicitudesPendientes() {
-        List<SolicitudDTO> pendientes = solicitudSerSocioService.obtenerSolicitudesPendientes();
+    public ResponseEntity<List<SolicitudJugadorDTO>> obtenerSolicitudesPendientes() {
+        List<SolicitudJugadorDTO> pendientes = solicitudJugadorService.obtenerSolicitudesPendientesJugador();
         return new ResponseEntity<>(pendientes, HttpStatus.OK);
     }
 
@@ -75,7 +58,7 @@ public class SolicitudSocioController {
             @PathVariable Long id,
             @RequestParam EstadoSolicitudEnums nuevoEstado
     ) {
-        ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
+        ResponceDTO response = solicitudJugadorService.actualizarEstadoSolicitudJugador(id, nuevoEstado);
         return ResponseEntity.ok(response);
     }
 }

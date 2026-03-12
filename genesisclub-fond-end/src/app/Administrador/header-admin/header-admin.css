@@ -1,129 +1,203 @@
-/* ===== HEADER ===== */
+/* ============================================
+   ADMIN HEADER — GenesisClub
+   ============================================ */
+
 .admin-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.85rem 5%;
+  background: rgba(6, 8, 16, 0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  font-family: 'DM Sans', sans-serif;
+}
 
-  padding: 14px 24px;
-
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  color: white;
-
-  position: sticky;
+/* Línea de acento superior */
+.admin-header::before {
+  content: '';
+  position: absolute;
   top: 0;
-  z-index: 1000;
-
-  box-shadow: 0 4px 20px rgba(0,0,0,.4);
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #00e5ff, #f59e0b);
 }
 
-/* ===== LOGO ===== */
+/* ============================================
+   LOGO
+   ============================================ */
 .logo h2 {
-  margin: 0;
-  font-size: 20px;
-  font-weight: 600;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  letter-spacing: 0.1em;
+  color: #00e5ff;
+  text-shadow: 0 0 18px rgba(0, 229, 255, 0.35);
+  white-space: nowrap;
+  cursor: default;
 }
 
-/* ===== NAV DESKTOP ===== */
+/* ============================================
+   HAMBURGUESA (mobile)
+   ============================================ */
+.menu-toggle {
+  display: none;
+  font-size: 1.4rem;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e8eaf0;
+  border-radius: 0.5rem;
+  padding: 0.35em 0.6em;
+  cursor: pointer;
+  transition: border-color 0.2s, color 0.2s;
+  line-height: 1;
+}
+
+.menu-toggle:hover {
+  border-color: #00e5ff;
+  color: #00e5ff;
+}
+
+/* ============================================
+   NAV BUTTONS
+   ============================================ */
 .nav-buttons {
   display: flex;
-  gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 0.3rem;
 }
 
-/* ===== BOTONES ===== */
 .nav-btn {
-  background: #334155;
-  color: white;
-  border: none;
-
-  padding: 10px 16px;
-  border-radius: 10px;
-
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  padding: 0.5em 0.95em;
+  background: transparent;
+  color: #8892a4;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
   cursor: pointer;
-  transition: .25s;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+  white-space: nowrap;
 }
 
 .nav-btn:hover {
-  background: #475569;
-  transform: translateY(-2px);
+  color: #e8eaf0;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
-/* ===== LOGOUT ===== */
+.nav-btn.active,
+.nav-btn:focus-visible {
+  color: #00e5ff;
+  background: rgba(0, 229, 255, 0.08);
+  border-color: rgba(0, 229, 255, 0.25);
+  outline: none;
+}
+
+/* ============================================
+   ACCIONES / LOGOUT
+   ============================================ */
+.acciones {
+  display: flex;
+  align-items: center;
+}
+
 .logout {
-  background: #ef4444;
-  border: none;
-  padding: 10px 14px;
-  border-radius: 10px;
-  color: white;
-  font-weight: bold;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.5em 1.1em;
+  background: transparent;
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 0.5rem;
   cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
 }
 
 .logout:hover {
-  background: #dc2626;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.6);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
 }
 
-/* ===== HAMBURGUESA ===== */
-.menu-toggle {
-  display: none;
-  font-size: 26px;
-  background: transparent;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
+/* ============================================
+   HELPERS DE VISIBILIDAD
+   ============================================ */
+.mobile-only  { display: none; }
+.desktop-only { display: flex; }
 
-/* visibilidad */
-.mobile-only {
-  display: none;
-}
+/* ============================================
+   RESPONSIVE — MOBILE
+   ============================================ */
+@media (max-width: 56em) {
+  .menu-toggle  { display: block; }
+  .desktop-only { display: none !important; }
 
-.desktop-only {
-  display: block;
-}
-
-
-/* =====================================
-   📱 MOBILE FIX REAL
-===================================== */
-@media (max-width: 768px) {
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .desktop-only {
-    display: none;
-  }
-
-  /* OCULTO REAL */
+  /* Nav colapsado por defecto */
   .nav-buttons {
     display: none;
-
-    position: absolute;
-    top: 60px;
-    left: 0;
-
-    width: 100%;
     flex-direction: column;
-
-    background: #0f172a;
-
-    padding: 18px;
-    gap: 12px;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.25rem;
+    padding: 0.75rem 0 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
+    animation: slideDown 0.25s ease both;
   }
 
-  /* SOLO cuando está abierto */
+  /* Nav abierto con clase .open */
   .nav-buttons.open {
     display: flex;
   }
 
-  .nav-btn,
-  .mobile-only {
-    width: 100%;
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
+  .nav-btn {
+    font-size: 0.88rem;
+    padding: 0.7em 1em;
+    text-align: left;
+    border-radius: 0.5rem;
+    border: 1px solid transparent;
+  }
+
+  .nav-btn:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  /* Logout al final del menú mobile */
   .mobile-only {
     display: block;
+    margin-top: 0.5rem;
+    text-align: center;
+  }
+}
+
+/* ============================================
+   RESPONSIVE — DESKTOP GRANDE
+   ============================================ */
+@media (min-width: 80em) {
+  .admin-header {
+    padding: 0.85rem 6%;
+  }
+
+  .nav-btn {
+    font-size: 0.85rem;
+    padding: 0.5em 1.1em;
   }
 }

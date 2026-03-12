@@ -41,16 +41,24 @@ public class SecurityConfig {
                 // --- RUTAS PÚBLICAS ---
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/api/usuario/registro").permitAll()
-                .requestMatchers("/api/solicitud/nuevo").permitAll()
-                .requestMatchers("/api/solicitud/registro-invitado").permitAll()
+                .requestMatchers("/api/solicitud/socio/nuevo").permitAll()
+                .requestMatchers("/api/solicitud/socio/registro-invitado").permitAll()
                 .requestMatchers("/api/solicitud/jugador").permitAll()
                 .requestMatchers("/email/**").permitAll()
                 .requestMatchers("/publico/test-final").permitAll()
                 .requestMatchers("/api/invitacion/aceptar/**").permitAll()
 
                 // --- RUTAS DE ADMINISTRADOR ---
-                .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
-                .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/socio/pendientes").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/socio/actualizar/**").hasRole("ADMIN")
+                // endpoints de solicitudes de jugadores (nuevo controlador separado)
+                .requestMatchers("/api/solicitud/jugador/pendientes").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/jugador/actualizar/**").hasRole("ADMIN")
+
+                // acceso a recursos de jugadores
+                .requestMatchers("/api/jugador/todos").hasRole("ADMIN")
+                .requestMatchers("/api/jugador/**").hasRole("ADMIN")
+
                 .requestMatchers("/api/socio/todos").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
                 .requestMatchers("/api/auth/admin/solo").hasRole("ADMIN")

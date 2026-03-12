@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SocioDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
 import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
+import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Servicio.SocioServicio;
 
 @Service
@@ -17,6 +18,9 @@ public class ServicioSocioImpl implements SocioServicio {
 
     @Autowired
     private SocioRepository socioRepository;
+
+    @Autowired
+    private SolicitudReposistory solicitudRepository; // para obtener patente de la última solicitud
 
     // ===============================
     // LISTAR TODOS
@@ -49,7 +53,7 @@ public class ServicioSocioImpl implements SocioServicio {
     // ===============================
     private SocioDTO toDTO(SocioEntity s) {
 
-        return new SocioDTO(
+        SocioDTO dto = new SocioDTO(
                 s.getId(),
                 s.getUsuario().getNombre(),
                 s.getUsuario().getApellido(),
@@ -57,7 +61,15 @@ public class ServicioSocioImpl implements SocioServicio {
                 s.getEstado().getEstado(),
                 s.getCantidadInvitaciones(),
                 s.getNumPostulaciones(),
-                s.getUltimoMovimiento()
+                s.getUltimoMovimiento(),
+                null // la patente se asigna más abajo si existe
         );
+        // obtener patente de la última solicitud asociada al email
+        String email = s.getUsuario().getEmail();
+        solicitudRepository.findTopByEmailOrderByFechaSolicitudDesc(email)
+                .map(sol -> sol.getVehiculo())
+                .filter(v -> v != null)
+                .ifPresent(v -> dto.setPatente(v.getPatente()));
+        return dto;
     }
 }

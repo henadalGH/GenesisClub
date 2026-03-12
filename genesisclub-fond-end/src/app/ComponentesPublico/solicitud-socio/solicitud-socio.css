@@ -1,195 +1,303 @@
-/* ===== CONTENEDOR GENERAL ===== */
+/* ============================================
+   SOLICITUD DE REGISTRO — GenesisClub (FIXED)
+   ============================================ */
+
 :host {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
-
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  padding: 20px;
-  font-family: "Inter", "Segoe UI", sans-serif;
+  padding: 2rem 1.25rem;
+  background-color: #060810;
+  font-family: 'DM Sans', sans-serif;
 }
 
-/* ===== CARD ===== */
-.card {
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 20%, rgba(124, 58, 237, 0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(0, 229, 255, 0.12) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   CONTENEDOR
+   ============================================ */
+.contenedor {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 520px;
-
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 18px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.25),
-    0 2px 8px rgba(0,0,0,0.15);
-
-  animation: fadeIn 0.4s ease;
+  max-width: 40rem;
+  animation: fadeUp 0.6s ease both;
 }
 
-/* ===== HEADER ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   CARD — SIN overflow:hidden (era lo que
+   cortaba y cruzaba los inputs del grid)
+   ============================================ */
+.card {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2.25rem;
+  box-shadow:
+    0 8px 48px rgba(0, 0, 0, 0.6),
+    0 0 0 1px rgba(0, 229, 255, 0.04);
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #00e5ff);
+  border-radius: 1.5rem 1.5rem 0 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   HEADER CARD
+   ============================================ */
 .header-card {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .titulo {
-  font-size: 26px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  letter-spacing: 0.07em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
 }
 
 .descripcion {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  color: #8892a4;
+  font-weight: 300;
+  line-height: 1.6;
+  max-width: 28rem;
+  margin: 0 auto;
 }
 
-/* ===== FORM ===== */
+/* ============================================
+   FORMULARIO
+   ============================================ */
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1.1rem;
 }
 
-/* ===== GRID DOS COLUMNAS ===== */
+/* ============================================
+   GRID 2 COLUMNAS
+   minmax(0, 1fr) es la clave: impide que los
+   hijos desborden su celda y se crucen
+   ============================================ */
 .grid-campos {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  width: 100%;
 }
 
-/* ===== CAMPOS ===== */
+/* ============================================
+   CAMPOS
+   ============================================ */
 .campos {
   display: flex;
   flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0; /* evita desborde dentro del grid */
 }
 
 .campos label {
-  font-size: 13px;
-  font-weight: 600;
-  color: #334155;
-  margin-bottom: 6px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4b5563;
 }
 
-/* INPUTS MODERNOS */
 .campos input {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-
-  font-size: 14px;
-
-  transition: all 0.25s ease;
-}
-
-/* hover */
-.campos input:hover {
-  border-color: #94a3b8;
-}
-
-/* focus */
-.campos input:focus {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  color: #e8eaf0;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.65rem;
+  padding: 0.72em 1em;
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
-/* ===== BOTONES ===== */
+.campos input::placeholder {
+  color: #374151;
+  font-size: 0.85rem;
+}
+
+.campos input:focus {
+  border-color: #00e5ff;
+  background: rgba(0, 229, 255, 0.05);
+  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+}
+
+/* Fix autofill Chrome */
+.campos input:-webkit-autofill,
+.campos input:-webkit-autofill:hover,
+.campos input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #e8eaf0;
+  -webkit-box-shadow: 0 0 0px 1000px #111827 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ============================================
+   CHECKBOX (Tiene GNC)
+   ============================================ */
+.campos-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.4rem 0;
+}
+
+.campos-checkbox input[type="checkbox"] {
+  width: 1.1rem;
+  height: 1.1rem;
+  min-width: 1.1rem;
+  accent-color: #00e5ff;
+  cursor: pointer;
+}
+
+.campos-checkbox label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #4b5563;
+  cursor: pointer;
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
 .botones {
   display: flex;
-  gap: 12px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
-/* BOTÓN PRINCIPAL */
 .btn-enviar {
-  flex: 1;
-  padding: 12px;
-
-  background: #3b82f6;
-  color: white;
-
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.8em 1.5em;
+  background: #00e5ff;
+  color: #060810;
   border: none;
-  border-radius: 10px;
-
-  font-weight: 600;
+  border-radius: 0.65rem;
   cursor: pointer;
-
-  transition: 0.25s;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
-.btn-enviar:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
+.btn-enviar:not(:disabled):hover {
+  background: #33eaff;
+  box-shadow: 0 0 28px rgba(0, 229, 255, 0.45);
+  transform: translateY(-2px);
 }
 
 .btn-enviar:disabled {
-  opacity: 0.6;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
-/* BOTÓN CANCELAR */
+.spinner {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(6, 8, 16, 0.3);
+  border-top-color: #060810;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .btn-cancelar {
-  flex: 1;
-  padding: 12px;
-
-  background: transparent;
-  color: #475569;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.7em 1.5em;
+  background: transparent;
+  color: #8892a4;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.65rem;
   cursor: pointer;
-
-  transition: 0.25s;
+  width: 100%;
+  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
 }
 
 .btn-cancelar:hover {
-  background: #f1f5f9;
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.4);
+  background: rgba(239, 68, 68, 0.06);
 }
 
-/* ===== SPINNER ===== */
-.spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 6px;
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 32em) {
+  :host {
+    align-items: flex-start;
+    padding: 1.5rem 1rem;
+  }
 
-  animation: spin 0.7s linear infinite;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
   .card {
-    padding: 25px;
+    padding: 2rem 1.25rem;
+    border-radius: 1.25rem;
   }
 
   .grid-campos {
     grid-template-columns: 1fr;
   }
+}
 
+@media (min-width: 48em) {
   .botones {
-    flex-direction: column;
+    flex-direction: row;
   }
-}
 
-/* ===== ANIMACIONES ===== */
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .btn-enviar,
+  .btn-cancelar {
+    flex: 1;
   }
 }

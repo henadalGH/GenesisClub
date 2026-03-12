@@ -1,0 +1,66 @@
+<app-header-admin></app-header-admin>
+
+<div class="page">
+
+  @if (cargando()) {
+
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+
+  } @else if (jugador()) {
+
+    <section class="profile-card">
+
+      <header class="profile-header">
+        <i class="bi bi-person-circle avatar"></i>
+
+        <div>
+          <h2>{{ jugador().nombre }} {{ jugador().apellido }}</h2>
+          <span class="email">{{ jugador().email }}</span>
+        </div>
+      </header>
+
+      <div class="info-grid">
+
+        <div class="info-item">
+          <span>ID Jugador</span>
+          <strong>{{ jugador().id }}</strong>
+        </div>
+
+        <div class="info-item">
+          <span>ID Usuario</span>
+          <strong>{{ jugador().usuarioId }}</strong>
+        </div>
+
+        <div class="info-item">
+          <span>Estado</span>
+
+          <span
+            class="badge"
+            [class.activo]="jugador().estado === 'ACTIVO'"
+            [class.bloqueado]="jugador().estado === 'BLOQUEADO'"
+          >
+            {{ jugador().estado }}
+          </span>
+        </div>
+
+        <div class="info-item">
+          <span>Email</span>
+          <strong>{{ jugador().email }}</strong>
+        </div>
+
+      </div>
+
+      <footer class="profile-footer">
+        <button class="btn btn-back" routerLink="/listaJugadores">
+          <i class="bi bi-arrow-left"></i> Volver al listado
+        </button>
+      </footer>
+
+    </section>
+
+  }
+
+</div>

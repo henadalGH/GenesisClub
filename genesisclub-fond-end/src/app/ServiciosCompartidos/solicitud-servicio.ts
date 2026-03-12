@@ -13,9 +13,9 @@ export interface ResponceDTO {
   providedIn: 'root',
 })
 export class SolicitudServicio {
-  private urlSolicitud = `${environment.apiUrl}/solicitud/nuevo`;
+  private urlSolicitud = `${environment.apiUrl}/solicitud/socio/nuevo`;
   private urlSolicitudJugador = `${environment.apiUrl}/solicitud/jugador`;
-  private urlInvitado = `${environment.apiUrl}/solicitud/registro-invitado`;
+  private urlInvitado = `${environment.apiUrl}/solicitud/socio/registro-invitado`;
 
   constructor(private http: HttpClient) {}
 

@@ -3,9 +3,9 @@
 <div class="contenedor">
 
   <section class="cabecera">
-    <h1 class="titulo">Solicitudes Pendientes</h1>
+    <h1 class="titulo">Solicitudes Pendientes de Jugadores</h1>
     <p class="subtitulo">
-      Gestioná las solicitudes de nuevos socios y dales acceso al sistema.
+      Gestioná las solicitudes de nuevos jugadores y dales acceso al sistema.
     </p>
   </section>
 
@@ -18,13 +18,13 @@
   <section class="lista">
 
     @for (pen of pendiente; track pen.id) {
-      
+
       <article class="card">
-        
+
         <div class="info">
-          
+
           <div class="dato">
-            <span class="label">Socio</span>
+            <span class="label">Jugador</span>
             <span class="valor">{{ pen.nombre }} {{ pen.apellido }}</span>
           </div>
 
@@ -38,18 +38,17 @@
             <span class="valor">{{ pen.contacto }}</span>
           </div>
 
-          <!-- Si el socio incluyó vehículo mostramos info -->
+          <div class="dato">
+            <span class="label">Fecha Solicitud</span>
+            <span class="valor">{{ pen.fechaSolicitud }}</span>
+          </div>
+
           @if (pen.patente) {
             <div class="dato">
               <span class="label">Patente vehículo</span>
               <span class="valor">{{ pen.patente }}</span>
             </div>
           }
-
-          <div class="dato">
-            <span class="label">Fecha Solicitud</span>
-            <span class="valor">{{ pen.fechaSolicitud }}</span>
-          </div>
 
           <div class="dato">
             <span class="label">Estado Actual</span>
@@ -79,7 +78,7 @@
       </article>
 
     } @empty {
-      
+
       <div class="sin-pendientes">
         <div class="icono-check">✅</div>
         <h2>¡Todo al día!</h2>
