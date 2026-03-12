@@ -31,22 +31,18 @@ public class AuthServiceImpl implements AuthService {
     public Map<String, Object> login(LoginDTO login) throws Exception {
 
         Map<String, Object> response = new HashMap<>();
+        
+        // Mensaje genérico para CUALQUIER error de autenticación
+        final String ERROR_MESSAGE = "Usuario o contraseña incorrectos";
 
         UsuarioEntity usuario = usuarioRepository
                 .findByEmail(login.getEmail())
                 .orElse(null);
 
-        // ❌ no existe
-        if (usuario == null) {
+        // ❌ no existe o ❌ password incorrecta → MISMO mensaje
+        if (usuario == null || !encoder.matches(login.getPassword(), usuario.getPassword())) {
             response.put("success", false);
-            response.put("message", "Usuario no encontrado");
-            return response;
-        }
-
-        // ❌ password incorrecta
-        if (!encoder.matches(login.getPassword(), usuario.getPassword())) {
-            response.put("success", false);
-            response.put("message", "Contraseña incorrecta");
+            response.put("message", ERROR_MESSAGE);
             return response;
         }
 

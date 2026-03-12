@@ -54,6 +54,9 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "verificacion_email")
     private boolean verificacionEmail;
 
+    @Column(name = "estado")
+    private String estado = "ACTIVO"; // ACTIVO, SUSPENDIDO, BLOQUEADO
+
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private RolEntity rol;
@@ -73,6 +76,9 @@ public class UsuarioEntity implements UserDetails {
 
     @OneToMany(mappedBy = "usuario")
     private List<NotificacionEntity> notificacion = new ArrayList<>();
+
+    @OneToMany(mappedBy = "usuario")
+    private List<VehiculoEntity> vehiculos = new ArrayList<>();
 
     // ⚡ SE ELIMINÓ LA LISTA "relacion" DE AQUÍ PORQUE CAUSABA EL ERROR DE MAPEO
     // Y PORQUE LA LÓGICA MULTINIVEL PERTENECE A LA ENTIDAD SOCIO.

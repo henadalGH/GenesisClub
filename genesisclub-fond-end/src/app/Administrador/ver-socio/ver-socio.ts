@@ -18,7 +18,10 @@ export class VerSocio implements OnInit {
 
   // Estados reactivos con Signals
   socio = signal<any>(null);
+  vehiculos = signal<any[]>([]);
   cargando = signal<boolean>(true);
+  procesando = signal<boolean>(false);
+  idProc = signal<number>(0);
   id = signal<number>(0);
 
   ngOnInit(): void {
@@ -31,15 +34,85 @@ export class VerSocio implements OnInit {
   }
 
   obtenerDatosSocio() {
-    this.cargando.set(true); // Por si quieres reactivar carga
+    this.cargando.set(true);
     this.socioServicio.verSocio(this.id()).subscribe({
       next: (data) => {
         this.socio.set(data);
+        this.obtenerVehiculos();
         this.cargando.set(false);
       },
       error: (error) => {
         console.error('Error al cargar socio:', error);
         this.cargando.set(false);
+      }
+    });
+  }
+
+  obtenerVehiculos() {
+    this.socioServicio.obtenerVehiculosSocio(this.id()).subscribe({
+      next: (data) => {
+        this.vehiculos.set(data);
+      },
+      error: (error) => {
+        console.error('Error al cargar vehículos:', error);
+        this.vehiculos.set([]);
+      }
+    });
+  }
+
+  suspenderSocio() {
+    if (!confirm('¿Estás seguro de que deseas suspender este socio?')) {
+      return;
+    }
+    this.procesando.set(true);
+    this.socioServicio.suspenderSocio(this.id()).subscribe({
+      next: () => {
+        alert('Socio suspendido correctamente');
+        this.obtenerDatosSocio();
+        this.procesando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al suspender socio:', error);
+        alert('Error al suspender socio');
+        this.procesando.set(false);
+      }
+    });
+  }
+
+  bloquearSocio() {
+    if (!confirm('¿Estás seguro de que deseas bloquear este socio?')) {
+      return;
+    }
+    this.procesando.set(true);
+    this.socioServicio.bloquearSocio(this.id()).subscribe({
+      next: () => {
+        alert('Socio bloqueado correctamente');
+        this.obtenerDatosSocio();
+        this.procesando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al bloquear socio:', error);
+        alert('Error al bloquear socio');
+        this.procesando.set(false);
+      }
+    });
+  }
+
+  activarSocio() {
+    if (!confirm('¿Estás seguro de que deseas activar este socio?')) {
+      return;
+    }
+    this.procesando.set(true);
+    this.socioServicio.activarSocio(this.id()).subscribe({
+      next: () => {
+        alert('Socio activado correctamente');
+        this.obtenerDatosSocio();
+        this.procesando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al activar socio:', error);
+        alert('Error al activar socio');
+        this.procesando.set(false);
       }
     });
   }

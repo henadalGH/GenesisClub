@@ -14,6 +14,7 @@ export class Login {
 
   email: string = '';
   password: string = '';
+  errorMessage: string = '';
 
   constructor(
     private authServicio: AuthServicio,
@@ -21,8 +22,11 @@ export class Login {
   ) {}
 
   login() {
+    // reset previous error
+    this.errorMessage = '';
+
     if (!this.email || !this.password) {
-      alert('Complete los campos');
+      this.errorMessage = 'Complete los campos';
       return;
     }
 
@@ -32,7 +36,14 @@ export class Login {
         this.authServicio.redirectByRole();
       },
       error: (err: any) => {
-        alert(err.message || 'Usuario o contraseña incorrectos');
+        // show inline message instead of alert
+        if (err?.message && !err.message.startsWith('Http failure response')) {
+          this.errorMessage = err.message;
+        } else if (err?.error?.message) {
+          this.errorMessage = err.error.message;
+        } else {
+          this.errorMessage = 'Usuario o contraseña incorrectos';
+        }
       }
     });
   }

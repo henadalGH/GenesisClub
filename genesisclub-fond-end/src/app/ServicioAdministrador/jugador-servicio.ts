@@ -26,4 +26,32 @@ export class JugadorServicio {
     const url = `${this.urlObtenerPorId}/${id}`;
     return this.http.get<any>(url);
   }
+
+  /**
+   * Obtiene los vehículos de un jugador
+   */
+  obtenerVehiculosJugador(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.urlObtenerPorId}/${id}/vehiculos`);
+  }
+
+  /**
+   * Suspende a un jugador
+   */
+  suspenderJugador(id: number): Observable<any> {
+    return this.http.put<any>(`${this.urlObtenerPorId}/${id}/suspender`, {});
+  }
+
+  /**
+   * Bloquea a un jugador
+   */
+  bloquearJugador(id: number): Observable<any> {
+    return this.http.put<any>(`${this.urlObtenerPorId}/${id}/bloquear`, {});
+  }
+
+  /**
+   * Activa a un jugador
+   */
+  activarJugador(id: number): Observable<any> {
+    return this.http.put<any>(`${this.urlObtenerPorId}/${id}/activar`, {});
+  }
 }

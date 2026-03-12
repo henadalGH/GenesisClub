@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.JugadorDTO;
+import com.example.genesisclub.genesisClub.Modelo.DTO.VehiculoDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.JugadorEntity;
 import com.example.genesisclub.genesisClub.Repositorio.JugadorRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
@@ -37,6 +38,62 @@ public class JugadorServiceImpl implements JugadorService {
         return mapToDTO(jugador);
     }
 
+    // ===============================
+    // OBTENER VEHÍCULOS POR JUGADOR
+    // ===============================
+    @Override
+    public List<VehiculoDTO> obtenerVehiculosPorJugador(Long id) {
+        JugadorEntity jugador = jugadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jugador no encontrado con id: " + id));
+        
+        return jugador.getUsuario().getVehiculos()
+                .stream()
+                .map(this::vehiculoToDTO)
+                .toList();
+    }
+
+    // ===============================
+    // SUSPENDER JUGADOR
+    // ===============================
+    @Override
+    @Transactional
+    public void suspenderJugador(Long id) {
+        JugadorEntity jugador = jugadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jugador no encontrado con id: " + id));
+        
+        // Cambiar estado del usuario a SUSPENDIDO
+        jugador.getUsuario().setEstado("SUSPENDIDO");
+        jugadorRepository.save(jugador);
+    }
+
+    // ===============================
+    // BLOQUEAR JUGADOR
+    // ===============================
+    @Override
+    @Transactional
+    public void bloquearJugador(Long id) {
+        JugadorEntity jugador = jugadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jugador no encontrado con id: " + id));
+        
+        // Cambiar estado del usuario a BLOQUEADO
+        jugador.getUsuario().setEstado("BLOQUEADO");
+        jugadorRepository.save(jugador);
+    }
+
+    // ===============================
+    // ACTIVAR JUGADOR
+    // ===============================
+    @Override
+    @Transactional
+    public void activarJugador(Long id) {
+        JugadorEntity jugador = jugadorRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Jugador no encontrado con id: " + id));
+        
+        // Cambiar estado del usuario a ACTIVO
+        jugador.getUsuario().setEstado("ACTIVO");
+        jugadorRepository.save(jugador);
+    }
+
     private JugadorDTO mapToDTO(JugadorEntity entity) {
         JugadorDTO dto = new JugadorDTO();
         dto.setId(entity.getId());
@@ -45,8 +102,8 @@ public class JugadorServiceImpl implements JugadorService {
             dto.setNombre(entity.getUsuario().getNombre());
             dto.setApellido(entity.getUsuario().getApellido());
             dto.setEmail(entity.getUsuario().getEmail());
-            dto.setEstado("ACTIVO");
-            // buscar patente en la última solicitud por email
+            dto.setEstado(entity.getUsuario().getEstado() != null ? 
+                         entity.getUsuario().getEstado() : "ACTIVO");
             String email = entity.getUsuario().getEmail();
             solicitudRepository.findTopByEmailOrderByFechaSolicitudDesc(email)
                     .map(sol -> sol.getVehiculo())
@@ -54,5 +111,16 @@ public class JugadorServiceImpl implements JugadorService {
                     .ifPresent(v -> dto.setPatente(v.getPatente()));
         }
         return dto;
+    }
+
+    private VehiculoDTO vehiculoToDTO(com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity v) {
+        return new VehiculoDTO(
+                v.getId(),
+                v.getPatente(),
+                v.getMarca(),
+                v.getModelo(),
+                v.getAnio(),
+                v.isTieneGnc()
+        );
     }
 }

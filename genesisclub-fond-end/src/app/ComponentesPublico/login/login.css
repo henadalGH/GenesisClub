@@ -198,9 +198,19 @@
 
     .cancelar:hover {
     color: #ef4444;
-    border-color: rgba(239, 68, 68, 0.4);
-    background: rgba(239, 68, 68, 0.06);
     }
+
+    /* mensaje de error dentro del formulario */
+    .mensaje-error {
+    
+    color: #fff;
+    padding: 0.75rem 1rem;
+    border-radius: 0.65rem;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-top: 0.5rem;
+    }
+
 
     /* ============================================
     RESPONSIVE

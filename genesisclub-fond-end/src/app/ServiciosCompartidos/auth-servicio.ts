@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap, catchError, throwError } from 'rxjs';
 import { LoginServicio } from './login-servicio';
 import { jwtDecode } from 'jwt-decode';
 
@@ -30,6 +30,17 @@ export class AuthServicio {
         } else {
           throw new Error('Usuario o contraseña incorrectos');
         }
+      }),
+      catchError((err: any) => {
+        // transform HTTP errors to friendly message
+        let msg = 'Usuario o contraseña incorrectos';
+        if (err.status === 0) {
+          msg = 'No se pudo conectar al servidor';
+        } else if (err.status === 401) {
+          // prefer backend message if present
+          msg = err.error?.message || 'Usuario o contraseña incorrectos';
+        }
+        return throwError(() => new Error(msg));
       })
     );
   }
