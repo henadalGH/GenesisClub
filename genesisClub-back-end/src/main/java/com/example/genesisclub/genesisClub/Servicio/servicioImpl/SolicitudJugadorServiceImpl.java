@@ -110,7 +110,6 @@ public class SolicitudJugadorServiceImpl implements SolicitudJugadorService {
         entidad.setNombre(dto.getNombre());
         entidad.setApellido(dto.getApellido());
         entidad.setEmail(dto.getEmail());
-        entidad.setContacto(dto.getContacto());
         entidad.setFechaSolicitud(LocalDate.now());
         entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
@@ -138,7 +137,6 @@ public class SolicitudJugadorServiceImpl implements SolicitudJugadorService {
         dto.setNombre(s.getNombre());
         dto.setApellido(s.getApellido());
         dto.setEmail(s.getEmail());
-        dto.setContacto(s.getContacto());
         dto.setFechaSolicitud(s.getFechaSolicitud());
         dto.setEstado(s.getEstado().getEstado());
         if (s.getVehiculo() != null) {

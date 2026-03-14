@@ -1,5 +1,5 @@
 /* ============================================
-   SOLICITUD DE REGISTRO — GenesisClub (FIXED)
+   SOLICITUD SOCIO — GenesisClub (MEDIUM DARK)
    ============================================ */
 
 :host {
@@ -7,8 +7,8 @@
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  padding: 2rem 1.25rem;
-  background-color: #060810;
+  padding: 2.5rem 1.25rem;
+  background: #1e2235;
   font-family: 'DM Sans', sans-serif;
 }
 
@@ -17,8 +17,8 @@
   position: fixed;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 20% 20%, rgba(124, 58, 237, 0.2) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 85% 80%, rgba(0, 229, 255, 0.12) 0%, transparent 60%);
+    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 60%);
   pointer-events: none;
   z-index: 0;
 }
@@ -35,33 +35,30 @@
 }
 
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
+  from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
 /* ============================================
-   CARD — SIN overflow:hidden (era lo que
-   cortaba y cruzaba los inputs del grid)
+   CARD
    ============================================ */
 .card {
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #2a3148;
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.5rem;
   padding: 2.5rem 2.25rem;
   box-shadow:
-    0 8px 48px rgba(0, 0, 0, 0.6),
-    0 0 0 1px rgba(0, 229, 255, 0.04);
+    0 8px 40px rgba(0, 0, 0, 0.25),
+    0 1px 4px rgba(0, 0, 0, 0.1);
   position: relative;
 }
 
 .card::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #7c3aed, #00e5ff);
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7c3aed, #0ea5e9);
   border-radius: 1.5rem 1.5rem 0 0;
   pointer-events: none;
 }
@@ -76,9 +73,9 @@
 
 .titulo {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
   letter-spacing: 0.07em;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
+  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 55%, #7dd3fc 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -88,8 +85,8 @@
 
 .descripcion {
   font-size: 0.85rem;
-  color: #8892a4;
-  font-weight: 300;
+  color: #94a3b8;
+  font-weight: 400;
   line-height: 1.6;
   max-width: 28rem;
   margin: 0 auto;
@@ -106,8 +103,6 @@
 
 /* ============================================
    GRID 2 COLUMNAS
-   minmax(0, 1fr) es la clave: impide que los
-   hijos desborden su celda y se crucen
    ============================================ */
 .grid-campos {
   display: grid;
@@ -123,23 +118,23 @@
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
-  min-width: 0; /* evita desborde dentro del grid */
+  min-width: 0;
 }
 
 .campos label {
-  font-size: 0.72rem;
+  font-size: 0.73rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.09em;
   text-transform: uppercase;
-  color: #4b5563;
+  color: #94a3b8;
 }
 
-.campos input {
+.campos input:not([type="checkbox"]) {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.92rem;
-  color: #e8eaf0;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  background: #1e2235;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.65rem;
   padding: 0.72em 1em;
   outline: none;
@@ -149,51 +144,45 @@
   transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
-.campos input::placeholder {
-  color: #374151;
+.campos input:not([type="checkbox"])::placeholder {
+  color: #4b5563;
   font-size: 0.85rem;
 }
 
-.campos input:focus {
-  border-color: #00e5ff;
-  background: rgba(0, 229, 255, 0.05);
-  box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
+.campos input:not([type="checkbox"]):focus {
+  border-color: #818cf8;
+  background: #252b42;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
 }
 
 /* Fix autofill Chrome */
 .campos input:-webkit-autofill,
 .campos input:-webkit-autofill:hover,
 .campos input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #e8eaf0;
-  -webkit-box-shadow: 0 0 0px 1000px #111827 inset;
+  -webkit-text-fill-color: #e2e8f0;
+  -webkit-box-shadow: 0 0 0px 1000px #1e2235 inset;
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* ============================================
-   CHECKBOX (Tiene GNC)
-   ============================================ */
-.campos-checkbox {
+/* Checkbox GNC */
+.campos label:has(input[type="checkbox"]) {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
-  padding: 0.4rem 0;
-}
-
-.campos-checkbox input[type="checkbox"] {
-  width: 1.1rem;
-  height: 1.1rem;
-  min-width: 1.1rem;
-  accent-color: #00e5ff;
+  gap: 0.55rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
   cursor: pointer;
-}
-
-.campos-checkbox label {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #4b5563;
+}
+
+.campos input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #818cf8;
   cursor: pointer;
+  flex-shrink: 0;
 }
 
 /* ============================================
@@ -211,9 +200,9 @@
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: 0.06em;
-  padding: 0.8em 1.5em;
-  background: #00e5ff;
-  color: #060810;
+  padding: 0.82em 1.5em;
+  background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+  color: #ffffff;
   border: none;
   border-radius: 0.65rem;
   cursor: pointer;
@@ -222,26 +211,33 @@
   align-items: center;
   justify-content: center;
   gap: 0.5rem;
-  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.3);
+  transition: opacity 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
 .btn-enviar:not(:disabled):hover {
-  background: #33eaff;
-  box-shadow: 0 0 28px rgba(0, 229, 255, 0.45);
+  opacity: 0.92;
+  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.45);
   transform: translateY(-2px);
 }
 
+.btn-enviar:active {
+  transform: translateY(0);
+}
+
 .btn-enviar:disabled {
-  opacity: 0.45;
+  opacity: 0.4;
   cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
 .spinner {
   display: inline-block;
   width: 0.9rem;
   height: 0.9rem;
-  border: 2px solid rgba(6, 8, 16, 0.3);
-  border-top-color: #060810;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
   border-radius: 50%;
   animation: spin 0.7s linear infinite;
   flex-shrink: 0;
@@ -253,23 +249,23 @@
 
 .btn-cancelar {
   font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.88rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-  padding: 0.7em 1.5em;
+  padding: 0.75em 1.5em;
   background: transparent;
-  color: #8892a4;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #94a3b8;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.65rem;
   cursor: pointer;
   width: 100%;
-  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease;
 }
 
 .btn-cancelar:hover {
-  color: #ef4444;
-  border-color: rgba(239, 68, 68, 0.4);
-  background: rgba(239, 68, 68, 0.06);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.06);
 }
 
 /* ============================================

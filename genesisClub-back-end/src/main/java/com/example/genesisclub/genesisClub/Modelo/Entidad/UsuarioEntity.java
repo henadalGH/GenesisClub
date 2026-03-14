@@ -42,6 +42,12 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column( name = "codigoArea")
+    private String codigoArea;
+
+    @Column(name = "celular")
+    private String numeroCelular;
+
     @Column(name = "fecha_creacion")
     private LocalDate fechaCreacion;
 

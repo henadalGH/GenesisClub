@@ -49,8 +49,21 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
     @Override
     public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
+
         ResponceDTO response = new ResponceDTO();
-        if (validarEmailExistente(solicitudDTO.getEmail(), response)) return response;
+
+        if (validarEmailExistente(solicitudDTO.getEmail(), response)) {
+            return response;
+        }
+
+        // 🔴 VALIDAR SI LA PATENTE YA EXISTE
+        if (solicitudDTO.getPatente() != null &&
+            vehiculoRepository.existsByPatente(solicitudDTO.getPatente())) {
+
+            response.setNumOfErrors(1);
+            response.setMensage("La patente ya se encuentra registrada en el sistema.");
+            return response;
+        }
 
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
@@ -58,20 +71,32 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
 
         // procesar vehículo si llegó patente
         if (solicitudDTO.getPatente() != null) {
-            VehiculoEntity veh = procesarVehiculo(solicitudDTO.getPatente(), solicitudDTO.getMarca(),
-                    solicitudDTO.getModelo(), solicitudDTO.getAnio(), solicitudDTO.getTieneGnc());
+
+            VehiculoEntity veh = procesarVehiculo(
+                    solicitudDTO.getPatente(),
+                    solicitudDTO.getMarca(),
+                    solicitudDTO.getModelo(),
+                    solicitudDTO.getAnio(),
+                    solicitudDTO.getTieneGnc()
+            );
+
             if (veh != null) {
                 solicitud.setVehiculo(veh);
             }
         }
 
-        EstadoSolicitudEnums estadoEnum = estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
+        EstadoSolicitudEnums estadoEnum =
+                estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
+
         EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(estadoEnum)
                 .orElseThrow(() -> new RuntimeException("Estado de solicitud no configurado"));
 
         solicitud.setEstado(estado);
+
         solicitudRepository.save(solicitud);
+
         response.setMensage("Solicitud creada correctamente");
+
         return response;
     }
 
@@ -210,7 +235,6 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         entidad.setNombre(dto.getNombre());
         entidad.setApellido(dto.getApellido());
         entidad.setEmail(dto.getEmail());
-        entidad.setContacto(dto.getContacto());
         entidad.setFechaSolicitud(LocalDate.now());
         entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
@@ -251,7 +275,8 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
         dto.setNombre(s.getNombre());
         dto.setApellido(s.getApellido());
         dto.setEmail(s.getEmail());
-        dto.setContacto(s.getContacto());
+        dto.setCodigoArea(s.getCodigoArea());
+        dto.setNumeroCelular(s.getNumeroCelular());
         dto.setFechaSolicitud(s.getFechaSolicitud());
         dto.setEstado(s.getEstado().getEstado());
         dto.setTipoSolicitud(s.getTipoSolicitud());

@@ -13,7 +13,8 @@ public class SolicitudDTO {
     private String apellido;
     private String email;
     private String password;
-    private String contacto;
+    private String codigoArea;
+    private String numeroCelular;
     private LocalDate fechaSolicitud;
     private EstadoSolicitudEnums estado;
     private String token;
