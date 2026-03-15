@@ -8,6 +8,8 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.RegistroDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 
+import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -20,7 +22,7 @@ public class RegistroController {
     private RegistroUsuarioServicio registroService;
 
     @PostMapping("/registro")
-    public ResponseEntity<ResponceDTO> registrar(@RequestBody RegistroDTO dto) {
+    public ResponseEntity<ResponceDTO> registrar(@Valid @RequestBody RegistroDTO dto) {
         return ResponseEntity.ok(registroService.registrarUsuario(dto));
     }
 }

@@ -8,6 +8,9 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudJugadorService;
+
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ public class SolicitudJugadorController {
     // REGISTRO JUGADOR (PÚBLICO)
     // ======================================================
     @PostMapping
-    public ResponseEntity<ResponceDTO> crearSolicitudJugador(@RequestBody SolicitudJugadorDTO solicitud) {
+    public ResponseEntity<ResponceDTO> crearSolicitudJugador( @Valid @RequestBody SolicitudJugadorDTO solicitud) {
         ResponceDTO response = solicitudJugadorService.solicitarJugador(solicitud);
 
         if (response.getNumOfErrors() > 0) {

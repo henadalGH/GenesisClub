@@ -12,51 +12,109 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./solicitud-socio.css'],
 })
 export class SolicitudSocio {
-  // Propiedades vinculadas al [(ngModel)] del HTML
+
   nombre: string = '';
   apellido: string = '';
   email: string = '';
-  contacto: string = '';
+  codigoArea: string = '';
+  numeroCelular: string = '';
   password: string = '';
   confirmPassword: string = '';
-  // campos de vehículo opcionales
   patente: string = '';
   marca: string = '';
   modelo: string = '';
-  anio?: number;
+  anio: number | null = null;
   tieneGnc: boolean = false;
 
+  mostrarPassword: boolean = false;
+  mostrarConfirmPassword: boolean = false;
+
   cargando: boolean = false;
+  errores: any = {};
 
   constructor(
     private solicitudServicio: SolicitudServicio,
     private router: Router
-  ) { }
+  ) {}
 
-  enviarSolicitud() {
-    // 1. Validaciones de campos vacíos
-    if (!this.email || !this.nombre || !this.apellido || !this.contacto || !this.password) {
-      alert('Por favor, completa todos los campos.');
+  validarCampo(control: any, campo: string): void {
+    if (control.invalid) {
+      if (control.errors?.['required']) {
+        this.errores[campo] = 'Este campo es obligatorio';
+      } else if (control.errors?.['pattern']) {
+        switch (campo) {
+          case 'password':
+            this.errores[campo] = 'La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y símbolo';
+            break;
+          case 'codigoArea':
+            this.errores[campo] = 'Código de área inválido (solo números)';
+            break;
+          case 'numeroCelular':
+            this.errores[campo] = 'Número de celular inválido (solo números)';
+            break;
+          case 'email':
+            this.errores[campo] = 'Ingresá un correo válido';
+            break;
+          default:
+            this.errores[campo] = 'Formato inválido';
+        }
+      }
+    } else {
+      this.errores[campo] = '';
+    }
+  }
+
+  validarConfirmPassword(): void {
+    if (this.confirmPassword && this.confirmPassword !== this.password) {
+      this.errores.confirmPassword = 'Las contraseñas no coinciden';
+    } else {
+      this.errores.confirmPassword = '';
+    }
+  }
+
+  validarPatente(): void {
+    if (!this.patente) {
+      this.errores.patente = '';
       return;
     }
 
-    // 2. Validación de contraseñas
+    const regexVieja = /^[A-Z]{3}[- ]?\d{3}$/i;
+    const regexNueva = /^[A-Z]{2}\d{3}[A-Z]{2}$/i;
+
+    if (!regexVieja.test(this.patente) && !regexNueva.test(this.patente)) {
+      this.errores.patente = 'Patente inválida para Argentina';
+    } else {
+      this.errores.patente = '';
+    }
+  }
+
+  enviarSolicitud(): void {
+    if (!this.nombre || !this.apellido || !this.email || !this.codigoArea || !this.numeroCelular || !this.password) {
+      alert('Por favor, completa todos los campos obligatorios.');
+      return;
+    }
+
     if (this.password !== this.confirmPassword) {
       alert('Las contraseñas no coinciden.');
       return;
     }
 
+    if (this.errores.patente) {
+      alert('Corrige la patente antes de enviar.');
+      return;
+    }
+
     this.cargando = true;
 
-    // 3. Creamos el objeto para enviar (esto arregla el error de los 5 argumentos)
     const payload: any = {
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
-      contacto: this.contacto,
-      password: this.password
+      password: this.password,
+      codigoArea: this.codigoArea,
+      numeroCelular: this.numeroCelular
     };
-    // añadimos datos de vehículo solo si hay patente
+
     if (this.patente) {
       payload.patente = this.patente;
       payload.marca = this.marca;
@@ -65,16 +123,15 @@ export class SolicitudSocio {
       payload.tieneGnc = this.tieneGnc;
     }
 
-    // 4. Llamada al servicio con manejo de error 400
     this.solicitudServicio.enviarSolicitud(payload).subscribe({
       next: (res) => {
-        alert(res.mensage); // "Solicitud creada correctamente"
+        this.cargando = false;
+        alert(res.mensage);
         this.router.navigate(['/inicio']);
       },
       error: (err) => {
         this.cargando = false;
-        // Capturamos el mensaje de "Email ya vinculado..." que enviamos desde Java
-        const mensajeBack = err.error?.mensage || 'Error al procesar la solicitud';
+        const mensajeBack = err?.error?.mensage ?? 'Error al procesar la solicitud';
         alert(mensajeBack);
         console.error('Error desde el servidor:', err);
       }

@@ -8,6 +8,9 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
+
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +34,7 @@ public class SolicitudSocioController {
     // REGISTRO NORMAL (PÚBLICO)
     // ======================================================
     @PostMapping("/nuevo")
-    public ResponseEntity<ResponceDTO> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
+    public ResponseEntity<ResponceDTO> crearSolicitud(@Valid @RequestBody SolicitudDTO solicitud) {
         ResponceDTO response = solicitudSerSocioService.crearSolicitud(solicitud, null);
 
         if (response.getNumOfErrors() > 0) {
@@ -77,5 +80,5 @@ public class SolicitudSocioController {
     ) {
         ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
         return ResponseEntity.ok(response);
-    }
+    } 
 }

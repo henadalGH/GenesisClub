@@ -47,9 +47,7 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 1.5rem;
   padding: 2.5rem 2.25rem;
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.25),
-    0 1px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
   position: relative;
 }
 
@@ -64,7 +62,7 @@
 }
 
 /* ============================================
-   HEADER CARD
+   HEADER
    ============================================ */
 .header-card {
   text-align: center;
@@ -101,9 +99,7 @@
   gap: 1.1rem;
 }
 
-/* ============================================
-   GRID 2 COLUMNAS
-   ============================================ */
+/* Grid 2 columnas general */
 .grid-campos {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -121,7 +117,7 @@
   min-width: 0;
 }
 
-.campos label {
+.campos > label {
   font-size: 0.73rem;
   font-weight: 700;
   letter-spacing: 0.09em;
@@ -129,7 +125,35 @@
   color: #94a3b8;
 }
 
-.campos input:not([type="checkbox"]) {
+/* ============================================
+   TELÉFONO — código área (1fr) + celular (3fr)
+   ============================================ */
+.telefono-grupo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.telefono-grupo > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.telefono-grupo label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
+}
+
+/* ============================================
+   INPUTS
+   ============================================ */
+input:not([type="checkbox"]) {
   font-family: 'DM Sans', sans-serif;
   font-size: 0.92rem;
   color: #e2e8f0;
@@ -144,27 +168,75 @@
   transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
-.campos input:not([type="checkbox"])::placeholder {
+input:not([type="checkbox"])::placeholder {
   color: #4b5563;
   font-size: 0.85rem;
 }
 
-.campos input:not([type="checkbox"]):focus {
+input:not([type="checkbox"]):focus {
   border-color: #818cf8;
   background: #252b42;
   box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
 }
 
 /* Fix autofill Chrome */
-.campos input:-webkit-autofill,
-.campos input:-webkit-autofill:hover,
-.campos input:-webkit-autofill:focus {
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
   -webkit-text-fill-color: #e2e8f0;
   -webkit-box-shadow: 0 0 0px 1000px #1e2235 inset;
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Checkbox GNC */
+/* ============================================
+   PASSWORD WRAPPER — input + botón ver/ocultar
+   ============================================ */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  padding-right: 5rem; /* espacio para el botón */
+}
+
+.ver-pass-btn {
+  position: absolute;
+  right: 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #818cf8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25em 0;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.ver-pass-btn:hover {
+  color: #a5b4fc;
+}
+
+/* ============================================
+   ERRORES
+   ============================================ */
+.error {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f87171;
+  letter-spacing: 0.02em;
+  margin-top: 0.1rem;
+  line-height: 1.4;
+}
+
+/* ============================================
+   CHECKBOX GNC
+   ============================================ */
 .campos label:has(input[type="checkbox"]) {
   display: flex;
   align-items: center;
@@ -177,7 +249,7 @@
   text-transform: uppercase;
 }
 
-.campos input[type="checkbox"] {
+input[type="checkbox"] {
   width: 1rem;
   height: 1rem;
   accent-color: #818cf8;
@@ -221,10 +293,6 @@
   transform: translateY(-2px);
 }
 
-.btn-enviar:active {
-  transform: translateY(0);
-}
-
 .btn-enviar:disabled {
   opacity: 0.4;
   cursor: not-allowed;
@@ -232,6 +300,7 @@
   box-shadow: none !important;
 }
 
+/* Spinner */
 .spinner {
   display: inline-block;
   width: 0.9rem;
@@ -284,6 +353,10 @@
 
   .grid-campos {
     grid-template-columns: 1fr;
+  }
+
+  .telefono-grupo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
   }
 }
 

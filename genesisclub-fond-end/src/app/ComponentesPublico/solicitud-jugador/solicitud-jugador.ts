@@ -12,35 +12,92 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./solicitud-jugador.css'],
 })
 export class SolicitudJugador {
+
   nombre: string = '';
   apellido: string = '';
   email: string = '';
-  contacto: string = '';
+  codigoArea: string = '';
+  numeroCelular: string = '';
   password: string = '';
   confirmPassword: string = '';
-
-  // campos de vehículo
   patente: string = '';
   marca: string = '';
   modelo: string = '';
-  anio?: number;
+  anio: number | null = null;
   tieneGnc: boolean = false;
 
+  mostrarPassword: boolean = false;
+  mostrarConfirmPassword: boolean = false;
+
   cargando: boolean = false;
+  errores: any = {};
 
   constructor(
     private solicitudServicio: SolicitudServicio,
     private router: Router
-  ) { }
+  ) {}
 
-  enviarSolicitud() {
-    if (!this.email || !this.nombre || !this.apellido || !this.contacto || !this.password) {
-      alert('Por favor, completa todos los campos.');
+  validarCampo(control: any, campo: string): void {
+    if (control.invalid) {
+      if (control.errors?.['required']) {
+        this.errores[campo] = 'Este campo es obligatorio';
+      } else if (control.errors?.['pattern']) {
+        switch (campo) {
+          case 'password':
+            this.errores[campo] = 'La contraseña debe tener mínimo 8 caracteres, mayúscula, minúscula, número y símbolo';
+            break;
+          case 'contacto':
+            this.errores[campo] = 'El contacto debe contener solo números';
+            break;
+          case 'email':
+            this.errores[campo] = 'Ingresá un correo válido';
+            break;
+          default:
+            this.errores[campo] = 'Formato inválido';
+        }
+      }
+    } else {
+      this.errores[campo] = '';
+    }
+  }
+
+  validarConfirmPassword(): void {
+    if (this.confirmPassword && this.confirmPassword !== this.password) {
+      this.errores.confirmPassword = 'Las contraseñas no coinciden';
+    } else {
+      this.errores.confirmPassword = '';
+    }
+  }
+
+  validarPatente(): void {
+    if (!this.patente) {
+      this.errores.patente = '';
+      return;
+    }
+
+    const regexVieja = /^[A-Z]{3}\d{3}$/i;
+    const regexNueva = /^[A-Z]{2}\d{3}[A-Z]{2}$/i;
+
+    if (!regexVieja.test(this.patente) && !regexNueva.test(this.patente)) {
+      this.errores.patente = 'Patente inválida para Argentina';
+    } else {
+      this.errores.patente = '';
+    }
+  }
+
+  enviarSolicitud(): void {
+    if (!this.nombre || !this.apellido || !this.email || !this.codigoArea || !this.numeroCelular || !this.password) {
+      alert('Por favor, completa todos los campos obligatorios.');
       return;
     }
 
     if (this.password !== this.confirmPassword) {
       alert('Las contraseñas no coinciden.');
+      return;
+    }
+
+    if (this.errores.patente || this.errores.contacto) {
+      alert('Corrige los errores antes de enviar.');
       return;
     }
 
@@ -50,23 +107,28 @@ export class SolicitudJugador {
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
-      contacto: this.contacto,
-      password: this.password,
-      patente: this.patente || null,
-      marca: this.marca || null,
-      modelo: this.modelo || null,
-      anio: this.anio || null,
-      tieneGnc: this.tieneGnc
+      codigoArea: this.codigoArea,
+      numeroCelular: this.numeroCelular,
+      password: this.password
     };
+
+    if (this.patente) {
+      payload.patente = this.patente;
+      payload.marca = this.marca;
+      payload.modelo = this.modelo;
+      payload.anio = this.anio;
+      payload.tieneGnc = this.tieneGnc;
+    }
 
     this.solicitudServicio.enviarSolicitudJugador(payload).subscribe({
       next: (res) => {
+        this.cargando = false;
         alert(res.mensage);
         this.router.navigate(['/inicio']);
       },
       error: (err) => {
         this.cargando = false;
-        const mensajeBack = err.error?.mensage || 'Error al procesar la solicitud';
+        const mensajeBack = err?.error?.mensage ?? 'Error al procesar la solicitud';
         alert(mensajeBack);
         console.error('Error desde el servidor:', err);
       }
