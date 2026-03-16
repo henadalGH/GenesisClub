@@ -183,6 +183,8 @@ public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEn
         registroDTO.setApellido(solicitud.getApellido());
         registroDTO.setEmail(solicitud.getEmail());
         registroDTO.setPassword(solicitud.getPassword());
+        registroDTO.setCodigoArea(solicitud.getCodigoArea());
+        registroDTO.setNumeroCelular(solicitud.getNumeroCelular());
         registroDTO.setRol(rolAsignado);
         registroDTO.setEstado(EstadoSocioEnums.ACTIVO);
 
@@ -233,7 +235,7 @@ public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEn
 }
 
 
-
+ 
     @Override
     public List<SolicitudDTO> obtenerSolicitudesPendientes() {
 
@@ -241,7 +243,8 @@ public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEn
                 .findByEstado(EstadoSolicitudEnums.PENDIENTE)
                 .orElseThrow();
 
-        return solicitudRepository.findByEstado(pendiente)
+        return solicitudRepository
+        .findByEstadoAndTipoSolicitud(pendiente, TipoSolicitud.SOCIO)
                 .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());

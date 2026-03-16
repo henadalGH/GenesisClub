@@ -60,7 +60,7 @@
                 SocioEntity socio = socioRepository.findById(id)
                         .orElseThrow(() ->
                                 new RuntimeException("Socio no encontrado con id: " + id)
-                        );
+                        ); 
 
                 VehiculoEntity vehiculo = socio.getUsuario()
                         .getVehiculos()
@@ -162,6 +162,8 @@
                         socio.getUsuario().getNombre(),
                         socio.getUsuario().getApellido(),
                         socio.getUsuario().getEmail(),
+                        socio.getUsuario().getCodigoArea(),
+                        socio.getUsuario().getNumeroCelular(),
                         socio.getEstado().getEstado(),
                         socio.getCantidadInvitaciones(),
                         socio.getNumPostulaciones(),

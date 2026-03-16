@@ -65,7 +65,7 @@ public class SolicitudJugadorServiceImpl implements SolicitudJugadorService {
                 dto.getPatente(),
                 dto.getMarca(),
                 dto.getModelo(),
-                dto.getAnio(),
+                dto.getAnio(), 
                 dto.getTieneGnc()
         );
 
@@ -93,7 +93,7 @@ public class SolicitudJugadorServiceImpl implements SolicitudJugadorService {
 
         EstadoSolicitudEntity pendiente = estadoSolicitudRepository
                 .findByEstado(EstadoSolicitudEnums.PENDIENTE)
-                .orElseThrow();
+                .orElseThrow(); 
 
         return solicitudRepository
                 .findByEstadoAndTipoSolicitud(pendiente, TipoSolicitud.JUGADOR)
@@ -133,6 +133,8 @@ public ResponceDTO actualizarEstadoSolicitudJugador(Long solicitudId, EstadoSoli
         registroDTO.setApellido(solicitud.getApellido());
         registroDTO.setEmail(solicitud.getEmail());
         registroDTO.setPassword(solicitud.getPassword());
+        registroDTO.setCodigoArea(solicitud.getCodigoArea());
+        registroDTO.setNumeroCelular(solicitud.getNumeroCelular());
         registroDTO.setRol(RolesEnums.JUGADOR);
 
         // Crear usuario
@@ -220,6 +222,9 @@ public ResponceDTO actualizarEstadoSolicitudJugador(Long solicitudId, EstadoSoli
         entidad.setNombre(dto.getNombre());
         entidad.setApellido(dto.getApellido());
         entidad.setEmail(dto.getEmail());
+        entidad.setCodigoArea(dto.getCodigoArea());
+        entidad.setNumeroCelular(dto.getNumeroCelular());
+        entidad.setFechaSolicitud(dto.getFechaSolicitud());
         entidad.setFechaSolicitud(LocalDate.now());
         entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
@@ -252,6 +257,8 @@ public ResponceDTO actualizarEstadoSolicitudJugador(Long solicitudId, EstadoSoli
         dto.setNombre(s.getNombre());
         dto.setApellido(s.getApellido());
         dto.setEmail(s.getEmail());
+        dto.setCodigoArea(s.getCodigoArea());
+        dto.setNumeroCelular(s.getNumeroCelular());
         dto.setFechaSolicitud(s.getFechaSolicitud());
         dto.setEstado(s.getEstado().getEstado());
 

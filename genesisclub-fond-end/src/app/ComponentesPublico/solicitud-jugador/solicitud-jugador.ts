@@ -122,6 +122,7 @@ export class SolicitudJugador {
 
     this.solicitudServicio.enviarSolicitudJugador(payload).subscribe({
       next: (res) => {
+        console.log(payload);
         this.cargando = false;
         alert(res.mensage);
         this.router.navigate(['/inicio']);
