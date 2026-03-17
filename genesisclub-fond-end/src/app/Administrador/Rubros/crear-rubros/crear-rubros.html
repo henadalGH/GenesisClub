@@ -1,3 +1,92 @@
 <app-header-admin></app-header-admin>
 
+<div class="container">
+  <div class="form-container">
+    <h1>➕ Crear Nuevo Rubro</h1>
 
+    <!-- Mensajes de éxito/error -->
+    <div *ngIf="mensajeExito" class="alert alert-success">
+      {{ mensajeExito }}
+    </div>
+    <div *ngIf="mensajeError" class="alert alert-error">
+      {{ mensajeError }}
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="rubroForm" (ngSubmit)="guardar()">
+      
+      <!-- Campo Nombre -->
+      <div class="form-group">
+        <label for="nombre">Nombre del Rubro *</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          placeholder="Ej: Fútbol, Tenis, Ping Pong..."
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('nombre')">
+        <small *ngIf="isFieldInvalid('nombre')" class="error-text">
+          El nombre es requerido
+        </small>
+      </div>
+
+      <!-- Campo Descripción -->
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          placeholder="Describe el propósito o características del rubro..."
+          class="form-control"
+          rows="4"
+          [class.is-invalid]="isFieldInvalid('descripcion')"></textarea>
+        <small *ngIf="isFieldInvalid('descripcion')" class="error-text">
+          La descripción es requerida
+        </small>
+      </div>
+
+      <!-- Campo Clave de Acceso -->
+      <div class="form-group">
+        <label for="claveAcceso">Clave de Acceso *</label>
+        <input
+          id="claveAcceso"
+          type="password"
+          formControlName="claveAcceso"
+          placeholder="Ingresa una clave de acceso..."
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('claveAcceso')">
+        <small *ngIf="isFieldInvalid('claveAcceso')" class="error-text">
+          La clave de acceso es requerida
+        </small>
+      </div>
+
+      <!-- Campo Activo -->
+      <div class="form-group checkbox">
+        <label for="activo">
+          <input
+            id="activo"
+            type="checkbox"
+            formControlName="activo"
+            class="form-check-input">
+          <span>El rubro estará activo al crearse</span>
+        </label>
+      </div>
+
+      <!-- Botones -->
+      <div class="form-actions">
+        <button
+          type="submit"
+          class="btn btn-primary"
+          [disabled]="loading || rubroForm.invalid">
+          {{ loading ? '⏳ Creando...' : '✅ Crear Rubro' }}
+        </button>
+        <button
+          type="button"
+          routerLink="/listaRubros"
+          class="btn btn-secondary">
+          ❌ Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

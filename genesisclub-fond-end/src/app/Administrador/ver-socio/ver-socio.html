@@ -11,7 +11,6 @@
 
   } @else if (socio()) {
 
-    <h1>{{socio().codigoArea}}</h1>
 
     <section class="profile-card">
 
@@ -21,6 +20,7 @@
         <div>
           <h2>{{ socio().nombre }} {{ socio().apellido }}</h2>
           <span class="email">{{ socio().email }}</span>
+          <span class="cont">{{ socio().codigoArea }} - {{socio().numeroCelular}}</span>
         </div>
       </header>
 
@@ -95,6 +95,70 @@
         } @else {
           <p class="no-data">Sin vehículos registrados</p>
         }
+      </div>
+
+      <!-- SECCIÓN DE RUBROS -->
+      <div class="rubros-section">
+        <h3><i class="bi bi-bookmark-star"></i> Rubros Asociados</h3>
+
+        @if (rubrosAsociados().length > 0) {
+          <div class="rubros-grid">
+            @for (rubro of rubrosAsociados(); track rubro.idRubro) {
+              <div class="rubro-card">
+                <div class="rubro-header">
+                  <strong>{{ rubro.nombreRubro }}</strong>
+                  <button
+                    class="btn-delete"
+                    [disabled]="procesando()"
+                    (click)="desasociarRubro(rubro.idRubro)"
+                    title="Desasociar rubro">
+                    <i class="bi bi-trash"></i>
+                  </button>
+                </div>
+                <p class="rubro-date">Asociado: {{ rubro.fechaAsignacion }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="no-data">Sin rubros asociados</p>
+        }
+
+        <div class="rubro-actions">
+          @if (!mostrarSelectorRubros()) {
+            <button
+              class="btn btn-primary"
+              [disabled]="procesando() || rubrosDisponibles().length === 0"
+              (click)="mostrarSelectorRubros.set(true)">
+              <i class="bi bi-plus-circle"></i> Asociar Rubro
+            </button>
+          } @else {
+            <div class="rubro-selector">
+              <select
+                [(ngModel)]="rubroSeleccionado"
+                class="form-select"
+                [disabled]="procesando()">
+                <option [value]="null">Selecciona un rubro</option>
+                @for (rubro of rubrosDisponibles(); track rubro.id) {
+                  @if (!isRubroAsociado(rubro.id)) {
+                    <option [value]="rubro.id">{{ rubro.nombre }}</option>
+                  }
+                }
+              </select>
+              <button
+                class="btn btn-success"
+                [disabled]="procesando() || !rubroSeleccionado()"
+                (click)="asociarRubro()">
+                <i class="bi bi-check-circle"></i> Confirmar
+              </button>
+              <button
+                class="btn btn-secondary"
+                [disabled]="procesando()"
+                (click)="mostrarSelectorRubros.set(false)">
+                <i class="bi bi-x-circle"></i> Cancelar
+              </button>
+            </div>
+          }
+        </div>
       </div>
 
       <!-- SECCIÓN DE ACCIONES -->

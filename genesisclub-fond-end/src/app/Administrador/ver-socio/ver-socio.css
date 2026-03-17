@@ -431,6 +431,183 @@
 }
 
 /* ============================================
+   RUBROS SECTION
+   ============================================ */
+.rubros-section {
+  padding: 1.75rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.rubros-section h3 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: #8892a4;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.rubros-section h3 i {
+  color: #00e5ff;
+}
+
+.rubros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  gap: 0.85rem;
+  margin-bottom: 1.2rem;
+}
+
+.rubro-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0.85rem;
+  padding: 1.1rem 1.2rem;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.rubro-card:hover {
+  border-color: rgba(0, 229, 255, 0.15);
+  background: rgba(0, 229, 255, 0.03);
+}
+
+.rubro-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.rubro-header strong {
+  font-size: 0.92rem;
+  color: #e8eaf0;
+  font-weight: 700;
+  flex: 1;
+  word-break: break-word;
+}
+
+.btn-delete {
+  background: transparent;
+  border: none;
+  color: #ef4444;
+  cursor: pointer;
+  font-size: 0.9rem;
+  padding: 0.2rem 0.4rem;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-delete:hover:not(:disabled) {
+  opacity: 1;
+}
+
+.btn-delete:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.rubro-date {
+  font-size: 0.75rem;
+  color: #4b5563;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.rubro-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.rubro-selector {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.form-select {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  padding: 0.6em 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e8eaf0;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.form-select:hover:not(:disabled) {
+  border-color: rgba(0, 229, 255, 0.25);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.form-select:focus {
+  outline: none;
+  border-color: rgba(0, 229, 255, 0.5);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 12px rgba(0, 229, 255, 0.15);
+}
+
+.form-select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.form-select option {
+  background: #111827;
+  color: #e8eaf0;
+}
+
+.btn-primary {
+  background: rgba(0, 229, 255, 0.12);
+  color: #00e5ff;
+  border-color: rgba(0, 229, 255, 0.25);
+}
+
+.btn-primary:not(:disabled):hover {
+  background: rgba(0, 229, 255, 0.2);
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: rgba(255, 255, 255, 0.05);
+  color: #8892a4;
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-secondary:not(:disabled):hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+}
+
+.rubro-selector {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.rubro-selector .form-select {
+  flex: 1;
+  min-width: 150px;
+}
+
+.rubro-selector .btn {
+  flex: 0;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 40em) {
@@ -474,7 +651,8 @@
   }
 
   .vehicles-section,
-  .actions-section {
+  .actions-section,
+  .rubros-section {
     padding: 1.4rem;
   }
 
@@ -491,6 +669,20 @@
   .actions-section .btn + .btn {
     margin-left: 0;
     margin-top: 0.5rem;
+  }
+
+  .rubro-selector {
+    flex-direction: column;
+  }
+
+  .rubro-selector .form-select,
+  .rubro-selector .btn {
+    width: 100%;
+    min-width: auto;
+  }
+
+  .rubro-selector .btn {
+    justify-content: center;
   }
 }
 

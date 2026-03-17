@@ -1,7 +1,80 @@
 <app-header-admin></app-header-admin>
 
+<div class="container">
+  <div class="titulo">
+    <h1>🏁 Gestionar Rubros</h1>
+    <button [routerLink]="['/crearRubros']" class="btn-crear">
+      ➕ Crear nuevo rubro
+    </button>
+  </div>
 
-<div class="titulo">
-    <h1>Listas de rubros</h1>
-    <button [routerLink]="['/crearRubros']">+ Crear rubros</button>
+  <!-- Filtros y búsqueda -->
+  <div class="filtros">
+    <div class="search-box">
+      <input 
+        type="text" 
+        placeholder="🔍 Buscar por nombre..." 
+        [(ngModel)]="searchTerm"
+        (keyup)="buscar()"
+        class="input-search">
+    </div>
+
+    <div class="filter-box">
+      <select [(ngModel)]="filtroEstado" (change)="filtrar()" class="select-filter">
+        <option value="">Todos los estados</option>
+        <option value="activo">Activos</option>
+        <option value="inactivo">Inactivos</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Tabla de rubros -->
+  <div class="tabla-container">
+    <table class="tabla-rubros" *ngIf="rubrosFiltrados.length > 0">
+      <thead>
+        <tr>
+          <th>#ID</th>
+          <th>Nombre</th>
+          <th>Descripción</th>
+          <th>Estado</th>
+          <th>Fecha Creación</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let rubro of rubrosFiltrados" [class.inactivo]="!rubro.activo">
+          <td>{{ rubro.id }}</td>
+          <td><strong>{{ rubro.nombre }}</strong></td>
+          <td>{{ rubro.descripcion }}</td>
+          <td>
+            <span class="estado" [ngClass]="rubro.activo ? 'activo' : 'inactivo'">
+              {{ rubro.activo ? '✅ Activo' : '❌ Inactivo' }}
+            </span>
+          </td>
+          <td>{{ rubro.fechaCreacion | date: 'short' }}</td>
+          <td class="acciones">
+            <button (click)="editar(rubro.id)" class="btn-accion btn-editar" title="Editar">
+              ✏️ Editar
+            </button>
+            <button 
+              (click)="toggleActivo(rubro.id, rubro.activo)" 
+              [class.btn-desactivar]="rubro.activo"
+              [class.btn-activar]="!rubro.activo"
+              class="btn-accion"
+              [title]="rubro.activo ? 'Desactivar' : 'Activar'">
+              {{ rubro.activo ? '🔒 Desactivar' : '🔓 Activar' }}
+            </button>
+            <button (click)="eliminar(rubro.id)" class="btn-accion btn-eliminar" title="Eliminar">
+              🗑️ Eliminar
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Mensaje cuando no hay rubros -->
+    <div *ngIf="rubrosFiltrados.length === 0" class="sin-datos">
+      <p>📭 No se encontraron rubros</p>
+    </div>
+  </div>
 </div>

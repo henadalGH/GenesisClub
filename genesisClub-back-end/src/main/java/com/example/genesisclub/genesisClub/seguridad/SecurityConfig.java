@@ -47,6 +47,10 @@ public class SecurityConfig {
                 .requestMatchers("/email/**").permitAll()
                 .requestMatchers("/publico/test-final").permitAll()
                 .requestMatchers("/api/invitacion/aceptar/**").permitAll()
+                .requestMatchers("/api/rubro/activos").permitAll()
+                .requestMatchers("/api/rubro/buscar").permitAll()
+                .requestMatchers("/api/rubro/nombre/**").permitAll()
+                .requestMatchers("/api/rubro/clave/**").permitAll()
 
                 // --- RUTAS DE ADMINISTRADOR ---
                 .requestMatchers("/api/solicitud/socio/pendientes").hasRole("ADMIN")
@@ -62,6 +66,22 @@ public class SecurityConfig {
                 .requestMatchers("/api/socio/todos").hasRole("ADMIN")
                 .requestMatchers("/api/socio/**").hasRole("ADMIN")
                 .requestMatchers("/api/auth/admin/solo").hasRole("ADMIN")
+
+                // --- RUTAS DE RUBROS - ADMINISTRADOR ---
+                .requestMatchers("/api/rubro").hasRole("ADMIN")
+                .requestMatchers("/api/rubro/**").hasRole("ADMIN")
+                .requestMatchers("/api/rubro-socio").hasRole("ADMIN")
+                .requestMatchers("/api/rubro-socio/**").hasRole("ADMIN")
+                .requestMatchers("/api/historial-rubro").hasRole("ADMIN")
+                .requestMatchers("/api/historial-rubro/**").hasRole("ADMIN")
+
+                // --- RUTAS DE USUARIO-RUBRO - SOCIO/ADMIN ---
+                .requestMatchers("/api/usuario-rubro").hasAnyRole("SOCIO", "ADMIN")
+                .requestMatchers("/api/usuario-rubro/**").hasAnyRole("SOCIO", "ADMIN")
+
+                // --- RUTAS DE ACCESO LOG RUBROS - ADMINISTRADOR ---
+                .requestMatchers("/api/rubro-acceso-log").hasRole("ADMIN")
+                .requestMatchers("/api/rubro-acceso-log/**").hasRole("ADMIN")
 
                 // --- RUTAS DEL CONTROLLER RELACION-SOCIO ---
                 .requestMatchers("/api/relacion-socio/mis-invitados/**").hasAnyRole("SOCIO", "ADMIN")

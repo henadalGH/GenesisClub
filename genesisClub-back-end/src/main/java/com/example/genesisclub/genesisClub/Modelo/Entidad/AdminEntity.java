@@ -30,7 +30,7 @@ public class AdminEntity {
     private UsuarioEntity usuario;
 
     @OneToMany(mappedBy = "admin")
-    private List<RubroEntity> rubro = new ArrayList<>();
+    private List<RubroEntity> rubros = new ArrayList<>();
 
     @OneToMany(mappedBy = "admin")
     private List<HistorialRubroEntity> historial = new ArrayList<>();

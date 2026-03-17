@@ -1,28 +1,37 @@
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { SocioServicio } from '../../ServicioAdministrador/socio-servicio';
+import { RubroServicio } from '../../ServiciosCompartidos/rubro-servicio';
+import { RubroSocioServicio } from '../../ServiciosCompartidos/rubro-socio-servicio';
 import { HeaderAdmin } from '../header-admin/header-admin';
 
 @Component({
   selector: 'app-ver-socio',
   standalone: true,
-  imports: [CommonModule, RouterModule, HeaderAdmin],
+  imports: [CommonModule, RouterModule, FormsModule, HeaderAdmin],
   templateUrl: './ver-socio.html',
   styleUrls: ['./ver-socio.css'], // <-- Corregido
 })
 export class VerSocio implements OnInit {
   // Inyecciones modernas
   private socioServicio = inject(SocioServicio);
+  private rubroServicio = inject(RubroServicio);
+  private rubroSocioServicio = inject(RubroSocioServicio);
   private route = inject(ActivatedRoute);
 
   // Estados reactivos con Signals
   socio = signal<any>(null);
   vehiculos = signal<any[]>([]);
+  rubrosDisponibles = signal<any[]>([]);
+  rubrosAsociados = signal<any[]>([]);
   cargando = signal<boolean>(true);
   procesando = signal<boolean>(false);
   idProc = signal<number>(0);
   id = signal<number>(0);
+  rubroSeleccionado = signal<number | null>(null);
+  mostrarSelectorRubros = signal<boolean>(false);
 
   ngOnInit(): void {
     // Obtenemos el ID de la URL
@@ -39,6 +48,8 @@ export class VerSocio implements OnInit {
       next: (data) => {
         this.socio.set(data);
         this.obtenerVehiculos();
+        this.obtenerRubrosDisponibles();
+        this.obtenerRubrosAsociados();
         this.cargando.set(false);
       },
       error: (error) => {
@@ -56,6 +67,78 @@ export class VerSocio implements OnInit {
       error: (error) => {
         console.error('Error al cargar vehículos:', error);
         this.vehiculos.set([]);
+      }
+    });
+  }
+
+  obtenerRubrosDisponibles() {
+    this.rubroServicio.obtenerActivos().subscribe({
+      next: (data) => {
+        this.rubrosDisponibles.set(data);
+      },
+      error: (error) => {
+        console.error('Error al cargar rubros:', error);
+        this.rubrosDisponibles.set([]);
+      }
+    });
+  }
+
+  obtenerRubrosAsociados() {
+    this.rubroSocioServicio.obtenerPorSocio(this.id()).subscribe({
+      next: (data) => {
+        this.rubrosAsociados.set(data);
+      },
+      error: (error) => {
+        console.error('Error al cargar rubros asociados:', error);
+        this.rubrosAsociados.set([]);
+      }
+    });
+  }
+
+  asociarRubro() {
+    if (!this.rubroSeleccionado()) {
+      alert('Selecciona un rubro para asociar');
+      return;
+    }
+
+    this.procesando.set(true);
+    const rubroSocioDTO = {
+      idSocio: this.id(),
+      idRubro: this.rubroSeleccionado()
+    };
+
+    this.rubroSocioServicio.crear(rubroSocioDTO as any).subscribe({
+      next: () => {
+        alert('Rubro asociado correctamente');
+        this.rubroSeleccionado.set(null);
+        this.mostrarSelectorRubros.set(false);
+        this.obtenerRubrosAsociados();
+        this.procesando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al asociar rubro:', error);
+        alert(error.error?.message || 'Error al asociar el rubro');
+        this.procesando.set(false);
+      }
+    });
+  }
+
+  desasociarRubro(rubroId: number) {
+    if (!confirm('¿Deseas desasociar este rubro del socio?')) {
+      return;
+    }
+
+    this.procesando.set(true);
+    this.rubroSocioServicio.eliminarRelacion(rubroId, this.id()).subscribe({
+      next: () => {
+        alert('Rubro desasociado correctamente');
+        this.obtenerRubrosAsociados();
+        this.procesando.set(false);
+      },
+      error: (error) => {
+        console.error('Error al desasociar rubro:', error);
+        alert('Error al desasociar el rubro');
+        this.procesando.set(false);
       }
     });
   }
@@ -115,5 +198,10 @@ export class VerSocio implements OnInit {
         this.procesando.set(false);
       }
     });
+  }
+
+  // Verifica si un rubro está asociado al socio
+  isRubroAsociado(idRubro: number): boolean {
+    return this.rubrosAsociados().some(r => r.idRubro === idRubro);
   }
 }

@@ -103,6 +103,60 @@
     border-color: rgba(0, 229, 255, 0.22);
     }
 
+    /* Botón especial para Rubros */
+    .nav-buttons button.rubros-btn {
+    position: relative;
+    color: #a5b4fc;
+    border: 1px solid rgba(165, 180, 252, 0.25);
+    background: rgba(165, 180, 252, 0.05);
+    }
+
+    .nav-buttons button.rubros-btn:hover {
+    color: #c7d2fe;
+    background: rgba(165, 180, 252, 0.12);
+    border-color: rgba(165, 180, 252, 0.4);
+    }
+
+    /* Tooltip dentro del botón */
+    .nav-buttons button.rubros-btn .tooltip {
+    display: none;
+    position: absolute;
+    bottom: -2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(165, 180, 252, 0.95);
+    color: #111827;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    white-space: nowrap;
+    z-index: 1000;
+    box-shadow: 0 4px 12px rgba(165, 180, 252, 0.3);
+    pointer-events: none;
+    letter-spacing: 0.02em;
+    }
+
+    .nav-buttons button.rubros-btn .tooltip::after {
+    content: '';
+    position: absolute;
+    top: -0.35rem;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 4px solid transparent;
+    border-bottom-color: rgba(165, 180, 252, 0.95);
+    }
+
+    .nav-buttons button.rubros-btn:hover .tooltip {
+    display: block;
+    animation: tooltipFadeIn 0.2s ease;
+    }
+
+    @keyframes tooltipFadeIn {
+    from { opacity: 0; transform: translateX(-50%) translateY(-5px); }
+    to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+
     /* ============================================
     ACCIONES (perfil + logout)
     ============================================ */

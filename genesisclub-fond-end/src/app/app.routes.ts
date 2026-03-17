@@ -22,6 +22,8 @@ import { RegistroInvitado } from './ComponentesPublico/registro-invitado/registr
 import { CrearRubros } from './Administrador/Rubros/crear-rubros/crear-rubros';
 import { ListarRubros } from './Administrador/Rubros/listar-rubros/listar-rubros';
 import { VerResPorSocio } from './Administrador/ver-res-por-socio/ver-res-por-socio';
+import { VerRubro } from './Administrador/Rubros/ver-rubro/ver-rubro';
+import { RubrosSocio } from './Socio/rubros-socio/rubros-socio';
 
 
 export const routes: Routes = [
@@ -36,9 +38,6 @@ export const routes: Routes = [
   { path: 'solicitud-jugador', component: SolicitudJugador },
   { path: 'inicioRubro', component: InicioRubros },
   { path: "registroInvitado", component: RegistroInvitado},
-  {path: "listaRubros", component: ListarRubros},
-  {path: "crearRubros", component: CrearRubros},
-  { path: "verRedSocio/:id", component: VerResPorSocio },
 
 
   // =========================
@@ -61,6 +60,11 @@ export const routes: Routes = [
     component: InvitacionesSocio,
     canActivate: [AuthGuard],
     data: { role: ['ROLE_SOCIO'] }
+  },
+  {
+    path: 'mis-rubros',
+    component: RubrosSocio,
+    
   },
 
 
@@ -133,6 +137,28 @@ export const routes: Routes = [
     data: { role: ['ROLE_ADMIN'] }
   },
 
+  // =========================
+  // 🏁 RUTAS RUBROS
+  // =========================
+  {
+    path: 'listaRubros',
+    component: ListarRubros,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'crearRubros',
+    component: CrearRubros,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'verRubro/:id',
+    component: VerRubro,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  { path: "verRedSocio/:id", component: VerResPorSocio },
 
   // =========================
   // ❌ COMODÍN

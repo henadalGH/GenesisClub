@@ -1,0 +1,152 @@
+<!-- Usa HeaderSocio en lugar de HeaderAdmin si existe -->
+<div class="container">
+  <div class="titulo">
+    <h1>🏁 Mis Rubros</h1>
+  </div>
+
+  <!-- Alertas -->
+  <div *ngIf="mensajeExito()" class="alert alert-success">
+    {{ mensajeExito() }}
+  </div>
+  <div *ngIf="mensajeError()" class="alert alert-error">
+    {{ mensajeError() }}
+  </div>
+
+  <!-- Sección: Asociación con Clave de Acceso -->
+  <div class="section asociacion-section">
+    <h2>🔐 Asociarme con Clave de Acceso</h2>
+    <p class="descripcion">Si tienes una clave de acceso a un rubro, ingresala aquí para asociarte automáticamente.</p>
+    
+    @if (!mostrarFormularioClaveAcceso()) {
+      <button 
+        class="btn btn-clave"
+        [disabled]="procesando()"
+        (click)="mostrarFormularioClaveAcceso.set(true)">
+        <i class="bi bi-key"></i> Ingresar Clave de Acceso
+      </button>
+    } @else {
+      <div class="formulario-clave">
+        <div class="input-group">
+          <input 
+            type="password"
+            [(ngModel)]="claveAccesoIngresada"
+            placeholder="Ingresa la clave de acceso"
+            class="input-clave"
+            [disabled]="procesando()"
+            (keyup.enter)="asociarConClaveAcceso()">
+          <button 
+            class="btn btn-confirmar"
+            [disabled]="procesando() || !claveAccesoIngresada()"
+            (click)="asociarConClaveAcceso()">
+            <i class="bi bi-check-circle"></i> Confirmar
+          </button>
+          <button 
+            class="btn btn-cancelar"
+            [disabled]="procesando()"
+            (click)="mostrarFormularioClaveAcceso.set(false); claveAccesoIngresada.set('')">
+            <i class="bi bi-x-circle"></i> Cancelar
+          </button>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Sección: Rubros Asociados (por clave) -->
+  <div class="section">
+    <h2>✅ Mis Rubros Asociados</h2>
+    <div class="rubros-grid">
+      @for (rubro of rubrosAsociadosSocio(); track rubro.idRubro) {
+        <div class="rubro-card asociado">
+          <div class="card-header">
+            <h3>{{ rubro.nombreRubro }}</h3>
+            <span class="badge badge-asociado">Asociado</span>
+          </div>
+          <div class="card-body">
+            <p>
+              <strong>Fecha:</strong> {{ rubro.fechaAsignacion | date: 'short' }}
+            </p>
+          </div>
+          <div class="card-footer">
+            <button 
+              class="btn btn-danger"
+              [disabled]="procesando()"
+              (click)="desasociarse(rubro.idRubro)">
+              <i class="bi bi-trash"></i> Desasociarme
+            </button>
+          </div>
+        </div>
+      }
+
+      @if (rubrosAsociadosSocio().length === 0) {
+        <div class="sin-datos">
+          <p>📭 Aún no estás asociado a ningún rubro</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Sección: Rubros Asignados -->
+  <div class="section">
+    <h2>✅ Mis Rubros Activos</h2>
+    <div class="rubros-grid">
+      @for (rubro of rubrosAsignados(); track rubro.idRubro) {
+        <div class="rubro-card activo">
+          <div class="card-header">
+            <h3>{{ obtenerNombreRubro(rubro.idRubro) }}</h3>
+            <span class="badge">Miembro Activo</span>
+          </div>
+          <div class="card-body">
+            <p>
+              <strong>Tipo:</strong> {{ rubro.tipoUsuario }}
+            </p>
+            <p *ngIf="rubro.fechaIngreso">
+              <strong>Miembro desde:</strong> {{ rubro.fechaIngreso | date: 'short' }}
+            </p>
+          </div>
+        </div>
+      }
+
+      @if (rubrosAsignados().length === 0) {
+        <div class="sin-datos">
+          <p>📭 Aún no eres miembro de ningún rubro</p>
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Sección: Rubros Disponibles -->
+  <div class="section">
+    <h2>📋 Rubros Disponibles</h2>
+    <div class="rubros-grid">
+      @for (rubro of rubrosDisponibles(); track rubro.id) {
+        @if (!isRubroAsignado(rubro.id) && !isRubroAsociado(rubro.id)) {
+          <div class="rubro-card">
+            <div class="card-header">
+              <h3>{{ rubro.nombre }}</h3>
+              <span class="badge disponible">🔓 Disponible</span>
+            </div>
+            <div class="card-body">
+              <p class="descripcion">{{ rubro.descripcion }}</p>
+              <p>
+                <strong>Creado:</strong> {{ rubro.fechaCreacion | date: 'short' }}
+              </p>
+            </div>
+            <div class="card-footer">
+              <button 
+                (click)="solicitarRubro(rubro.id)"
+                class="btn btn-solicitar">
+                📬 Solicitar Acceso
+              </button>
+            </div>
+          </div>
+        }
+      }
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading()" class="loading">
+  <div class="spinner"></div>
+  <p>Cargando rubros...</p>
+</div>

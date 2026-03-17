@@ -20,7 +20,6 @@ import lombok.Data;
 @Table(name = "rubros", schema = "genesisclub")
 public class RubroEntity {
 
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rubro")
@@ -32,7 +31,7 @@ public class RubroEntity {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(name = "activacion")
+    @Column(name = "activo")
     private boolean activo;
 
     @Column(name = "fecha_creacion")
@@ -42,7 +41,7 @@ public class RubroEntity {
     private LocalDate fechaModificacion;
 
     @ManyToOne
-    @JoinColumn(name = "id_creador")
+    @JoinColumn(name = "admin_id")
     private AdminEntity admin;
 
     @OneToMany(mappedBy = "rubro")
@@ -57,7 +56,7 @@ public class RubroEntity {
     @Column(name = "fecha_clave_generacion")
     private LocalDate fechaClaveGeneracion;
 
-    @Column(name = "clave_activa", columnDefinition = "boolean default true")
+    @Column(name = "clave_activa")
     private boolean claveActiva = true;
 
 }

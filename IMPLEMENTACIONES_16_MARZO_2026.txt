@@ -1,0 +1,313 @@
+================================================================================
+                    IMPLEMENTACIONES - 16 DE MARZO 2026
+                              GENESIS CLUB
+================================================================================
+
+RESUMEN GENERAL:
+Se implementó un sistema completo de asociación de Socios a Rubros usando clave 
+de acceso, junto con mejoras en las relaciones JPA y componentes frontend.
+
+================================================================================
+1. RELACIÓN JPA - ADMIN Y RUBRO (Spring Boot 3 + Hibernate 6)
+================================================================================
+
+ARCHIVOS MODIFICADOS:
+  - AdminEntity.java
+  - RubroEntity.java
+
+CAMBIOS:
+  • AdminEntity:
+    - Cambió campo "rubro" a "rubros" (plural)
+    - @OneToMany(mappedBy = "admin")
+    - private List<RubroEntity> rubros = new ArrayList<>();
+
+  • RubroEntity:
+    - Cambió campo "creador" a "admin"
+    - Cambió @JoinColumn(name = "id_creador") a (name = "admin_id")
+    - @ManyToOne
+    - @JoinColumn(name = "admin_id")
+    - private AdminEntity admin;
+
+VALIDACIONES:
+  - Relación bidireccional correcta
+  - RubroEntity es el lado dueño (@ManyToOne)
+  - AdminEntity usa mappedBy para evitar columna duplicada
+  - Compatible con Spring Boot 3 + Hibernate 6
+
+================================================================================
+2. SERVICIO RUBRO-SOCIO - ASOCIACIÓN POR CLAVE DE ACCESO
+================================================================================
+
+ARCHIVOS BACKEND:
+  - RubroSocioService.java (interfaz)
+  - RubroSocioServiceImpl.java (implementación)
+  - RubroSocioController.java
+  - RubroRepository.java
+
+NUEVO MÉTODO:
+  RubroSocioDTO asociarPorClaveAcceso(Long idSocio, String claveAcceso)
+
+VALIDACIONES IMPLEMENTADAS:
+  ✓ Verificar que el socio existe
+  ✓ Buscar rubro por clave de acceso
+  ✓ Validar que la clave esté activa
+  ✓ Validar que el rubro esté activo
+  ✓ Evitar asociaciones duplicadas
+  ✓ Crear la asociación con fecha actual
+
+ENDPOINTS:
+  POST   /api/rubro-socio/socio/{idSocio}/clave/{claveAcceso}
+         - Asocia un socio a un rubro usando clave
+  
+  GET    /api/rubro-socio/socio/{idSocio}
+         - Obtiene los rubros asociados a un socio
+  
+  DELETE /api/rubro-socio/rubro/{idRubro}/socio/{idSocio}
+         - Desasocia un socio de un rubro
+
+================================================================================
+3. SERVICIO FRONTEND - RUBRO-SOCIO
+================================================================================
+
+ARCHIVO:
+  - rubro-socio-servicio.ts
+
+NUEVA FUNCIÓN:
+  asociarPorClaveAcceso(idSocio: number, claveAcceso: string)
+    Llama al endpoint del backend para asociar por clave
+
+DESCRIPCIÓN:
+  Cliente HTTP que consumea todos los endpoints de RubroSocio.
+  Implementa las operaciones CRUD + asociación por clave.
+
+================================================================================
+4. COMPONENTE VER-SOCIO (ADMINISTRADOR)
+================================================================================
+
+ARCHIVOS MODIFICADOS:
+  - ver-socio.ts
+  - ver-socio.html
+  - ver-socio.css
+
+NUEVAS FUNCIONALIDADES:
+  ✓ Ver rubros asociados a un socio
+  ✓ Asociar nuevos rubros al socio (por ID)
+  ✓ Desasociar rubros del socio
+  ✓ Selector dinámico que excluye rubros ya asociados
+
+NUEVOS SIGNALS:
+  - rubrosDisponibles: Lista de rubros activos
+  - rubrosAsociados: Rubros ya vinculados al socio
+  - rubroSeleccionado: Rubro seleccionado en el selector
+  - mostrarSelectorRubros: Control de visibilidad del formulario
+
+MÉTODOS AGREGADOS:
+  - obtenerRubrosDisponibles()
+  - obtenerRubrosAsociados()
+  - asociarRubro()
+  - desasociarRubro(rubroId)
+  - isRubroAsociado(rubroId): validación para template
+
+VALIDACIONES:
+  - Evita asociar rubros duplicados
+  - Muestra confirmación antes de desasociar
+  - Manejo de errores con mensajes al usuario
+
+================================================================================
+5. COMPONENTE RUBROS-SOCIO (SOCIO)
+================================================================================
+
+ARCHIVOS MODIFICADOS:
+  - rubros-socio.ts
+  - rubros-socio.html
+  - rubros-socio.css
+
+NUEVAS SECIONES:
+  1. "Asociarme con Clave de Acceso"
+     - Input password para ingresar clave
+     - Validaciones en tiempo real
+     - Botones: Confirmar, Cancelar
+
+  2. "Mis Rubros Asociados"
+     - Muestra rubros vinculados por clave
+     - Fecha de asociación
+     - Botón para desasociarse
+
+  3. "Mis Rubros Activos" (existente)
+  4. "Rubros Disponibles" (existente)
+
+NUEVOS SIGNALS:
+  - claveAccesoIngresada: Almacena la clave temporal
+  - mostrarFormularioClaveAcceso: Control del formulario
+  - rubrosAsociadosSocio: Rubros asociados por clave
+  - procesando: Estado de la petición
+  - usuarioId y socioId: IDs del usuario/socio
+
+MÉTODOS AGREGADOS:
+  - obtenerIdUsuario(): Obtiene el ID del usuario logueado
+  - obtenerRubrosAsociados(): Carga rubros asociados
+  - asociarConClaveAcceso(): Procesa la clave de acceso
+  - desasociarse(rubroId): Desasocia de un rubro
+  - isRubroAsociado(rubroId): Validación para template
+
+SEGURIDAD:
+  - Las claves se envían como URL parameter (considera HTTPS en prod)
+  - Validación de user ID en servidor
+  - Validación de estado de clave y rubro
+
+================================================================================
+6. COMPONENTE HEADER-SOCIO (NAVEGACIÓN)
+================================================================================
+
+ARCHIVOS MODIFICADOS:
+  - herader-socio.html
+  - herader-socio.css
+
+NUEVAS RUTAS:
+  🏠 Inicio              → /socio/inicio
+  ✉️ Invitar socio       → Modal (existente)
+  👥 Mis socios          → /socio/socios
+  💼 Mis rubros          → /socio/rubros (CON TOOLTIP)
+  ⭐ Rubros asociados    → /socio/mis-rubros-asociados (NUEVA)
+  📊 Estadísticas        → /socio/estadisticas
+  👤 Mi perfil           → /socio/perfil
+  🚪 Cerrar sesión       → logout()
+
+MEJORAS:
+  • Botón "Mis rubros" con estilos especiales (púrpura)
+  • Tooltip que describe: "Asociarte a rubros con clave de acceso"
+  • Animación smooth al pasar el mouse
+  • Emojis en todos los botones para mejor UX
+
+ESTILOS AGREGADOS:
+  - .rubros-btn: Botón con color distintivo
+  - .tooltip: Información contextual
+  - @keyframes tooltipFadeIn: Animación de entrada
+
+================================================================================
+7. CORRECCIONES DE ERRORES
+================================================================================
+
+ERROR 1: obtenerUsuarioActual() no existe
+  SOLUCIÓN: Cambié por authServicio.getUserId()
+  ARCHIVO: rubros-socio.ts línea 45
+
+ERROR 2: Bindings con arrow functions en templates
+  SOLUCIÓN: Creé método isRubroAsociado() en el componente
+  ARCHIVO: ver-socio.ts y template
+
+ERROR 3: Método create() en RubroSocioServiceImpl no inyectaba socio/rubro
+  SOLUCIÓN: Agregué lógica para inyectar entidades desde los IDs
+
+================================================================================
+8. FLUJO DE USO FINAL
+================================================================================
+
+PARA ADMINISTRADOR (Ver Socio):
+  1. Accede a /socio/[id]
+  2. Ve rubros asociados en sección "Rubros Asociados"
+  3. Puede agregar rubros con selector dropdown
+  4. Puede desasociar rubros con botón "Desasociarme"
+
+PARA SOCIO (Panel Socio):
+  1. Acedera a /socio/rubros
+  2. Ingresa clave de acceso en el formulario
+  3. El sistema busca el rubro por clave
+  4. Si es válido, se asocia automáticamente
+  5. Aparece en "Mis Rubros Asociados"
+  6. Puede solicitar acceso a otros rubros
+  7. Puede desasociarse en cualquier momento
+
+================================================================================
+9. VALIDACIONES Y SEGURIDAD
+================================================================================
+
+BACKEND:
+  ✓ Validar existencia de socio y rubro
+  ✓ Validar que clave está activa
+  ✓ Validar que rubro está activo
+  ✓ Evitar duplicados
+  ✓ Transacciones (@Transactional)
+
+FRONTEND:
+  ✓ Validar campos no vacíos
+  ✓ Confirmación antes de desasociar
+  ✓ Manejo de errores con mensajes
+  ✓ Deshabilitación de botones en proceso
+  ✓ Mensajes de éxito/error con timeout
+
+================================================================================
+10. PRUEBAS RECOMENDADAS
+================================================================================
+
+BACKEND:
+  □ POST /api/rubro-socio/socio/{idSocio}/clave/{claveAcceso}
+    - Clave válida → asociación exitosa
+    - Clave inválida → error 400
+    - Clave inactiva → error 400
+    - Socio no existe → error 404
+    - Ya asociado → error 400
+
+  □ GET /api/rubro-socio/socio/{idSocio}
+    - Retorna lista de rubros asociados
+
+  □ DELETE /api/rubro-socio/rubro/{idRubro}/socio/{idSocio}
+    - Desasocia correctamente
+
+FRONTEND:
+  □ /socio/rubros
+    - Carga rubros disponibles
+    - Ingresa clave y se asocia
+    - Clave inválida → muestra error
+    - Desasociación funciona
+
+  □ /admin/ver-socio/{id}
+    - Muestra rubros asociados
+    - Selector excluye asociados
+    - Asociar nuevo rubro funciona
+    - Desasociar funciona
+
+================================================================================
+ESTADÍSTICAS DEL TRABAJO
+================================================================================
+
+Archivos modificados backend:    5
+Archivos modificados frontend:   6
+Nuevos métodos backend:          1
+Nuevas funciones frontend:       6
+Nuevas rutas:                    3
+Nuevos componentes:              0 (se mejoraron existentes)
+Líneas de código agregadas:      ~500+
+
+Tiempo invertido: ~2 horas (estimado)
+
+================================================================================
+NOTAS IMPORTANTES
+================================================================================
+
+1. Las rutas /socio/inicio y /socio/mis-rubros-asociados deben estar 
+   configuradas en el app.routes.ts
+
+2. La clave de acceso debe ser única en la tabla "rubros"
+
+3. En producción, usar HTTPS para proteger las claves de acceso
+
+4. Considerar agregar un endpoint para generar nuevas claves
+
+5. Considerar auditoría de quién se asoció a qué rubro y cuándo
+
+6. El método asociarPorClaveAcceso valida que el rubro esté activo y la 
+   clave también lo esté
+
+================================================================================
+CONTACTO Y SOPORTE
+================================================================================
+
+Cualquier duda sobre la implementación, revisar:
+  - Logs del backend en caso de errores 500
+  - Console del navegador para errores frontend
+  - Verificar que el socioId se obtiene correctamente
+
+================================================================================
+FIN DEL DOCUMENTO - 16 DE MARZO 2026
+================================================================================
