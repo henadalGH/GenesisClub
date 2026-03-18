@@ -14,7 +14,8 @@ public class JugadorDTO {
     private String apellido;
     private String email;
     private String estado;
-
+    private String codigoArea;
+    private String numeroCelular;
     // placa del vehículo asociada a su solicitud
     private String patente;
 }

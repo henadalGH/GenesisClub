@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.LoginDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.UsuarioEntity;
+import com.example.genesisclub.genesisClub.Repositorio.AdminRepository;
+import com.example.genesisclub.genesisClub.Repositorio.JugadorRepository;
+import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Servicio.AuthService;
 import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
@@ -18,6 +21,15 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private SocioRepository socioRepository;
+
+    @Autowired
+    private JugadorRepository jugadorRepository;
+
+    @Autowired
+    private AdminRepository adminRepository;
 
     @Autowired
     private JWTUtilityService jwtUtilityService;
@@ -49,9 +61,31 @@ public class AuthServiceImpl implements AuthService {
         // ✅ OBTENER ROL DESDE TU ENTIDAD
         String rolNombre = usuario.getRol().getNombre().name();
 
-        // ✅ GENERAR JWT CON ROL
+        // ✅ DETERMINAR QUÉ ID DEBE USARSE EN EL TOKEN
+        // (usuario.id es el id de la tabla usuario;
+        //  para SOCIO/JUGADOR/ADMIN necesitamos el id de la tabla relacionada)
+        Long tokenSubjectId = usuario.getId();
+        switch (rolNombre) {
+            case "SOCIO" -> {
+                tokenSubjectId = socioRepository.findByUsuario_Id(usuario.getId())
+                        .map(s -> s.getId())
+                        .orElse(usuario.getId());
+            }
+            case "JUGADOR" -> {
+                tokenSubjectId = jugadorRepository.findByUsuario_Id(usuario.getId())
+                        .map(j -> j.getId())
+                        .orElse(usuario.getId());
+            }
+            case "ADMIN" -> {
+                tokenSubjectId = adminRepository.findByUsuario_Id(usuario.getId())
+                        .map(a -> a.getId())
+                        .orElse(usuario.getId());
+            }
+        }
+
+        // ✅ GENERAR JWT CON EL ID CORRECTO
         String token = jwtUtilityService.generateJWT(
-                usuario.getId(),
+                tokenSubjectId,
                 rolNombre
         );
 
@@ -61,6 +95,7 @@ public class AuthServiceImpl implements AuthService {
         response.put("rol", rolNombre); // opcional (útil para frontend)
         response.put("email", usuario.getEmail());
         response.put("userId", usuario.getId());
+        response.put("profileId", tokenSubjectId); // id real del rol (socio/jugador/admin)
 
         return response;
     }

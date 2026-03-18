@@ -8,7 +8,7 @@ import { SolicitudServicio } from '../../ServiciosCompartidos/solicitud-servicio
   standalone: true,
   imports: [FormsModule],
   templateUrl: './registro-invitado.html',
-  styleUrls: ['./registro-invitado.css'] // corregido
+  styleUrl: './registro-invitado.css' // corregido
 })
 export class RegistroInvitado implements OnInit {
   

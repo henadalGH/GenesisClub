@@ -3,6 +3,7 @@ package com.example.genesisclub.genesisClub.Modelo.Entidad;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -29,6 +30,7 @@ public class SocioEntity {
 
     @ManyToOne
     @JoinColumn(name = "id_estado")
+    @JsonIgnoreProperties("socio")
     private EstadoSocioEnitity estado;
 
     @ManyToOne
@@ -47,6 +49,9 @@ public class SocioEntity {
 
     @OneToMany(mappedBy = "socio")
     private List<RubroSocioEntity> socioRubro = new ArrayList<>();
+
+    @OneToMany(mappedBy = "socio")
+    private List<SolicitudRubroEntity> solicitudesRubro = new ArrayList<>();
 
     @PrePersist
     public void prePersist() {

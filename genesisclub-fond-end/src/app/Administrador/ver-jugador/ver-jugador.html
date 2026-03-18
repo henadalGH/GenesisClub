@@ -18,21 +18,14 @@
 
         <div>
           <h2>{{ jugador().nombre }} {{ jugador().apellido }}</h2>
-          <span class="email">{{ jugador().email }}</span>
-          {{jugador().codigoArea}}
         </div>
       </header>
 
       <div class="info-grid">
 
         <div class="info-item">
-          <span>ID Jugador</span>
+          <span>Numero de Jugador</span>
           <strong>{{ jugador().id }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>ID Usuario</span>
-          <strong>{{ jugador().usuarioId }}</strong>
         </div>
 
         <div class="info-item">
@@ -51,6 +44,12 @@
         <div class="info-item">
           <span>Email</span>
           <strong>{{ jugador().email }}</strong>
+        </div>
+
+        
+        <div class="info-item">
+          <span>Contacto</span>
+          <strong>{{ jugador().codigoArea }} - {{jugador().numeroCelular}}</strong>
         </div>
 
       </div>

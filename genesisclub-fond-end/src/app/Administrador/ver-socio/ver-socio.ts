@@ -12,7 +12,7 @@ import { HeaderAdmin } from '../header-admin/header-admin';
   standalone: true,
   imports: [CommonModule, RouterModule, FormsModule, HeaderAdmin],
   templateUrl: './ver-socio.html',
-  styleUrls: ['./ver-socio.css'], // <-- Corregido
+  styleUrl: './ver-socio.css',
 })
 export class VerSocio implements OnInit {
   // Inyecciones modernas

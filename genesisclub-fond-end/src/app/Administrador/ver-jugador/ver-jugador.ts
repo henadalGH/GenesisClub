@@ -9,7 +9,7 @@ import { HeaderAdmin } from '../header-admin/header-admin';
   standalone: true,
   imports: [CommonModule, RouterModule, HeaderAdmin],
   templateUrl: './ver-jugador.html',
-  styleUrls: ['./ver-jugador.css'],
+  styleUrl: './ver-jugador.css',
 })
 export class VerJugador implements OnInit {
   private jugadorServicio = inject(JugadorServicio);

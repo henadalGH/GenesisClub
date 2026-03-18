@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from "@angular/router";
 import { SolicitudServicio } from '../../ServiciosCompartidos/solicitud-servicio';
+import { SolicitudSocioDTO } from '../../Modelos/usuario.model';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -9,7 +10,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterLink, FormsModule, CommonModule],
   templateUrl: './solicitud-socio.html',
-  styleUrls: ['./solicitud-socio.css'],
+  styleUrl: './solicitud-socio.css',
 })
 export class SolicitudSocio {
 
@@ -106,22 +107,12 @@ export class SolicitudSocio {
 
     this.cargando = true;
 
-    const payload: any = {
+    const payload: SolicitudSocioDTO = {
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
-      password: this.password,
-      codigoArea: this.codigoArea,
-      numeroCelular: this.numeroCelular
+      telefono: `${this.codigoArea}${this.numeroCelular}`
     };
-
-    if (this.patente) {
-      payload.patente = this.patente;
-      payload.marca = this.marca;
-      payload.modelo = this.modelo;
-      payload.anio = this.anio;
-      payload.tieneGnc = this.tieneGnc;
-    }
 
     this.solicitudServicio.enviarSolicitud(payload).subscribe({
       next: (res) => {

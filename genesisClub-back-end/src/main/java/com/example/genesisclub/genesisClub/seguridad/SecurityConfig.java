@@ -4,6 +4,7 @@ import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -39,57 +40,30 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // --- RUTAS PÚBLICAS ---
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/usuario/registro").permitAll()
-                .requestMatchers("/api/solicitud/socio/nuevo").permitAll()
-                .requestMatchers("/api/solicitud/socio/registro-invitado").permitAll()
-                .requestMatchers("/api/solicitud/jugador").permitAll()
-                .requestMatchers("/email/**").permitAll()
-                .requestMatchers("/publico/test-final").permitAll()
-                .requestMatchers("/api/invitacion/aceptar/**").permitAll()
-                .requestMatchers("/api/rubro/activos").permitAll()
-                .requestMatchers("/api/rubro/buscar").permitAll()
-                .requestMatchers("/api/rubro/nombre/**").permitAll()
-                .requestMatchers("/api/rubro/clave/**").permitAll()
+                .requestMatchers("/api/auth/**", "/api/usuario/registro", "/email/**").permitAll()
+                .requestMatchers("/api/solicitud/socio/nuevo", "/api/solicitud/socio/registro-invitado").permitAll()
+                .requestMatchers("/api/solicitud/jugador", "/api/invitacion/aceptar/**").permitAll()
+                .requestMatchers("/api/rubro/activos", "/api/rubro/buscar", "/api/rubro/nombre/**", "/api/rubro/clave/**").permitAll()
+                .requestMatchers("/publico/**").permitAll()
 
                 // --- RUTAS DE ADMINISTRADOR ---
-                .requestMatchers("/api/solicitud/socio/pendientes").hasRole("ADMIN")
-                .requestMatchers("/api/solicitud/socio/actualizar/**").hasRole("ADMIN")
-                // endpoints de solicitudes de jugadores (nuevo controlador separado)
-                .requestMatchers("/api/solicitud/jugador/pendientes").hasRole("ADMIN")
-                .requestMatchers("/api/solicitud/jugador/actualizar/**").hasRole("ADMIN")
+                // Al usar .hasRole("ADMIN"), Spring busca internamente "ROLE_ADMIN"
+                // Esto coincide perfectamente con tu JWTAuthorizationFilter
+                .requestMatchers("/api/solicitud/socio/pendientes", "/api/solicitud/socio/actualizar/**").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/jugador/pendientes", "/api/solicitud/jugador/actualizar/**").hasRole("ADMIN")
+                
+                // Endpoints de Solicitudes Rubro (el del error 403)
+                .requestMatchers(HttpMethod.GET, "/api/solicitudes-rubro/pendientes").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/**/aprobar").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/**/rechazar").hasRole("ADMIN")
+                
+                .requestMatchers("/api/jugador/**", "/api/socio/**", "/api/auth/admin/solo").hasRole("ADMIN")
+                .requestMatchers("/api/rubro/**", "/api/rubro-socio/**", "/api/historial-rubro/**", "/api/rubro-acceso-log/**").hasRole("ADMIN")
 
-                // acceso a recursos de jugadores
-                .requestMatchers("/api/jugador/todos").hasRole("ADMIN")
-                .requestMatchers("/api/jugador/**").hasRole("ADMIN")
+                // --- RUTAS DE SOCIO / MIXTAS ---
+                .requestMatchers(HttpMethod.POST, "/api/solicitudes-rubro").hasAnyRole("SOCIO", "ADMIN")
+                .requestMatchers("/api/usuario-rubro/**", "/api/relacion-socio/**", "/api/invitacion/**").hasAnyRole("SOCIO", "ADMIN")
 
-                .requestMatchers("/api/socio/todos").hasRole("ADMIN")
-                .requestMatchers("/api/socio/**").hasRole("ADMIN")
-                .requestMatchers("/api/auth/admin/solo").hasRole("ADMIN")
-
-                // --- RUTAS DE RUBROS - ADMINISTRADOR ---
-                .requestMatchers("/api/rubro").hasRole("ADMIN")
-                .requestMatchers("/api/rubro/**").hasRole("ADMIN")
-                .requestMatchers("/api/rubro-socio").hasRole("ADMIN")
-                .requestMatchers("/api/rubro-socio/**").hasRole("ADMIN")
-                .requestMatchers("/api/historial-rubro").hasRole("ADMIN")
-                .requestMatchers("/api/historial-rubro/**").hasRole("ADMIN")
-
-                // --- RUTAS DE USUARIO-RUBRO - SOCIO/ADMIN ---
-                .requestMatchers("/api/usuario-rubro").hasAnyRole("SOCIO", "ADMIN")
-                .requestMatchers("/api/usuario-rubro/**").hasAnyRole("SOCIO", "ADMIN")
-
-                // --- RUTAS DE ACCESO LOG RUBROS - ADMINISTRADOR ---
-                .requestMatchers("/api/rubro-acceso-log").hasRole("ADMIN")
-                .requestMatchers("/api/rubro-acceso-log/**").hasRole("ADMIN")
-
-                // --- RUTAS DEL CONTROLLER RELACION-SOCIO ---
-                .requestMatchers("/api/relacion-socio/mis-invitados/**").hasAnyRole("SOCIO", "ADMIN")
-                .requestMatchers("/api/relacion-socio/mi-red-arbol/**").hasAnyRole("SOCIO", "ADMIN")
-                .requestMatchers("/api/relacion-socio/mi-red-lista/**").hasAnyRole("SOCIO", "ADMIN")
-
-                // --- OTRAS RUTAS AUTENTICADAS ---
-                .requestMatchers("/api/invitacion/**").hasAnyRole("SOCIO", "ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JWTAuthorizationFilter(jwtUtilityService), 
@@ -101,12 +75,21 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        
+        // Configuración de orígenes para local y producción
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:4200", 
                 "https://*.onrender.com"
         ));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+        
+        // IMPORTANTE: Permitir todos los headers para evitar el 403 en peticiones OPTIONS
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        
+        // Exponer Authorization para que Angular pueda leerlo si es necesario
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
+
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

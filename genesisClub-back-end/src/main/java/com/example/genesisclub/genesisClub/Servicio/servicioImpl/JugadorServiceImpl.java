@@ -102,8 +102,10 @@ public class JugadorServiceImpl implements JugadorService {
             dto.setNombre(entity.getUsuario().getNombre());
             dto.setApellido(entity.getUsuario().getApellido());
             dto.setEmail(entity.getUsuario().getEmail());
+            dto.setCodigoArea(entity.getUsuario().getCodigoArea());
+            dto.setNumeroCelular(entity.getUsuario().getNumeroCelular());
             dto.setEstado(entity.getUsuario().getEstado() != null ? 
-                         entity.getUsuario().getEstado() : "ACTIVO");
+                        entity.getUsuario().getEstado() : "ACTIVO");
             String email = entity.getUsuario().getEmail();
             solicitudRepository.findTopByEmailOrderByFechaSolicitudDesc(email)
                     .map(sol -> sol.getVehiculo())

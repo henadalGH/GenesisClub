@@ -112,7 +112,25 @@ export class AuthServicio {
 
     const decoded: any = jwtDecode(token);
 
-    return decoded.sub || decoded.id || null;
+    // Prefer role-based IDs if present (e.g. socioId, jugadorId, adminId)
+    const rol = this.getRol();
+
+    let rawId: any = null;
+    if (rol === 'ROLE_SOCIO') {
+      rawId = decoded.socioId || decoded.socio?.id;
+    } else if (rol === 'ROLE_JUGADOR') {
+      rawId = decoded.jugadorId || decoded.jugador?.id;
+    } else if (rol === 'ROLE_ADMIN') {
+      rawId = decoded.adminId || decoded.admin?.id;
+    }
+
+    // Fallback to subject/id claims for backwards compatibility
+    rawId = rawId || decoded.sub || decoded.id || null;
+
+    if (!rawId) return null;
+
+    const parsedId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
+    return Number.isNaN(parsedId) ? null : parsedId;
   }
 
 
@@ -122,7 +140,29 @@ export class AuthServicio {
 
 
   // ========================
-  // 🔁 REDIRECCIÓN POR ROL
+  // � DEBUG - INSPECCIONAR TOKEN
+  // ========================
+  debugToken(): void {
+    const token = this.getToken();
+    if (!token) {
+      console.warn('❌ No hay token');
+      return;
+    }
+
+    try {
+      const decoded: any = jwtDecode(token);
+      console.log('📋 Token Decodificado:', decoded);
+      console.log('👤 Rol:', this.getRol());
+      console.log('🆔 User ID (desde JWT):', this.getUserId());
+      console.log('📧 Email:', localStorage.getItem('email'));
+    } catch (e) {
+      console.error('Error decodificando token:', e);
+    }
+  }
+
+
+  // ========================
+  // �🔁 REDIRECCIÓN POR ROL
   // ========================
   redirectByRole(): void {
 

@@ -18,6 +18,7 @@
           <th>Nombre</th>
           <th>Apellido</th>
           <th>Email</th>
+          <th>Patente</th>
           <th class="text-center">Acciones</th>
         </tr>
       </thead>
@@ -29,6 +30,7 @@
             <td class="font-bold">{{ jug.nombre }}</td>
             <td>{{ jug.apellido }}</td>
             <td class="text-muted">{{ jug.email }}</td>
+            <td>{{jug.patente}}</td>
             <td class="acciones-celda">
               <button class="btn-icon btn-view" title="Ver detalle" (click)="verJugador(jug.id)">
                 👁️ Ver

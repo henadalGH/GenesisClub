@@ -8,7 +8,7 @@ type Estado = 'ACEPTADA' | 'RECHAZADA';
 @Component({
   selector: 'app-solicitudes-jugadores-pendientes',
   templateUrl: './solicitudes-jugadores-pendientes.html',
-  styleUrls: ['./solicitudes-jugadores-pendientes.css'],
+  styleUrl: './solicitudes-jugadores-pendientes.css',
   standalone: true,
   imports: [HeaderAdmin, CommonModule],
 })

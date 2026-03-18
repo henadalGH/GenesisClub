@@ -24,6 +24,10 @@ import { ListarRubros } from './Administrador/Rubros/listar-rubros/listar-rubros
 import { VerResPorSocio } from './Administrador/ver-res-por-socio/ver-res-por-socio';
 import { VerRubro } from './Administrador/Rubros/ver-rubro/ver-rubro';
 import { RubrosSocio } from './Socio/rubros-socio/rubros-socio';
+import { MisSocios } from './Socio/mis-socios/mis-socios';
+import { RubrosDisponibles } from './Socio/rubros-disponibles/rubros-disponibles';
+import { SolicitarRubroComponent } from './Socio/solicitar-rubro/solicitar-rubro.component';
+import { SolicitudesRubrosPendientesComponent } from './Administrador/solicitudes-rubros-pendientes/solicitudes-rubros-pendientes.component';
 
 
 export const routes: Routes = [
@@ -43,7 +47,7 @@ export const routes: Routes = [
   // =========================
   // 👤 RUTAS SOCIO
   // =========================
-  {
+  { 
     path: 'inicioSocio',
     component: InicioSocio,
     canActivate: [AuthGuard],
@@ -62,10 +66,18 @@ export const routes: Routes = [
     data: { role: ['ROLE_SOCIO'] }
   },
   {
-    path: 'mis-rubros',
+    path: 'misRubros',
     component: RubrosSocio,
     
   },
+
+  {path: 'misSocios',
+    component: MisSocios
+  },
+
+  {path: 'rubrosDisponibles', component: RubrosDisponibles},
+
+  {path: 'solicitarRubro/:id', component: SolicitarRubroComponent, canActivate: [AuthGuard], data: { role: ['ROLE_SOCIO'] }},
 
 
   // =========================
@@ -155,6 +167,12 @@ export const routes: Routes = [
   {
     path: 'verRubro/:id',
     component: VerRubro,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_ADMIN'] }
+  },
+  {
+    path: 'solicitudesRubrosPendientes',
+    component: SolicitudesRubrosPendientesComponent,
     canActivate: [AuthGuard],
     data: { role: ['ROLE_ADMIN'] }
   },

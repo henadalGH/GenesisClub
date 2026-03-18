@@ -8,7 +8,7 @@ import { RouterLink, Router } from '@angular/router';
   standalone: true,
   imports: [RouterLink, FormsModule],
   templateUrl: './login.html',
-  styleUrls: ['./login.css'], // CORREGIDO
+  styleUrl: './login.css', // CORREGIDO
 })
 export class Login {
 

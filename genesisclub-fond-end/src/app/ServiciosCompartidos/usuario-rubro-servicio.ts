@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { environment } from '../../environments/environment';
 import { UsuarioRubroDTO } from '../Modelos/rubro.model';
 
 @Injectable({
@@ -8,7 +9,7 @@ import { UsuarioRubroDTO } from '../Modelos/rubro.model';
 })
 export class UsuarioRubroServicio {
 
-  private baseUrl = 'http://localhost:8080/api/usuario-rubro';
+  private baseUrl = `${environment.apiUrl}/usuario-rubro`;
 
   constructor(private http: HttpClient) {}
 

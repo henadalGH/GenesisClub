@@ -2,17 +2,18 @@ import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import * as headerAdmin from '../../Administrador/header-admin/header-admin';
 import { RubroDTO, UsuarioRubroDTO } from '../../Modelos/rubro.model';
 import { RubroServicio } from '../../ServiciosCompartidos/rubro-servicio';
 import { RubroSocioServicio } from '../../ServiciosCompartidos/rubro-socio-servicio';
 import { UsuarioRubroServicio } from '../../ServiciosCompartidos/usuario-rubro-servicio';
 import { AuthServicio } from '../../ServiciosCompartidos/auth-servicio';
+import { HeraderSocio } from "../herader-socio/herader-socio";
+import { RubrosDisponibles } from '../rubros-disponibles/rubros-disponibles';
 
 @Component({
   selector: 'app-rubros-socio',
   standalone: true,
-  imports: [CommonModule, FormsModule, headerAdmin.HeaderAdmin],
+  imports: [CommonModule, FormsModule, HeraderSocio],
   templateUrl: './rubros-socio.html',
   styleUrl: './rubros-socio.css'
 })
@@ -54,25 +55,15 @@ export class RubrosSocio implements OnInit {
   cargarDatos(): void {
     this.loading.set(true);
     
-    // Cargar rubros disponibles
-    this.rubroServicio.obtenerActivos().subscribe({
-      next: (rubros) => {
-        this.rubrosDisponibles.set(rubros);
-        // Cargar rubros asignados del usuario
-        this.usuarioRubroServicio.obtenerTodos().subscribe({
-          next: (asignados) => {
-            this.rubrosAsignados.set(asignados.filter(ua => ua.idUsuario === this.usuarioId()));
-            this.obtenerRubrosAsociados();
-            this.loading.set(false);
-          },
-          error: (err) => {
-            console.error('Error cargando rubros asignados:', err);
-            this.loading.set(false);
-          }
-        });
+    // Cargar rubros asignados del usuario
+    this.usuarioRubroServicio.obtenerTodos().subscribe({
+      next: (asignados) => {
+        this.rubrosAsignados.set(asignados.filter(ua => ua.idUsuario === this.usuarioId()));
+        this.obtenerRubrosAsociados();
+        this.loading.set(false);
       },
       error: (err) => {
-        console.error('Error cargando rubros disponibles:', err);
+        console.error('Error cargando rubros asignados:', err);
         this.loading.set(false);
       }
     });
@@ -92,39 +83,12 @@ export class RubrosSocio implements OnInit {
     }
   }
 
-  isRubroAsignado(rubroId: number): boolean {
-    return this.rubrosAsignados().some(ua => ua.idRubro === rubroId);
-  }
-
   isRubroAsociado(rubroId: number): boolean {
     return this.rubrosAsociadosSocio().some(r => r.idRubro === rubroId);
   }
 
   obtenerNombreRubro(rubroId: number): string {
     return this.rubrosDisponibles().find(r => r.id === rubroId)?.nombre || 'N/A';
-  }
-
-  solicitarRubro(rubroId: number): void {
-    const usuarioRubro: UsuarioRubroDTO = {
-      id: 0,
-      idUsuario: this.usuarioId(),
-      idRubro: rubroId,
-      tipoUsuario: 'SOCIO',
-      activo: false,
-      fechaIngreso: new Date().toISOString()
-    };
-
-    this.usuarioRubroServicio.crear(usuarioRubro).subscribe({
-      next: () => {
-        this.mensajeExito.set(`✅ Solicitud enviada para el rubro "${this.obtenerNombreRubro(rubroId)}"`);
-        setTimeout(() => this.mensajeExito.set(''), 5000);
-        this.cargarDatos();
-      },
-      error: (err) => {
-        this.mensajeError.set(err.error?.message || 'Error al solicitar el rubro');
-        setTimeout(() => this.mensajeError.set(''), 5000);
-      }
-    });
   }
 
   asociarConClaveAcceso(): void {

@@ -50,6 +50,9 @@ public class RubroEntity {
     @OneToMany(mappedBy = "rubro")
     private List<RubroSocioEntity> rubroSocio = new ArrayList<>();
 
+    @OneToMany(mappedBy = "rubro")
+    private List<SolicitudRubroEntity> solicitudesRubro = new ArrayList<>();
+
     @Column(name = "clave_acceso", length = 50, unique = true)
     private String claveAcceso;
 

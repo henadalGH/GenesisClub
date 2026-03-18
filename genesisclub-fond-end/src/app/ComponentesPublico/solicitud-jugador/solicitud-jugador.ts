@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterLink, FormsModule, CommonModule],
   templateUrl: './solicitud-jugador.html',
-  styleUrls: ['./solicitud-jugador.css'],
+  styleUrl: './solicitud-jugador.css',
 })
 export class SolicitudJugador {
 
