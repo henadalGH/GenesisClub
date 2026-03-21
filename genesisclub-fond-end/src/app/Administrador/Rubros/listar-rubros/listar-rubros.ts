@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -19,47 +19,76 @@ export class ListarRubros implements OnInit {
   searchTerm: string = '';
   filtroEstado: string = '';
 
-  constructor(private rubroServicio: RubroServicio) {}
+  constructor(
+    private rubroServicio: RubroServicio,
+    private cdr: ChangeDetectorRef // Fundamental para refrescar la vista
+  ) {}
 
   ngOnInit(): void {
     this.cargarRubros();
   }
 
+  // Carga inicial y refresco tras acciones
   cargarRubros(): void {
     this.rubroServicio.obtenerTodos().subscribe({
       next: (data) => {
-        this.rubros = data;
-        this.rubrosFiltrados = data;
+        this.rubros = [...data];
+        this.aplicarFiltrosLocales();
       },
       error: (err) => console.error('Error cargando rubros:', err)
     });
   }
 
+  // Lógica central de filtrado (evita conflictos entre búsqueda y estado)
+  aplicarFiltrosLocales(): void {
+    let resultado = [...this.rubros];
+
+    // Filtro por texto
+    if (this.searchTerm.trim() !== '') {
+      const term = this.searchTerm.toLowerCase();
+      resultado = resultado.filter(r => 
+        r.nombre?.toLowerCase().includes(term)
+      );
+    }
+
+    // Filtro por estado
+    if (this.filtroEstado === 'activo') {
+      resultado = resultado.filter(r => r.activo);
+    } else if (this.filtroEstado === 'inactivo') {
+      resultado = resultado.filter(r => !r.activo);
+    }
+
+    this.rubrosFiltrados = resultado;
+    
+    // Forzamos a Angular a "pintar" los resultados ahora mismo
+    this.cdr.detectChanges();
+  }
+
+  // Acción del botón buscar (usa el servicio para traer datos frescos)
   buscar(): void {
     if (this.searchTerm.trim() === '') {
-      this.rubrosFiltrados = this.rubros;
+      this.cargarRubros();
     } else {
       this.rubroServicio.buscar(this.searchTerm).subscribe({
-        next: (data) => this.rubrosFiltrados = data,
+        next: (data) => {
+          this.rubrosFiltrados = [...data];
+          this.cdr.detectChanges(); // Refresco inmediato post-búsqueda
+        },
         error: (err) => console.error('Error buscando:', err)
       });
     }
   }
 
+  // Acción del combo de filtros
   filtrar(): void {
-    if (this.filtroEstado === '') {
-      this.rubrosFiltrados = this.rubros;
-    } else if (this.filtroEstado === 'activo') {
-      this.rubrosFiltrados = this.rubros.filter(r => r.activo);
-    } else {
-      this.rubrosFiltrados = this.rubros.filter(r => !r.activo);
-    }
+    this.aplicarFiltrosLocales();
   }
 
   editar(id: number): void {
     console.log('Editar rubro:', id);
   }
 
+  // Cambiar estado (Activar/Desactivar)
   toggleActivo(id: number, activo: boolean): void {
     const accion = activo ? 
       this.rubroServicio.desactivar(id) : 
@@ -67,22 +96,10 @@ export class ListarRubros implements OnInit {
 
     accion.subscribe({
       next: () => {
+        // Al terminar la operación, recargamos la lista completa
         this.cargarRubros();
-        console.log('Estado actualizado');
       },
       error: (err) => console.error('Error actualizando estado:', err)
     });
-  }
-
-  eliminar(id: number): void {
-    if (confirm('¿Estás seguro de que deseas eliminar este rubro?')) {
-      this.rubroServicio.eliminar(id).subscribe({
-        next: () => {
-          this.cargarRubros();
-          console.log('Rubro eliminado');
-        },
-        error: (err) => console.error('Error eliminando rubro:', err)
-      });
-    }
   }
 }

@@ -107,11 +107,17 @@ export class SolicitudSocio {
 
     this.cargando = true;
 
-    const payload: SolicitudSocioDTO = {
+    const payload = {
       nombre: this.nombre,
       apellido: this.apellido,
       email: this.email,
-      telefono: `${this.codigoArea}${this.numeroCelular}`
+      codigoArea: this.codigoArea,
+      numeroCelular: this.numeroCelular,
+      patente: this.patente || undefined,
+      marca: this.marca || undefined,
+      modelo: this.modelo || undefined,
+      anio: this.anio || undefined,
+      tieneGnc: this.tieneGnc
     };
 
     this.solicitudServicio.enviarSolicitud(payload).subscribe({

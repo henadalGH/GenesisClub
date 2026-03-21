@@ -33,7 +33,6 @@
     <table class="tabla-rubros" *ngIf="rubrosFiltrados.length > 0">
       <thead>
         <tr>
-          <th>#ID</th>
           <th>Nombre</th>
           <th>Descripción</th>
           <th>Estado</th>
@@ -43,7 +42,6 @@
       </thead>
       <tbody>
         <tr *ngFor="let rubro of rubrosFiltrados" [class.inactivo]="!rubro.activo">
-          <td>{{ rubro.id }}</td>
           <td><strong>{{ rubro.nombre }}</strong></td>
           <td>{{ rubro.descripcion }}</td>
           <td>
@@ -53,9 +51,6 @@
           </td>
           <td>{{ rubro.fechaCreacion | date: 'short' }}</td>
           <td class="acciones">
-            <button (click)="editar(rubro.id)" class="btn-accion btn-editar" title="Editar">
-              ✏️ Editar
-            </button>
             <button 
               (click)="toggleActivo(rubro.id, rubro.activo)" 
               [class.btn-desactivar]="rubro.activo"
@@ -63,9 +58,6 @@
               class="btn-accion"
               [title]="rubro.activo ? 'Desactivar' : 'Activar'">
               {{ rubro.activo ? '🔒 Desactivar' : '🔓 Activar' }}
-            </button>
-            <button (click)="eliminar(rubro.id)" class="btn-accion btn-eliminar" title="Eliminar">
-              🗑️ Eliminar
             </button>
           </td>
         </tr>

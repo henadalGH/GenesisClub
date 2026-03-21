@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -31,6 +32,7 @@ public class EstadoSolicitudEntity {
     @Enumerated(EnumType.STRING)
     private EstadoSolicitudEnums estado;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "estado")
     private List<SolicitudEntity> solicitud = new ArrayList<>();
 }

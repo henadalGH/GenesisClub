@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudRubroResponseDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.RubroEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.RubroSocioEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
@@ -110,9 +111,24 @@ public class SolicitudRubroServiceImpl implements SolicitudRubroService {
     }
 
     @Override
-    public List<SolicitudRubroEntity> obtenerSolicitudesPendientes() {
+    public List<SolicitudRubroResponseDTO> obtenerSolicitudesPendientes() {
         return solicitudRubroRepository.findAll().stream()
                 .filter(s -> s.getEstado() == EstadoSolicitudRubro.PENDIENTE)
+                .map(s -> new SolicitudRubroResponseDTO(
+                    s.getId(),
+                    new SolicitudRubroResponseDTO.SocioInfoDTO(
+                        s.getSocio().getId(),
+                        s.getSocio().getUsuario() != null ? s.getSocio().getUsuario().getNombre() : "Sin nombre",
+                        s.getSocio().getUsuario() != null ? s.getSocio().getUsuario().getEmail() : "Sin email"
+                    ),
+                    new SolicitudRubroResponseDTO.RubroInfoDTO(
+                        s.getRubro().getId(),
+                        s.getRubro().getNombre(),
+                        s.getRubro().getDescripcion()
+                    ),
+                    s.getEstado().toString(),
+                    s.getFechaCreacion()
+                ))
                 .toList();
     }
 

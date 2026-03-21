@@ -1,5 +1,6 @@
 package com.example.genesisclub.genesisClub.Servicio;
 
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudRubroResponseDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudRubroEntity;
 
 import java.util.List;
@@ -12,6 +13,6 @@ public interface SolicitudRubroService {
 
     SolicitudRubroEntity rechazarSolicitud(Long solicitudId);
 
-    List<SolicitudRubroEntity> obtenerSolicitudesPendientes();
+    List<SolicitudRubroResponseDTO> obtenerSolicitudesPendientes();
 
 }

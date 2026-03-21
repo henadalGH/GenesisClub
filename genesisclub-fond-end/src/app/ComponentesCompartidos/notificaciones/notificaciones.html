@@ -1,0 +1,20 @@
+<div class="contenedor-notificaciones">
+  @for (notif of notificaciones; track notif.id) {
+    <div 
+      class="notificacion"
+      [class]="'notif-' + notif.tipo"
+      [@notificationAnimation]>
+      <div class="contenido">
+        <span class="icono">{{ getIcono(notif.tipo) }}</span>
+        <p class="mensaje">{{ notif.mensaje }}</p>
+        <button 
+          class="btn-cerrar"
+          (click)="remover(notif.id)"
+          aria-label="Cerrar notificación">
+          ×
+        </button>
+      </div>
+      <div class="barra-progreso"></div>
+    </div>
+  }
+</div>

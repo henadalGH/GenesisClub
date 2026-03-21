@@ -13,6 +13,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -29,9 +30,11 @@ public class AdminEntity {
     @JoinColumn(name = "id_usuario") 
     private UsuarioEntity usuario;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin")
     private List<RubroEntity> rubros = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "admin")
     private List<HistorialRubroEntity> historial = new ArrayList<>();
 

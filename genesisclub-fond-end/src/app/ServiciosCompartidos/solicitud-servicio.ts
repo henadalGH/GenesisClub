@@ -2,7 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
-import { ResponceDTO, SolicitudSocioDTO, SolicitudJugadorDTO, RegistroInvitadoDTO } from '../Modelos/usuario.model';
+import { ResponceDTO, CrearSolicitudSocioDTO, CrearSolicitudJugadorDTO, RegistroInvitadoDTO } from '../Modelos/usuario.model';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +15,11 @@ export class SolicitudServicio {
   constructor(private http: HttpClient) {}
 
   // Recibe un objeto tipado con datos del socio
-  enviarSolicitud(datos: SolicitudSocioDTO): Observable<ResponceDTO> {
+  enviarSolicitud(datos: CrearSolicitudSocioDTO): Observable<ResponceDTO> {
     return this.http.post<ResponceDTO>(this.urlSolicitud, datos);
   }
 
-  enviarSolicitudJugador(datos: SolicitudJugadorDTO): Observable<ResponceDTO> {
+  enviarSolicitudJugador(datos: CrearSolicitudJugadorDTO): Observable<ResponceDTO> {
     return this.http.post<ResponceDTO>(this.urlSolicitudJugador, datos);
   }
 

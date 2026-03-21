@@ -19,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -68,21 +69,27 @@ public class UsuarioEntity implements UserDetails {
     private RolEntity rol;
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<SocioEntity> socio = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<AdminEntity> admin = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<JugadorEntity> jugador = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<PerfilEntity> perfil = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<NotificacionEntity> notificacion = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<VehiculoEntity> vehiculos = new ArrayList<>();
 

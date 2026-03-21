@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.CrearSolicitudRubroDTO;
+import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudRubroResponseDTO;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudRubroEntity;
@@ -74,8 +75,8 @@ public class SolicitudRubroController {
     }
 
     @GetMapping("/pendientes")
-    public ResponseEntity<List<SolicitudRubroEntity>> obtenerSolicitudesPendientes() {
-        List<SolicitudRubroEntity> solicitudes = solicitudRubroService.obtenerSolicitudesPendientes();
+    public ResponseEntity<List<SolicitudRubroResponseDTO>> obtenerSolicitudesPendientes() {
+        List<SolicitudRubroResponseDTO> solicitudes = solicitudRubroService.obtenerSolicitudesPendientes();
         return ResponseEntity.ok(solicitudes);
     }
 

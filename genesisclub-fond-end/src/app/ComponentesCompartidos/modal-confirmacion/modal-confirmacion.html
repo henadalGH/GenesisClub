@@ -1,0 +1,30 @@
+<div class="modal-overlay" [ngClass]="{ 'active': visible }">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h2>{{ titulo }}</h2>
+      <button class="btn-cerrar" (click)="onCancelar()" [disabled]="cargando">×</button>
+    </div>
+
+    <div class="modal-body">
+      <p>{{ mensaje }}</p>
+    </div>
+
+    <div class="modal-footer">
+      <button 
+        class="btn btn-secundario" 
+        (click)="onCancelar()"
+        [disabled]="cargando">
+        {{ textoBtnCancelar }}
+      </button>
+      <button 
+        [ngClass]="getClasetBtn()"
+        (click)="onConfirmar()"
+        [disabled]="cargando">
+        @if (cargando) {
+          <span class="spinner"></span>
+        }
+        {{ textoBtnConfirmar }}
+      </button>
+    </div>
+  </div>
+</div>

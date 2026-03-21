@@ -10,7 +10,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.11</version>
+        <version>3.5.12</version>
         <relativePath/>
     </parent>
 
@@ -80,7 +80,6 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>${lombok.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -108,7 +107,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.11.0</version>
                 <configuration>
                     <release>21</release>
                     <annotationProcessorPaths>

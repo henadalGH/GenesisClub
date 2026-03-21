@@ -20,7 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -43,19 +42,19 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**", "/api/usuario/registro", "/email/**").permitAll()
                 .requestMatchers("/api/solicitud/socio/nuevo", "/api/solicitud/socio/registro-invitado").permitAll()
                 .requestMatchers("/api/solicitud/jugador", "/api/invitacion/aceptar/**").permitAll()
+                // Nota: "/api/rubro/nombre/**" y "/api/rubro/clave/**" están bien porque el ** está al final
                 .requestMatchers("/api/rubro/activos", "/api/rubro/buscar", "/api/rubro/nombre/**", "/api/rubro/clave/**").permitAll()
                 .requestMatchers("/publico/**").permitAll()
 
                 // --- RUTAS DE ADMINISTRADOR ---
-                // Al usar .hasRole("ADMIN"), Spring busca internamente "ROLE_ADMIN"
-                // Esto coincide perfectamente con tu JWTAuthorizationFilter
                 .requestMatchers("/api/solicitud/socio/pendientes", "/api/solicitud/socio/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/jugador/pendientes", "/api/solicitud/jugador/actualizar/**").hasRole("ADMIN")
                 
-                // Endpoints de Solicitudes Rubro (el del error 403)
+                // --- CORRECCIÓN AQUÍ: Endpoints de Solicitudes Rubro ---
+                // Se cambia ** por * porque el ID está en el medio de la ruta
                 .requestMatchers(HttpMethod.GET, "/api/solicitudes-rubro/pendientes").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/**/aprobar").hasRole("ADMIN")
-                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/**/rechazar").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/*/aprobar").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/*/rechazar").hasRole("ADMIN")
                 
                 .requestMatchers("/api/jugador/**", "/api/socio/**", "/api/auth/admin/solo").hasRole("ADMIN")
                 .requestMatchers("/api/rubro/**", "/api/rubro-socio/**", "/api/historial-rubro/**", "/api/rubro-acceso-log/**").hasRole("ADMIN")
@@ -76,20 +75,14 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         
-        // Configuración de orígenes para local y producción
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:4200", 
                 "https://*.onrender.com"
         ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        
-        // IMPORTANTE: Permitir todos los headers para evitar el 403 en peticiones OPTIONS
         configuration.setAllowedHeaders(Arrays.asList("*"));
-        
-        // Exponer Authorization para que Angular pueda leerlo si es necesario
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
-
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 
