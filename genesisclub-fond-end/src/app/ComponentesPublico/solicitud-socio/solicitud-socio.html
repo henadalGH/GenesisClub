@@ -16,7 +16,7 @@
         <div class="campos">
           <label>Nombre</label>
           <input type="text" name="nombre" [(ngModel)]="nombre" #nombreCtrl="ngModel" required
-                 placeholder="Ej: Juan" (blur)="validarCampo(nombreCtrl, 'nombre')">
+                placeholder="Ej: Juan" (blur)="validarCampo(nombreCtrl, 'nombre')">
           @if (errores.nombre) {
             <small class="error">{{ errores.nombre }}</small>
           }
@@ -25,7 +25,7 @@
         <div class="campos">
           <label>Apellido</label>
           <input type="text" name="apellido" [(ngModel)]="apellido" #apellidoCtrl="ngModel" required
-                 placeholder="Ej: Pérez" (blur)="validarCampo(apellidoCtrl, 'apellido')">
+                placeholder="Ej: Pérez" (blur)="validarCampo(apellidoCtrl, 'apellido')">
           @if (errores.apellido) {
             <small class="error">{{ errores.apellido }}</small>
           }

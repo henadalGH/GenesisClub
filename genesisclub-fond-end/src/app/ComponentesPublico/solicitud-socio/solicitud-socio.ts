@@ -113,6 +113,7 @@ export class SolicitudSocio {
       email: this.email,
       codigoArea: this.codigoArea,
       numeroCelular: this.numeroCelular,
+      password: this.password,
       patente: this.patente || undefined,
       marca: this.marca || undefined,
       modelo: this.modelo || undefined,
@@ -131,6 +132,7 @@ export class SolicitudSocio {
         const mensajeBack = err?.error?.mensage ?? 'Error al procesar la solicitud';
         alert(mensajeBack);
         console.error('Error desde el servidor:', err);
+        console.log(this.password);
       }
     });
   }
