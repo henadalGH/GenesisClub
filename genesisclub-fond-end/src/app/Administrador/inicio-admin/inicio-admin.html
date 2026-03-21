@@ -1,5 +1,114 @@
+
+
 <app-header-admin></app-header-admin>
 
-<div class="admin-container">
-  <h1>Bienvenido, Administrador</h1>
-</div>
+<section class="inicio-container">
+
+  <!-- BIENVENIDA -->
+  <div class="bienvenida">
+    <div class="bienvenida-texto">
+      <span class="badge-admin">⚙️ Panel de Administración</span>
+      <h1>Bienvenido, Administrador</h1>
+      <p>Revisá el estado del sistema y gestioná los accesos desde acá.</p>
+    </div>
+  </div> 
+
+  <!-- STATS -->
+  <div class="stats-grid">
+
+    <div class="stat-card">
+      <div class="stat-icon">👥</div>
+      <div class="stat-info">
+        <span class="stat-numero">10</span>
+        <span class="stat-label">Socios activos</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">🎮</div>
+      <div class="stat-info">
+        <span class="stat-numero">20</span>
+        <span class="stat-label">Jugadores</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-alerta" routerLink="/solicitudesPendientes">
+      <div class="stat-icon">⏳</div>
+      <div class="stat-info">
+        <span class="stat-numero">47</span>
+        <span class="stat-label">Solicitudes pendientes</span>
+      </div>
+    </div>
+
+    <div class="stat-card" routerLink="/solicitudesRubrosPendientes">
+      <div class="stat-icon">📋</div>
+      <div class="stat-info">
+        <span class="stat-numero">--</span>
+        <span class="stat-label">Solicitudes de rubros</span>
+      </div>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon">💼</div>
+      <div class="stat-info">
+        <span class="stat-numero"></span>
+        <span class="stat-label">Rubros activos</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ACCESOS RÁPIDOS -->
+  <div class="seccion">
+    <h2 class="seccion-titulo">Accesos rápidos</h2>
+    <div class="accesos-grid">
+
+      <div class="acceso-card" routerLink="/solicitudesPendientes">
+        <span class="acceso-icono">📋</span>
+        <div>
+          <h3>Solicitudes Socios</h3>
+          <p>Aprobá o rechazá nuevas solicitudes</p>
+        </div>
+        <span class="acceso-arrow">→</span>
+      </div>
+
+      <div class="acceso-card" routerLink="/solicitudesJugadoresPendientes">
+        <span class="acceso-icono">🎮</span>
+        <div>
+          <h3>Solicitudes Jugadores</h3>
+          <p>Gestioná los accesos de jugadores</p>
+        </div>
+        <span class="acceso-arrow">→</span>
+      </div>
+
+      <div class="acceso-card" routerLink="/listaSocios">
+        <span class="acceso-icono">👥</span>
+        <div>
+          <h3>Lista de Socios</h3>
+          <p>Visualizá y editá socios registrados</p>
+        </div>
+        <span class="acceso-arrow">→</span>
+      </div>
+
+      <div class="acceso-card" routerLink="/listaJugadores">
+        <span class="acceso-icono">🏃</span>
+        <div>
+          <h3>Lista de Jugadores</h3>
+          <p>Consultá todos los jugadores del sistema</p>
+        </div>
+        <span class="acceso-arrow">→</span>
+      </div>
+
+      <div class="acceso-card" routerLink="/listaRubros">
+        <span class="acceso-icono">💼</span>
+        <div>
+          <h3>Rubros</h3>
+          <p>Administrá las categorías del club</p>
+        </div>
+        <span class="acceso-arrow">→</span>
+      </div>
+
+    </div>
+  </div>
+
+</section>

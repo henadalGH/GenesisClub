@@ -1,195 +1,372 @@
-/* ===== CONTENEDOR GENERAL ===== */
+/* ============================================
+   SOLICITUD SOCIO — GenesisClub (MEDIUM DARK)
+   ============================================ */
+
 :host {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   min-height: 100vh;
-
-  background: linear-gradient(135deg, #0f172a, #1e293b);
-  padding: 20px;
-  font-family: "Inter", "Segoe UI", sans-serif;
+  padding: 2.5rem 1.25rem;
+  background: #1e2235;
+  font-family: 'DM Sans', sans-serif;
 }
 
-/* ===== CARD ===== */
-.card {
+:host::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(14, 165, 233, 0.1) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   CONTENEDOR
+   ============================================ */
+.contenedor {
+  position: relative;
+  z-index: 1;
   width: 100%;
-  max-width: 520px;
-
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 18px;
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.25),
-    0 2px 8px rgba(0,0,0,0.15);
-
-  animation: fadeIn 0.4s ease;
+  max-width: 40rem;
+  animation: fadeUp 0.6s ease both;
 }
 
-/* ===== HEADER ===== */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ============================================
+   CARD
+   ============================================ */
+.card {
+  background: #2a3148;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.5rem;
+  padding: 2.5rem 2.25rem;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #7c3aed, #0ea5e9);
+  border-radius: 1.5rem 1.5rem 0 0;
+  pointer-events: none;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
 .header-card {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 2rem;
 }
 
 .titulo {
-  font-size: 26px;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 8px;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.7rem, 4vw, 2.3rem);
+  letter-spacing: 0.07em;
+  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 55%, #7dd3fc 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
 }
 
 .descripcion {
-  font-size: 14px;
-  color: #64748b;
-  line-height: 1.4;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  font-weight: 400;
+  line-height: 1.6;
+  max-width: 28rem;
+  margin: 0 auto;
 }
 
-/* ===== FORM ===== */
+/* ============================================
+   FORMULARIO
+   ============================================ */
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 1.1rem;
 }
 
-/* ===== GRID DOS COLUMNAS ===== */
+/* Grid 2 columnas general */
 .grid-campos {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1rem;
+  width: 100%;
 }
 
-/* ===== CAMPOS ===== */
+/* ============================================
+   CAMPOS
+   ============================================ */
 .campos {
   display: flex;
   flex-direction: column;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
-.campos label {
-  font-size: 13px;
+.campos > label {
+  font-size: 0.73rem;
+  font-weight: 700;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+/* ============================================
+   TELÉFONO — código área (1fr) + celular (3fr)
+   ============================================ */
+.telefono-grupo {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  gap: 0.75rem;
+  align-items: start;
+}
+
+.telefono-grupo > div {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+}
+
+.telefono-grupo label {
+  font-size: 0.68rem;
   font-weight: 600;
-  color: #334155;
-  margin-bottom: 6px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #64748b;
 }
 
-/* INPUTS MODERNOS */
-.campos input {
-  padding: 12px 14px;
-  border-radius: 10px;
-  border: 1px solid #cbd5e1;
-
-  font-size: 14px;
-
-  transition: all 0.25s ease;
-}
-
-/* hover */
-.campos input:hover {
-  border-color: #94a3b8;
-}
-
-/* focus */
-.campos input:focus {
+/* ============================================
+   INPUTS
+   ============================================ */
+input:not([type="checkbox"]) {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.92rem;
+  color: #e2e8f0;
+  background: #1e2235;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.65rem;
+  padding: 0.72em 1em;
   outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59,130,246,0.15);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
-/* ===== BOTONES ===== */
+input:not([type="checkbox"])::placeholder {
+  color: #4b5563;
+  font-size: 0.85rem;
+}
+
+input:not([type="checkbox"]):focus {
+  border-color: #818cf8;
+  background: #252b42;
+  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+}
+
+/* Fix autofill Chrome */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: #e2e8f0;
+  -webkit-box-shadow: 0 0 0px 1000px #1e2235 inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* ============================================
+   PASSWORD WRAPPER — input + botón ver/ocultar
+   ============================================ */
+.password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.password-wrapper input {
+  padding-right: 5rem; /* espacio para el botón */
+}
+
+.ver-pass-btn {
+  position: absolute;
+  right: 0.75rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #818cf8;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0.25em 0;
+  transition: color 0.2s ease;
+  white-space: nowrap;
+}
+
+.ver-pass-btn:hover {
+  color: #a5b4fc;
+}
+
+/* ============================================
+   ERRORES
+   ============================================ */
+.error {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #f87171;
+  letter-spacing: 0.02em;
+  margin-top: 0.1rem;
+  line-height: 1.4;
+}
+
+/* ============================================
+   CHECKBOX GNC
+   ============================================ */
+.campos label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  cursor: pointer;
+  text-transform: uppercase;
+}
+
+input[type="checkbox"] {
+  width: 1rem;
+  height: 1rem;
+  accent-color: #818cf8;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* ============================================
+   BOTONES
+   ============================================ */
 .botones {
   display: flex;
-  gap: 12px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
 }
 
-/* BOTÓN PRINCIPAL */
 .btn-enviar {
-  flex: 1;
-  padding: 12px;
-
-  background: #3b82f6;
-  color: white;
-
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  padding: 0.82em 1.5em;
+  background: linear-gradient(135deg, #7c3aed, #0ea5e9);
+  color: #ffffff;
   border: none;
-  border-radius: 10px;
-
-  font-weight: 600;
+  border-radius: 0.65rem;
   cursor: pointer;
-
-  transition: 0.25s;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.3);
+  transition: opacity 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
-.btn-enviar:hover {
-  background: #2563eb;
-  transform: translateY(-1px);
+.btn-enviar:not(:disabled):hover {
+  opacity: 0.92;
+  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.45);
+  transform: translateY(-2px);
 }
 
 .btn-enviar:disabled {
-  opacity: 0.6;
+  opacity: 0.4;
   cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
 }
 
-/* BOTÓN CANCELAR */
+/* Spinner */
+.spinner {
+  display: inline-block;
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 .btn-cancelar {
-  flex: 1;
-  padding: 12px;
-
-  background: transparent;
-  color: #475569;
-
-  border: 1px solid #cbd5e1;
-  border-radius: 10px;
-
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
   font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 0.75em 1.5em;
+  background: transparent;
+  color: #94a3b8;
+  border: 1.5px solid rgba(255, 255, 255, 0.1);
+  border-radius: 0.65rem;
   cursor: pointer;
-
-  transition: 0.25s;
+  width: 100%;
+  transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease;
 }
 
 .btn-cancelar:hover {
-  background: #f1f5f9;
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.35);
+  background: rgba(248, 113, 113, 0.06);
 }
 
-/* ===== SPINNER ===== */
-.spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid rgba(255,255,255,0.4);
-  border-top: 2px solid white;
-  border-radius: 50%;
-  display: inline-block;
-  margin-right: 6px;
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 32em) {
+  :host {
+    align-items: flex-start;
+    padding: 1.5rem 1rem;
+  }
 
-  animation: spin 0.7s linear infinite;
-}
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 600px) {
   .card {
-    padding: 25px;
+    padding: 2rem 1.25rem;
+    border-radius: 1.25rem;
   }
 
   .grid-campos {
     grid-template-columns: 1fr;
   }
 
+  .telefono-grupo {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
+  }
+}
+
+@media (min-width: 48em) {
   .botones {
-    flex-direction: column;
+    flex-direction: row;
   }
-}
 
-/* ===== ANIMACIONES ===== */
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(8px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+  .btn-enviar,
+  .btn-cancelar {
+    flex: 1;
   }
 }

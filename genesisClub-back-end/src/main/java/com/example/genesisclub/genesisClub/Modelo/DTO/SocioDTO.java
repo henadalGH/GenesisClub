@@ -16,9 +16,14 @@ public class SocioDTO {
     private String nombre;
     private String apellido;
     private String email;
+    private String codigoArea;
+    private String numeroCelular;
     private EstadoSocioEnums estado;
     private Integer cantidadInvitaciones;
     private Integer numeroPostulaciones;
     private LocalDate ultimoMovimiento;
+
+    // placa del vehículo si se cargó durante la solicitud
+    private String patente;
 }
 

@@ -3,6 +3,8 @@ package com.example.genesisclub.genesisClub.seguridad;
 import java.io.IOException;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -16,6 +18,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
+
+    private static final Logger log = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private final JWTUtilityService jwtUtilityService;
 
@@ -63,11 +67,10 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
-            // 🔹 Debug: muestra rol que Spring ve
-            System.out.println("JWT válido -> userId: " + userId + ", Rol asignado: " + roleToUse);
+            log.debug("JWT válido -> userId: {}, Rol asignado: {}", userId, roleToUse);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Error al procesar token JWT", e);
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             return;
         }

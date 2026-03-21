@@ -8,20 +8,26 @@
 
         <nav class="nav-buttons">
 
-            <button type="button">
+            <button type="button" [routerLink]="['/inicioSocio']">
                 🏠 Inicio
             </button>
 
             <button type="button" (click)="abrirModal()">
-                ✉ Invitar socio
+                ✉️ Invitar socio
             </button>
 
-            <button type="button" routerLink="/socio/socios">
+            <button type="button" [routerLink]="['/misSocios']">
                 👥 Mis socios
             </button>
 
-            <button type="button" routerLink="/socio/rubros">
-                💼 Mis rubros
+            <!-- Rubros asociados -->
+            <button type="button" class="rubros-btn" [routerLink]="['/misRubros']">
+                💼 Mis rubros 
+                
+            </button>
+
+            <button type="button" [routerLink]="['/rubrosDisponibles']">
+                🗂️ Rubros
             </button>
 
             <button type="button" routerLink="/socio/estadisticas">
@@ -34,11 +40,11 @@
         <div class="acciones">
 
             <button type="button" class="perfil" routerLink="/socio/perfil">
-                👤 Perfil
+                👤 Mi perfil
             </button>
 
             <button type="button" class="logout" (click)="logout()">
-                Cerrar sesión
+                🚪 Cerrar sesión
             </button>
 
         </div>

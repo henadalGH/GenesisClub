@@ -1,5 +1,7 @@
 package com.example.genesisclub.genesisClub.Servicio.servicioImpl;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -15,6 +17,8 @@ import jakarta.mail.internet.MimeMessage;
 
 @Service
 public class EmailServiceImpl implements EmailService {
+
+    private static final Logger log = LoggerFactory.getLogger(EmailServiceImpl.class);
 
     @Autowired
     private JavaMailSender javaMailSender;
@@ -39,7 +43,6 @@ public class EmailServiceImpl implements EmailService {
             context.setVariable("mensaje", emailDTO.getMensaje());
             
             // 3. Procesar la plantilla
-            // IMPORTANTE: Cambiado a "mail" porque tu archivo es mail.html
             String htmlContent = templateEngine.process("mail", context);
 
             // true indica que el texto es HTML
@@ -48,16 +51,12 @@ public class EmailServiceImpl implements EmailService {
             // 4. Enviar
             javaMailSender.send(mimeMessage);
             
-            System.out.println("✅ Correo enviado con éxito a: " + emailDTO.getDestinatario());
+            log.info("Correo enviado exitosamente a: {}", emailDTO.getDestinatario());
 
         } catch (MessagingException e) {
-            System.err.println("❌ Error en la estructura del correo: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Error en la estructura del correo para: {}", emailDTO.getDestinatario(), e);
         } catch (Exception e) {
-            System.err.println("❌ Error crítico al enviar correo: " + e.getClass().getSimpleName());
-            System.err.println("Causa: " + e.getMessage());
-            // Esto te mostrará en la consola si el archivo mail.html no existe
-            e.printStackTrace(); 
+            log.error("Error crítico al enviar correo a: {}", emailDTO.getDestinatario(), e);
         }
     }
 }

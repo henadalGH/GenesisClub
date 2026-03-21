@@ -36,6 +36,34 @@ export class SocioServicio {
   }
 
   /**
+   * Obtiene los vehículos de un socio
+   */
+  obtenerVehiculosSocio(id: number): Observable<any[]> {
+    return this.http.get<any[]>(`${this.utlVerSocio}/${id}/vehiculos`);
+  }
+
+  /**
+   * Suspende a un socio
+   */
+  suspenderSocio(id: number): Observable<any> {
+    return this.http.put<any>(`${this.utlVerSocio}/${id}/suspender`, {});
+  }
+
+  /**
+   * Bloquea a un socio
+   */
+  bloquearSocio(id: number): Observable<any> {
+    return this.http.put<any>(`${this.utlVerSocio}/${id}/bloquear`, {});
+  }
+
+  /**
+   * Activa a un socio
+   */
+  activarSocio(id: number): Observable<any> {
+    return this.http.put<any>(`${this.utlVerSocio}/${id}/activar`, {});
+  }
+
+  /**
    * Obtiene la estructura jerárquica (Árbol) del socio para el Admin
    */
   verRedArbol(id: number): Observable<RelacionSocioDTO> {

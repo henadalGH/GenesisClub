@@ -38,8 +38,13 @@ public class SolicitudEntity {
     @Column(name = "password")
     private String password;
 
-    @Column(name = "contacto")
-    private String contacto;
+    
+    @Column( name = "codigoArea")
+    private String codigoArea;
+
+    @Column(name = "celular")
+    private String numeroCelular;
+
 
     @Column(name = "fecha_solicitud")
     private LocalDate fechaSolicitud;

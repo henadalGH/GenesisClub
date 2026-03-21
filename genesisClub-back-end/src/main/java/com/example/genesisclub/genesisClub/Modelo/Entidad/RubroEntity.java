@@ -14,12 +14,12 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
 @Table(name = "rubros", schema = "genesisclub")
 public class RubroEntity {
-
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -32,7 +32,7 @@ public class RubroEntity {
     @Column(name = "descripcion")
     private String descripcion;
 
-    @Column(name = "activacion")
+    @Column(name = "activo")
     private boolean activo;
 
     @Column(name = "fecha_creacion")
@@ -42,14 +42,20 @@ public class RubroEntity {
     private LocalDate fechaModificacion;
 
     @ManyToOne
-    @JoinColumn(name = "id_creador")
+    @JoinColumn(name = "admin_id")
     private AdminEntity admin;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rubro")
     private List<HistorialRubroEntity> historial = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "rubro")
     private List<RubroSocioEntity> rubroSocio = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "rubro")
+    private List<SolicitudRubroEntity> solicitudesRubro = new ArrayList<>();
 
     @Column(name = "clave_acceso", length = 50, unique = true)
     private String claveAcceso;
@@ -57,7 +63,7 @@ public class RubroEntity {
     @Column(name = "fecha_clave_generacion")
     private LocalDate fechaClaveGeneracion;
 
-    @Column(name = "clave_activa", columnDefinition = "boolean default true")
+    @Column(name = "clave_activa")
     private boolean claveActiva = true;
 
 }

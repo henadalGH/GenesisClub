@@ -14,6 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -50,6 +51,7 @@ public class InvitacionEntity {
     @JoinColumn(name = "id_estado_invitacion")
     private EstadoInvitacionEntity estado;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "invitacion")
     private List<SolicitudEntity> solicitud = new ArrayList<>();
 

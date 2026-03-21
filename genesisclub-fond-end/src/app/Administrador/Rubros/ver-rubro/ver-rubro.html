@@ -1,0 +1,125 @@
+<app-header-admin></app-header-admin>
+
+<div class="container" *ngIf="!loading">
+  <div class="card-container">
+    
+    <!-- Header -->
+    <div class="card-header">
+      <div>
+        <h1>{{ rubro?.nombre }}</h1>
+        <p class="breadcrumb">
+          <a routerLink="/listaRubros">📋 Rubros</a> / 
+          <span>{{ rubro?.nombre }}</span>
+        </p>
+      </div>
+      <button *ngIf="!editando" (click)="toggleEditar()" class="btn btn-editar">
+        ✏️ Editar
+      </button>
+    </div>
+
+    <!-- Alertas -->
+    <div *ngIf="mensajeExito" class="alert alert-success">
+      {{ mensajeExito }}
+    </div>
+    <div *ngIf="mensajeError" class="alert alert-error">
+      {{ mensajeError }}
+    </div>
+
+    <!-- Modo Vista -->
+    <div *ngIf="!editando" class="rubro-info">
+      <div class="info-grid">
+        <div class="info-item">
+          <label>ID:</label>
+          <span>{{ rubro?.id }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Estado:</label>
+          <span class="estado" [ngClass]="rubro?.activo ? 'activo' : 'inactivo'">
+            {{ rubro?.activo ? '✅ Activo' : '❌ Inactivo' }}
+          </span>
+        </div>
+
+        <div class="info-item full">
+          <label>Descripción:</label>
+          <p>{{ rubro?.descripcion }}</p>
+        </div>
+
+        <div class="info-item">
+          <label>Fecha Creación:</label>
+          <span>{{ rubro?.fechaCreacion | date: 'medium' }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Última Modificación:</label>
+          <span>{{ rubro?.fechaModificacion | date: 'medium' }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Creado por (ID):</label>
+          <span>{{ rubro?.idCreador }}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Clave Activa:</label>
+          <span class="badge" [ngClass]="rubro?.claveActiva ? 'activa' : 'inactiva'">
+            {{ rubro?.claveActiva ? '🔐 Sí' : '🔓 No' }}
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modo Edición -->
+    <form [formGroup]="rubroForm" *ngIf="editando" (ngSubmit)="guardarCambios()" class="rubro-form">
+      <div class="form-group">
+        <label for="nombre">Nombre del Rubro *</label>
+        <input
+          id="nombre"
+          type="text"
+          formControlName="nombre"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('nombre')">
+        <small *ngIf="isFieldInvalid('nombre')" class="error-text">
+          El nombre es requerido
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="descripcion">Descripción *</label>
+        <textarea
+          id="descripcion"
+          formControlName="descripcion"
+          rows="5"
+          class="form-control"
+          [class.is-invalid]="isFieldInvalid('descripcion')"></textarea>
+        <small *ngIf="isFieldInvalid('descripcion')" class="error-text">
+          La descripción es requerida
+        </small>
+      </div>
+
+      <div class="form-group checkbox">
+        <label>
+          <input type="checkbox" formControlName="activo" class="form-check-input">
+          <span>Rubro activo</span>
+        </label>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">✅ Guardar Cambios</button>
+        <button type="button" (click)="toggleEditar()" class="btn btn-secondary">❌ Cancelar</button>
+      </div>
+    </form>
+
+    <!-- Acciones -->
+    <div *ngIf="!editando" class="acciones">
+      <button (click)="toggleEditar()" class="btn btn-primary">📝 Modificar</button>
+      <button routerLink="/listaRubros" class="btn btn-secondary">⬅️ Volver</button>
+    </div>
+  </div>
+</div>
+
+<!-- Loading -->
+<div *ngIf="loading" class="loading">
+  <div class="spinner"></div>
+  <p>Cargando rubro...</p>
+</div>

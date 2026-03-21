@@ -1,203 +1,299 @@
-/* =============================
-   LAYOUT GENERAL
-============================= */
+/* ============================================
+   LISTA SOCIOS — GenesisClub
+   ============================================ */
+
 .socios-container {
-  padding: 40px 60px;
-  background: #f4f6fb;
-  min-height: 100vh;
-  font-family: "Inter", system-ui, sans-serif;
+  min-height: calc(100vh - 60px);
+  padding: 2.5rem 5%;
+  background-color: #060810;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
 }
 
+.socios-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
 
-/* =============================
-   HEADER SECCIÓN
-============================= */
+/* ============================================
+   TOP BAR
+   ============================================ */
 .top-bar {
+  position: relative;
+  z-index: 1;
   display: flex;
+  align-items: flex-start;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
 .titulo-seccion h1 {
-  font-size: 28px;
-  font-weight: 700;
-  color: #1e293b;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
 }
 
 .subtitulo {
-  font-size: 14px;
-  color: #64748b;
-  margin-top: 4px;
+  font-size: 0.88rem;
+  color: #8892a4;
+  font-weight: 300;
+  letter-spacing: 0.02em;
 }
 
-
-/* =============================
-   BOTÓN NUEVO
-============================= */
+/* ============================================
+   BOTÓN PRIMARIO (+ Nuevo socio)
+   ============================================ */
 .btn-primary {
-  background: #2563eb;
-  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.65em 1.4em;
+  background: #00e5ff;
+  color: #060810;
   border: none;
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-weight: 600;
+  border-radius: 0.6rem;
   cursor: pointer;
-  transition: .2s;
-  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+  white-space: nowrap;
+  align-self: center;
+  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
 }
 
 .btn-primary:hover {
-  background: #1d4ed8;
+  background: #33eaff;
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.4);
   transform: translateY(-2px);
 }
 
-
-/* =============================
-   CARD TABLA
-============================= */
-.tabla-wrapper {
-  background: #ffffff;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-  padding: 8px 0;
-  overflow: hidden;
+.btn-primary:active {
+  transform: translateY(0);
+  box-shadow: none;
 }
 
+/* ============================================
+   TABLA WRAPPER
+   ============================================ */
+.tabla-wrapper {
+  position: relative;
+  z-index: 1;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 229, 255, 0.03);
+  overflow-x: auto;
+}
 
-/* =============================
+.tabla-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #00e5ff);
+  z-index: 2;
+}
+
+/* ============================================
    TABLA
-============================= */
+   ============================================ */
 .tabla-socios {
   width: 100%;
   border-collapse: collapse;
-  font-size: 14px;
+  font-size: 0.9rem;
 }
 
-
-/* HEADER */
-.tabla-socios thead {
-  background: #f8fafc;
+.tabla-socios thead tr {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .tabla-socios th {
-  padding: 16px 20px;
-  font-size: 12px;
+  padding: 1rem 1.25rem;
+  font-size: 0.72rem;
   font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  letter-spacing: .06em;
-  color: #64748b;
+  color: #8892a4;
+  text-align: left;
+  white-space: nowrap;
 }
 
-
-/* FILAS */
-.tabla-socios td {
-  padding: 18px 20px;
-  border-top: 1px solid #f1f5f9;
-  color: #334155;
+.tabla-socios th.text-center {
+  text-align: center;
 }
 
 .tabla-socios tbody tr {
-  transition: .15s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.tabla-socios tbody tr:last-child {
+  border-bottom: none;
 }
 
 .tabla-socios tbody tr:hover {
-  background: #f1f5ff;
+  background: rgba(0, 229, 255, 0.04);
 }
 
+.tabla-socios td {
+  padding: 0.95rem 1.25rem;
+  color: #e8eaf0;
+  vertical-align: middle;
+  white-space: nowrap;
+}
 
-/* =============================
-   TEXTOS
-============================= */
 .col-id {
+  color: #4b5563;
+  font-size: 0.8rem;
   font-weight: 600;
-  color: #94a3b8;
+  width: 2.5rem;
 }
 
 .font-bold {
   font-weight: 600;
+  color: #ffffff;
 }
 
 .text-muted {
-  color: #64748b;
+  color: #8892a4;
+  font-size: 0.85rem;
 }
 
-.text-center {
-  text-align: center;
-}
-
-
-/* =============================
-   BOTONES ACCIONES (pill style)
-============================= */
 .acciones-celda {
+  text-align: center;
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 10px;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
+/* ============================================
+   BOTONES DE ACCIÓN
+   ============================================ */
 .btn-icon {
-  border: none;
-  padding: 7px 14px;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.45em 1em;
+  border-radius: 0.45rem;
   cursor: pointer;
-  transition: .2s;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+  border: 1px solid transparent;
 }
 
-
-/* Ver */
 .btn-view {
-  background: #e0f2fe;
-  color: #0369a1;
+  background: rgba(0, 229, 255, 0.1);
+  color: #00e5ff;
+  border-color: rgba(0, 229, 255, 0.2);
 }
 
 .btn-view:hover {
-  background: #bae6fd;
+  background: rgba(0, 229, 255, 0.18);
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.2);
+  transform: translateY(-1px);
 }
 
-
-/* Editar */
 .btn-edit {
-  background: #fef3c7;
-  color: #92400e;
+  background: rgba(245, 158, 11, 0.1);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.2);
 }
 
 .btn-edit:hover {
-  background: #fde68a;
+  background: rgba(245, 158, 11, 0.18);
+  border-color: rgba(245, 158, 11, 0.5);
+  box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
+  transform: translateY(-1px);
 }
 
-
-/* =============================
+/* ============================================
    ESTADO VACÍO
-============================= */
+   ============================================ */
 .tabla-vacia {
-  padding: 50px;
+  padding: 3.5rem 1rem !important;
   text-align: center;
-  color: #94a3b8;
-  font-size: 15px;
 }
 
+.vacio-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
 
-/* =============================
+.vacio-content::before {
+  content: '👥';
+  font-size: 2.5rem;
+  filter: grayscale(1);
+  opacity: 0.3;
+}
+
+.vacio-content p {
+  color: #4b5563;
+  font-size: 0.9rem;
+  max-width: 24rem;
+}
+
+/* ============================================
    RESPONSIVE
-============================= */
-@media (max-width: 900px) {
-
+   ============================================ */
+@media (max-width: 40em) {
   .socios-container {
-    padding: 20px;
+    padding: 1.75rem 4%;
   }
 
-  .tabla-socios {
-    font-size: 13px;
+  .top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-primary {
+    width: 100%;
+    text-align: center;
+  }
+
+  .tabla-socios th,
+  .tabla-socios td {
+    padding: 0.8rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  /* Ocultar email en mobile */
+  .tabla-socios th:nth-child(4),
+  .tabla-socios td:nth-child(4) {
+    display: none;
   }
 
   .acciones-celda {
     flex-direction: column;
+    gap: 0.35rem;
   }
+}
 
-  .btn-icon {
-    width: 100%;
+@media (min-width: 80em) {
+  .socios-container {
+    padding: 3rem 7%;
   }
 }

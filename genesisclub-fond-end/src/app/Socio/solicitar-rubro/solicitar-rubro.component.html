@@ -1,0 +1,12 @@
+<div class="container">
+  <h2>Solicitar Unión a Rubro</h2>
+  <form (ngSubmit)="solicitar()" *ngIf="!loading">
+    <div class="form-group">
+      <label for="clave">Clave de Acceso:</label>
+      <input type="password" id="clave" [(ngModel)]="claveAcceso" name="clave" required>
+    </div>
+    <button type="submit">Enviar Solicitud</button>
+  </form>
+  <div *ngIf="loading" class="loading">Enviando solicitud...</div>
+  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+</div>

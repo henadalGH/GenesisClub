@@ -15,24 +15,23 @@ import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.EstadoSolicitudEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.InvitacionEntity;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudEntity;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.RelacionUsuarioEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.RelacionUsuarioEntity; // IMPORTANTE
+import com.example.genesisclub.genesisClub.Modelo.Entidad.SolicitudEntity;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Modelo.Enums.RolesEnums;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.enums.TipoSolicitud;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSolicitudRepository;
 import com.example.genesisclub.genesisClub.Repositorio.InvitacionRepository;
+import com.example.genesisclub.genesisClub.Repositorio.RelacionUsuarioRepository;
+import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.SolicitudReposistory;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
-import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
-import com.example.genesisclub.genesisClub.Repositorio.RelacionUsuarioRepository; // NUEVO
 import com.example.genesisclub.genesisClub.Repositorio.VehiculoRepository;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
-import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
-import com.example.genesisclub.genesisClub.Modelo.Entidad.enums.TipoSolicitud;
 
 @Service
 @Transactional
@@ -45,218 +44,312 @@ public class SolicitudSerSocioServiceImpl implements SolicitudSerSocioService {
     @Autowired private RegistroUsuarioServicio registroService;
     @Autowired private InvitacionRepository invitacionRepository;
     @Autowired private SocioRepository socioRepository;
-    @Autowired private RelacionUsuarioRepository relacionRepository; // Inyectado para el multinivel
+    @Autowired private RelacionUsuarioRepository relacionRepository;
     @Autowired private VehiculoRepository vehiculoRepository;
 
     @Override
     public ResponceDTO crearSolicitud(SolicitudDTO solicitudDTO, EstadoSolicitudEnums estadoSolicitud) {
+
         ResponceDTO response = new ResponceDTO();
-        if (validarEmailExistente(solicitudDTO.getEmail(), response)) return response;
+
+        if (validarEmailExistente(solicitudDTO.getEmail(), response)) {
+            return response;
+        }
+
+        if (!validarPatenteSegunAnio(solicitudDTO.getPatente(), solicitudDTO.getAnio())) {
+            response.setNumOfErrors(1);
+            response.setMensage("La patente no coincide con el año del vehículo según normativa argentina.");
+            return response;
+        }
+
+        if (solicitudDTO.getPatente() != null &&
+            vehiculoRepository.existsByPatente(solicitudDTO.getPatente().trim().toUpperCase())) {
+
+            response.setNumOfErrors(1);
+            response.setMensage("La patente ya se encuentra registrada.");
+            return response;
+        }
+
+        if (!validarAnioVehiculo(solicitudDTO.getAnio(), response)) {
+            return response;
+        }
 
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
+        solicitud.setTipoSolicitud(TipoSolicitud.SOCIO);
 
-        EstadoSolicitudEnums estadoEnum = estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
+        if (solicitudDTO.getPatente() != null) {
+            VehiculoEntity veh = procesarVehiculo(
+                    solicitudDTO.getPatente(),
+                    solicitudDTO.getMarca(),
+                    solicitudDTO.getModelo(),
+                    solicitudDTO.getAnio(),
+                    solicitudDTO.getTieneGnc()
+            );
+            solicitud.setVehiculo(veh);
+        }
+
+        EstadoSolicitudEnums estadoEnum =
+                estadoSolicitud != null ? estadoSolicitud : EstadoSolicitudEnums.PENDIENTE;
+
         EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(estadoEnum)
-                .orElseThrow(() -> new RuntimeException("Estado de solicitud no configurado"));
+                .orElseThrow(() -> new RuntimeException("Estado no configurado"));
 
         solicitud.setEstado(estado);
         solicitudRepository.save(solicitud);
+
         response.setMensage("Solicitud creada correctamente");
+
         return response;
     }
 
     @Override
     public ResponceDTO crearSolicitudDesdeInvitacion(SolicitudDTO solicitudDTO, String token) {
+
         ResponceDTO response = new ResponceDTO();
 
         InvitacionEntity invitacion = invitacionRepository.findByToken(token)
-                .orElseThrow(() -> new RuntimeException("El token de invitación no existe o es inválido."));
+                .orElseThrow(() -> new RuntimeException("Token inválido"));
 
         if (invitacion.getFechaExpiracion().isBefore(LocalDateTime.now())) {
             response.setNumOfErrors(1);
-            response.setMensage("La invitación ha expirado. Solicita una nueva a tu socio referente.");
+            response.setMensage("La invitación expiró.");
             return response;
         }
 
-        if (validarEmailExistente(solicitudDTO.getEmail(), response)) return response;
-
-        if (solicitudDTO.getPassword() == null || solicitudDTO.getPassword().isEmpty()) {
-            response.setNumOfErrors(1);
-            response.setMensage("Debe ingresar un password para completar el registro.");
+        if (validarEmailExistente(solicitudDTO.getEmail(), response)) {
             return response;
         }
 
         SolicitudEntity solicitud = new SolicitudEntity();
         mapearDatosBasicos(solicitud, solicitudDTO);
+        solicitud.setTipoSolicitud(TipoSolicitud.SOCIO);
+
+        if (solicitudDTO.getPatente() != null) {
+            VehiculoEntity veh = procesarVehiculo(
+                    solicitudDTO.getPatente(),
+                    solicitudDTO.getMarca(),
+                    solicitudDTO.getModelo(),
+                    solicitudDTO.getAnio(),
+                    solicitudDTO.getTieneGnc()
+            );
+            solicitud.setVehiculo(veh);
+        }
 
         solicitud.setInvitacion(invitacion);
         solicitud.setSocio(invitacion.getSocioOrigen());
 
-        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
+        EstadoSolicitudEntity estado = estadoSolicitudRepository
+                .findByEstado(EstadoSolicitudEnums.PENDIENTE)
                 .orElseThrow();
+
         solicitud.setEstado(estado);
         solicitudRepository.save(solicitud);
 
-        response.setMensage("Registro exitoso mediante invitación. Pendiente de aprobación por administración.");
+        response.setMensage("Solicitud creada mediante invitación.");
+
         return response;
     }
 
     @Override
-    public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEnums nuevoEstado) {
-        ResponceDTO response = new ResponceDTO();
-        SolicitudEntity solicitud = solicitudRepository.findById(solicitudId)
-                .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+public ResponceDTO actualizarEstadoSolicitud(Long solicitudId, EstadoSolicitudEnums nuevoEstado) {
 
-        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(nuevoEstado)
+    ResponceDTO response = new ResponceDTO();
+
+    // Obtener la solicitud
+    SolicitudEntity solicitud = solicitudRepository.findById(solicitudId)
+            .orElseThrow(() -> new RuntimeException("Solicitud no encontrada"));
+
+    // Obtener el nuevo estado
+    EstadoSolicitudEntity estado = estadoSolicitudRepository
+            .findByEstado(nuevoEstado)
+            .orElseThrow();
+
+    solicitud.setEstado(estado);
+    solicitud.setFechaSolicitud(LocalDate.now());
+
+    // Si la solicitud es aceptada
+    if (nuevoEstado == EstadoSolicitudEnums.ACEPTADA) {
+
+        // Determinar el rol a asignar
+        RolesEnums rolAsignado =
+                solicitud.getTipoSolicitud() == TipoSolicitud.JUGADOR
+                        ? RolesEnums.JUGADOR
+                        : RolesEnums.SOCIO;
+
+        // Preparar DTO de registro
+        RegistroDTO registroDTO = new RegistroDTO();
+        registroDTO.setNombre(solicitud.getNombre());
+        registroDTO.setApellido(solicitud.getApellido());
+        registroDTO.setEmail(solicitud.getEmail());
+        registroDTO.setPassword(solicitud.getPassword());
+        registroDTO.setCodigoArea(solicitud.getCodigoArea());
+        registroDTO.setNumeroCelular(solicitud.getNumeroCelular());
+        registroDTO.setRol(rolAsignado);
+        registroDTO.setEstado(EstadoSocioEnums.ACTIVO);
+
+        // Registrar usuario/socio
+        registroService.registrarDesdeSolicitud(registroDTO);
+
+        // Obtener el socio recién creado
+        SocioEntity nuevoSocio = socioRepository
+                .findByUsuarioEmail(solicitud.getEmail())
                 .orElseThrow();
 
-        solicitud.setEstado(estado);
-        solicitud.setFechaSolicitud(LocalDate.now());
+        // Manejar relación con socio padre si aplica
+        if (solicitud.getSocio() != null) {
+            SocioEntity socioPadre = solicitud.getSocio();
+            Integer actuales = socioPadre.getCantidadInvitaciones();
+            socioPadre.setCantidadInvitaciones((actuales == null ? 0 : actuales) + 1);
+            socioRepository.save(socioPadre);
 
-        if (nuevoEstado == EstadoSolicitudEnums.ACEPTADA) {
-            
-            // 1. REGISTRAR AL NUEVO SOCIO
-            RegistroDTO registroDTO = new RegistroDTO();
-            registroDTO.setNombre(solicitud.getNombre());
-            registroDTO.setApellido(solicitud.getApellido());
-            registroDTO.setEmail(solicitud.getEmail());
-            registroDTO.setPassword(solicitud.getPassword());
-            registroDTO.setRol(RolesEnums.SOCIO);
-            registroDTO.setEstado(EstadoSocioEnums.ACTIVO);
-
-            registroService.registrarDesdeSolicitud(registroDTO);
-
-            // 2. LÓGICA MULTINIVEL: Vincular con el socio referente
-            if (solicitud.getSocio() != null) {
-                SocioEntity socioReferente = solicitud.getSocio();
-                
-                // Sumar invitación al contador del padre
-                Integer actuales = socioReferente.getCantidadInvitaciones();
-                socioReferente.setCantidadInvitaciones((actuales == null ? 0 : actuales) + 1);
-                socioRepository.save(socioReferente);
-                
-                // Buscar al nuevo socio recién creado para establecer la relación
-                SocioEntity nuevoSocioHijo = socioRepository.findByUsuarioEmail(solicitud.getEmail())
-                        .orElseThrow(() -> new RuntimeException("Error al recuperar el nuevo socio creado"));
-
-                // Crear la fila en la tabla relacion_usuario
-                RelacionUsuarioEntity nuevaRelacion = new RelacionUsuarioEntity();
-                nuevaRelacion.setSocioPadre(socioReferente);
-                nuevaRelacion.setSocioHijo(nuevoSocioHijo);
-                nuevaRelacion.setNivel(1); // Nivel 1 por ser directo
-                nuevaRelacion.setFecha(LocalDate.now());
-                
-                relacionRepository.save(nuevaRelacion);
-                
-                // Marcar invitación como respondida
-                if (solicitud.getInvitacion() != null) {
-                    InvitacionEntity inv = solicitud.getInvitacion();
-                    inv.setFechaRespuesta(LocalDateTime.now());
-                    invitacionRepository.save(inv);
-                }
-            }
+            RelacionUsuarioEntity relacion = new RelacionUsuarioEntity();
+            relacion.setSocioPadre(socioPadre);
+            relacion.setSocioHijo(nuevoSocio);
+            relacion.setNivel(1);
+            relacion.setFecha(LocalDate.now());
+            relacionRepository.save(relacion);
         }
 
-        solicitudRepository.save(solicitud);
-        response.setMensage("Estado de la solicitud actualizado a: " + nuevoEstado);
-        return response;
+        // 🔹 Asociar vehículo al usuario del nuevo socio
+        if (solicitud.getVehiculo() != null) {
+            VehiculoEntity vehiculo = solicitud.getVehiculo();
+            vehiculo.setUsuario(nuevoSocio.getUsuario()); // usuario asociado al socio
+            vehiculoRepository.save(vehiculo);
+        }
+
+        // Manejar invitación si existe
+        if (solicitud.getInvitacion() != null) {
+            InvitacionEntity inv = solicitud.getInvitacion();
+            inv.setFechaRespuesta(LocalDateTime.now());
+            invitacionRepository.save(inv);
+        }
     }
 
+    // Guardar cambios en la solicitud
+    solicitudRepository.save(solicitud);
+
+    response.setMensage("Estado actualizado a " + nuevoEstado);
+
+    return response;
+}
+
+
+ 
     @Override
     public List<SolicitudDTO> obtenerSolicitudesPendientes() {
-        EstadoSolicitudEntity pendiente = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
+
+        EstadoSolicitudEntity pendiente = estadoSolicitudRepository
+                .findByEstado(EstadoSolicitudEnums.PENDIENTE)
                 .orElseThrow();
-        return solicitudRepository.findByEstado(pendiente).stream()
+
+        return solicitudRepository
+        .findByEstadoAndTipoSolicitud(pendiente, TipoSolicitud.SOCIO)
+                .stream()
                 .map(this::mapToDTO)
                 .collect(Collectors.toList());
     }
 
-    // =================== Helpers ===================
-
     private void mapearDatosBasicos(SolicitudEntity entidad, SolicitudDTO dto) {
-        entidad.setNombre(dto.getNombre());
-        entidad.setApellido(dto.getApellido());
-        entidad.setEmail(dto.getEmail());
-        entidad.setContacto(dto.getContacto());
+
+        entidad.setNombre(dto.getNombre().trim());
+        entidad.setApellido(dto.getApellido().trim());
+        entidad.setEmail(dto.getEmail().trim().toLowerCase());
+        entidad.setCodigoArea(dto.getCodigoArea());
+        entidad.setNumeroCelular(dto.getNumeroCelular());
         entidad.setFechaSolicitud(LocalDate.now());
         entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
     }
 
-    // overload for jugador DTO to avoid casting issues
-    private void mapearDatosBasicos(SolicitudEntity entidad, SolicitudJugadorDTO dto) {
-        entidad.setNombre(dto.getNombre());
-        entidad.setApellido(dto.getApellido());
-        entidad.setEmail(dto.getEmail());
-        entidad.setContacto(dto.getContacto());
-        entidad.setFechaSolicitud(LocalDate.now());
-        entidad.setPassword(passwordEncoder.encode(dto.getPassword()));
-    }
-
-    // nuevo método reutilizable para creación/recuperación de vehículos
     private VehiculoEntity procesarVehiculo(String patente, String marca,
-            String modelo, Integer anio, Boolean tieneGnc) {
-        if (patente == null) {
-            return null;
-        }
-        return vehiculoRepository.findByPatente(patente).orElseGet(() -> {
+                                            String modelo, Integer anio, Boolean tieneGnc) {
+
+        if (patente == null) return null;
+
+        String patenteNormalizada = patente.trim().toUpperCase();
+
+        return vehiculoRepository.findByPatente(patenteNormalizada).orElseGet(() -> {
+
             VehiculoEntity v = new VehiculoEntity();
-            v.setPatente(patente);
+
+            v.setPatente(patenteNormalizada);
             v.setMarca(marca);
             v.setModelo(modelo);
             v.setAnio(anio);
-            v.setTieneGnc(tieneGnc != null && tieneGnc);
+            v.setTieneGnc(tieneGnc != null ? tieneGnc : false);
             v.setFechaRegistro(LocalDate.now());
+
             return vehiculoRepository.save(v);
         });
     }
 
-    // nueva operación pública para solicitudes de jugador
-    @Override
-    public ResponceDTO solicitarJugador(SolicitudJugadorDTO dto) {
-        ResponceDTO response = new ResponceDTO();
-        if (validarEmailExistente(dto.getEmail(), response)) return response;
-
-        SolicitudEntity solicitud = new SolicitudEntity();
-        // use overloaded helper for jugador DTO
-        mapearDatosBasicos(solicitud, dto);
-
-        VehiculoEntity veh = procesarVehiculo(dto.getPatente(), dto.getMarca(), dto.getModelo(), dto.getAnio(), dto.getTieneGnc());
-        if (veh != null) {
-            solicitud.setVehiculo(veh);
-        }
-
-        solicitud.setTipoSolicitud(TipoSolicitud.JUGADOR);
-
-        EstadoSolicitudEntity estado = estadoSolicitudRepository.findByEstado(EstadoSolicitudEnums.PENDIENTE)
-                .orElseThrow(() -> new RuntimeException("Estado de solicitud no configurado"));
-
-        solicitud.setEstado(estado);
-        solicitudRepository.save(solicitud);
-        response.setMensage("Solicitud creada correctamente");
-        return response;
-    }
-
     private boolean validarEmailExistente(String email, ResponceDTO response) {
+
         boolean existeUsuario = usuarioRepository.existsByEmail(email);
         boolean existeSolicitud = solicitudRepository.existsByEmail(email);
+
         if (existeUsuario || existeSolicitud) {
+
             response.setNumOfErrors(1);
-            response.setMensage("El correo electrónico ya está registrado o tiene una solicitud en curso.");
+            response.setMensage("El email ya está registrado o tiene una solicitud en proceso.");
+
             return true;
         }
+
         return false;
     }
 
+    private boolean validarPatenteSegunAnio(String patente, Integer anio) {
+
+        if (patente == null || anio == null) return true;
+
+        if (anio < 2016) {
+            return patente.matches("^[A-Z]{3}[0-9]{3}$");
+        } else {
+            return patente.matches("^[A-Z]{2}[0-9]{3}[A-Z]{2}$");
+        }
+    }
+
+    private boolean validarAnioVehiculo(Integer anio, ResponceDTO response) {
+
+        if (anio == null) return true;
+
+        int anioActual = LocalDate.now().getYear();
+
+        if (anio < 1900 || anio > anioActual) {
+
+            response.setNumOfErrors(1);
+            response.setMensage("El año del vehículo no es válido.");
+
+            return false;
+        }
+
+        return true;
+    }
+
     private SolicitudDTO mapToDTO(SolicitudEntity s) {
+
         SolicitudDTO dto = new SolicitudDTO();
+
         dto.setId(s.getId());
         dto.setNombre(s.getNombre());
         dto.setApellido(s.getApellido());
         dto.setEmail(s.getEmail());
-        dto.setContacto(s.getContacto());
+        dto.setCodigoArea(s.getCodigoArea());
+        dto.setNumeroCelular(s.getNumeroCelular());
         dto.setFechaSolicitud(s.getFechaSolicitud());
         dto.setEstado(s.getEstado().getEstado());
+        dto.setTipoSolicitud(s.getTipoSolicitud());
+
+        if (s.getVehiculo() != null) {
+
+            dto.setPatente(s.getVehiculo().getPatente());
+            dto.setMarca(s.getVehiculo().getMarca());
+            dto.setModelo(s.getVehiculo().getModelo());
+            dto.setAnio(s.getVehiculo().getAnio());
+            dto.setTieneGnc(s.getVehiculo().isTieneGnc());
+        }
+
         return dto;
     }
 }

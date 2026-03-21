@@ -1,0 +1,73 @@
+<app-header-admin></app-header-admin>
+<div class="container">
+  <div class="cabecera">
+    <h2>Solicitudes de Rubros Pendientes</h2>
+    <p class="subtitulo">Aprueba o rechaza las solicitudes de acceso a rubros de los socios.</p>
+  </div>
+
+  @if (loading) {
+    <div class="loading">⏳ Cargando...</div>
+  }
+
+  @if (errorMessage) {
+    <div class="error-banner">{{ errorMessage }}</div>
+  }
+
+  @if (!loading && solicitudes && solicitudes.length > 0) {
+    <table class="tabla-solicitudes">
+      <thead>
+        <tr>
+          <th>Socio</th>
+          <th>Email</th>
+          <th>Rubro Solicitado</th>
+          <th>📅 Fecha</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (solicitud of solicitudes; track solicitud.id) {
+          <tr class="solicitud-row">
+            <td class="socio">{{ solicitud.socio.nombreUsuario }}</td>
+            <td class="email">{{ solicitud.socio.emailUsuario || 'N/A' }}</td>
+            <td class="rubro">{{ solicitud.rubro.nombre || 'N/A' }}</td>
+            <td class="fecha">{{ solicitud.fechaCreacion | date:'short' }}</td>
+            <td class="acciones">
+              <button 
+                class="btn-accion btn-aprobar"
+                (click)="abrirModalAprobar(solicitud.id)"
+                [disabled]="loading"
+                title="Aprobar solicitud">
+                ✅ Aprobar
+              </button>
+              <button 
+                class="btn-accion btn-rechazar"
+                (click)="abrirModalRechazar(solicitud.id)"
+                [disabled]="loading"
+                title="Rechazar solicitud">
+                ❌ Rechazar
+              </button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  } @else if (!loading && !errorMessage) {
+    <div class="no-data">
+      <div class="icono-check">✅</div>
+      <h3>¡Todo al día!</h3>
+      <p>No hay solicitudes pendientes de rubros.</p>
+    </div>
+  }
+</div>
+
+<!-- Modal de Confirmación -->
+<app-modal-confirmacion
+  [visible]="modalState.visible"
+  [titulo]="getTextoModal().titulo"
+  [mensaje]="getTextoModal().mensaje"
+  [textoBtnConfirmar]="getTextoModal().texto"
+  [tipoAccion]="getTipoModal()"
+  [cargando]="loading"
+  (confirmar)="confirmarAccion()"
+  (cancelar)="cerrarModal()">
+</app-modal-confirmacion>

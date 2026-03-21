@@ -4,6 +4,7 @@ import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -19,7 +20,6 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
-
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
@@ -39,29 +39,30 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // --- RUTAS PÚBLICAS ---
-                .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/api/usuario/registro").permitAll()
-                .requestMatchers("/api/solicitud/nuevo").permitAll()
-                .requestMatchers("/api/solicitud/registro-invitado").permitAll()
-                .requestMatchers("/api/solicitud/jugador").permitAll()
-                .requestMatchers("/email/**").permitAll()
-                .requestMatchers("/publico/test-final").permitAll()
-                .requestMatchers("/api/invitacion/aceptar/**").permitAll()
+                .requestMatchers("/api/auth/**", "/api/usuario/registro", "/email/**").permitAll()
+                .requestMatchers("/api/solicitud/socio/nuevo", "/api/solicitud/socio/registro-invitado").permitAll()
+                .requestMatchers("/api/solicitud/jugador", "/api/invitacion/aceptar/**").permitAll()
+                // Nota: "/api/rubro/nombre/**" y "/api/rubro/clave/**" están bien porque el ** está al final
+                .requestMatchers("/api/rubro/activos", "/api/rubro/buscar", "/api/rubro/nombre/**", "/api/rubro/clave/**").permitAll()
+                .requestMatchers("/publico/**").permitAll()
 
                 // --- RUTAS DE ADMINISTRADOR ---
-                .requestMatchers("/api/solicitud/pendientes").hasRole("ADMIN")
-                .requestMatchers("/api/solicitud/actualizar/**").hasRole("ADMIN")
-                .requestMatchers("/api/socio/todos").hasRole("ADMIN")
-                .requestMatchers("/api/socio/**").hasRole("ADMIN")
-                .requestMatchers("/api/auth/admin/solo").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/socio/pendientes", "/api/solicitud/socio/actualizar/**").hasRole("ADMIN")
+                .requestMatchers("/api/solicitud/jugador/pendientes", "/api/solicitud/jugador/actualizar/**").hasRole("ADMIN")
+                
+                // --- CORRECCIÓN AQUÍ: Endpoints de Solicitudes Rubro ---
+                // Se cambia ** por * porque el ID está en el medio de la ruta
+                .requestMatchers(HttpMethod.GET, "/api/solicitudes-rubro/pendientes").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/*/aprobar").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/*/rechazar").hasRole("ADMIN")
+                
+                .requestMatchers("/api/jugador/**", "/api/socio/**", "/api/auth/admin/solo").hasRole("ADMIN")
+                .requestMatchers("/api/rubro/**", "/api/rubro-socio/**", "/api/historial-rubro/**", "/api/rubro-acceso-log/**").hasRole("ADMIN")
 
-                // --- RUTAS DEL CONTROLLER RELACION-SOCIO ---
-                .requestMatchers("/api/relacion-socio/mis-invitados/**").hasAnyRole("SOCIO", "ADMIN")
-                .requestMatchers("/api/relacion-socio/mi-red-arbol/**").hasAnyRole("SOCIO", "ADMIN")
-                .requestMatchers("/api/relacion-socio/mi-red-lista/**").hasAnyRole("SOCIO", "ADMIN")
+                // --- RUTAS DE SOCIO / MIXTAS ---
+                .requestMatchers(HttpMethod.POST, "/api/solicitudes-rubro").hasAnyRole("SOCIO", "ADMIN")
+                .requestMatchers("/api/usuario-rubro/**", "/api/relacion-socio/**", "/api/invitacion/**").hasAnyRole("SOCIO", "ADMIN")
 
-                // --- OTRAS RUTAS AUTENTICADAS ---
-                .requestMatchers("/api/invitacion/**").hasAnyRole("SOCIO", "ADMIN")
                 .anyRequest().authenticated()
             )
             .addFilterBefore(new JWTAuthorizationFilter(jwtUtilityService), 
@@ -73,12 +74,15 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
+        
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:4200", 
                 "https://*.onrender.com"
         ));
+
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "Cache-Control"));
+        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

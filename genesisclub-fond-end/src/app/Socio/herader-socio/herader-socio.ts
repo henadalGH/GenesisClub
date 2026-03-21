@@ -22,7 +22,7 @@ export class HeraderSocio implements OnInit {
 
   ngOnInit(): void {
     const id = this.authServicio.getUserId();
-    console.log('ID socio activo:', id);
+    console.log('ID usuario activo:', id);
   }
 
   logout() {

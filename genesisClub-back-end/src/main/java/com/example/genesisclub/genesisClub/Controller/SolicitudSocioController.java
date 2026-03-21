@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.ResponceDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudDTO;
-import com.example.genesisclub.genesisClub.Modelo.DTO.SolicitudJugadorDTO;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSolicitudEnums;
 import com.example.genesisclub.genesisClub.Servicio.SolicitudSerSocioService;
+
+import jakarta.validation.Valid;
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +24,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
 @RestController
-@RequestMapping("/api/solicitud")
+@RequestMapping("/api/solicitud/socio")
 public class SolicitudSocioController {
 
     @Autowired
@@ -32,25 +34,13 @@ public class SolicitudSocioController {
     // REGISTRO NORMAL (PÚBLICO)
     // ======================================================
     @PostMapping("/nuevo")
-    public ResponseEntity<ResponceDTO> crearSolicitud(@RequestBody SolicitudDTO solicitud) {
+    public ResponseEntity<ResponceDTO> crearSolicitud(@Valid @RequestBody SolicitudDTO solicitud) {
         ResponceDTO response = solicitudSerSocioService.crearSolicitud(solicitud, null);
 
         if (response.getNumOfErrors() > 0) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
-
-    // nuevo endpoint para solicitar como jugador
-    @PostMapping("/jugador")
-    public ResponseEntity<ResponceDTO> crearSolicitudJugador(@RequestBody SolicitudJugadorDTO solicitud) {
-        ResponceDTO response = solicitudSerSocioService.solicitarJugador(solicitud);
-
-        if (response.getNumOfErrors() > 0) {
-            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
-        }
-
+        System.out.println(solicitud.getPassword());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
@@ -90,5 +80,5 @@ public class SolicitudSocioController {
     ) {
         ResponceDTO response = solicitudSerSocioService.actualizarEstadoSolicitud(id, nuevoEstado);
         return ResponseEntity.ok(response);
-    }
+    } 
 }

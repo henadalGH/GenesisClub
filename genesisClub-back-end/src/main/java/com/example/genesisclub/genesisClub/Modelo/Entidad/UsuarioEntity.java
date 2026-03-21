@@ -19,6 +19,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Data;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Data
@@ -42,6 +43,12 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Column( name = "codigoArea")
+    private String codigoArea;
+
+    @Column(name = "celular")
+    private String numeroCelular;
+
     @Column(name = "fecha_creacion")
     private LocalDate fechaCreacion;
 
@@ -54,25 +61,37 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "verificacion_email")
     private boolean verificacionEmail;
 
+    @Column(name = "estado")
+    private String estado = "ACTIVO"; // ACTIVO, SUSPENDIDO, BLOQUEADO
+
     @ManyToOne
     @JoinColumn(name = "id_rol")
     private RolEntity rol;
 
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<SocioEntity> socio = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<AdminEntity> admin = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<JugadorEntity> jugador = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<PerfilEntity> perfil = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario")
     private List<NotificacionEntity> notificacion = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario")
+    private List<VehiculoEntity> vehiculos = new ArrayList<>();
 
     // ⚡ SE ELIMINÓ LA LISTA "relacion" DE AQUÍ PORQUE CAUSABA EL ERROR DE MAPEO
     // Y PORQUE LA LÓGICA MULTINIVEL PERTENECE A LA ENTIDAD SOCIO.

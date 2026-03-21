@@ -1,0 +1,105 @@
+<app-herader-socio></app-herader-socio>
+
+<!-- ── ALERTAS ── -->
+@if (mensajeExito()) {
+  <div class="mr-alert mr-alert--success">
+    <i class="bi bi-check-circle-fill"></i>
+    <span>{{ mensajeExito() }}</span>
+  </div>
+}
+@if (mensajeError()) {
+  <div class="mr-alert mr-alert--error">
+    <i class="bi bi-exclamation-triangle-fill"></i>
+    <span>{{ mensajeError() }}</span>
+  </div>
+}
+
+<section class="mr-page">
+
+  <!-- ── LOADING ── -->
+  @if (loading()) {
+    <div class="mr-loading">
+      <div class="mr-spinner"></div>
+      <p>Cargando rubros...</p>
+    </div>
+  } @else {
+
+    <!-- ── RUBROS ASOCIADOS ── -->
+    <div class="mr-section">
+      <div class="mr-section__header">
+        <h2 class="mr-section__titulo">✅ Mis Rubros Asociados</h2>
+        <span class="mr-section__count">{{ rubrosAsociadosSocio().length }}</span>
+      </div>
+
+      @if (rubrosAsociadosSocio().length > 0) {
+        <div class="mr-grid">
+          @for (rubro of rubrosAsociadosSocio(); track rubro.idRubro) {
+            <div class="mr-card mr-card--asociado">
+              <div class="mr-card__head">
+                <span class="mr-badge mr-badge--asociado">Asociado</span>
+              </div>
+              <h3 class="mr-card__nombre">{{ rubro.nombreRubro }}</h3>
+              <p class="mr-card__fecha">
+                <i class="bi bi-calendar3"></i>
+                {{ rubro.fechaAsignacion | date: 'dd/MM/yyyy' }}
+              </p>
+              <div class="mr-card__footer">
+                <button
+                  class="mr-btn mr-btn--danger"
+                  [disabled]="procesando()"
+                  (click)="desasociarse(rubro.idRubro)">
+                  <i class="bi bi-trash3"></i> Desasociarme
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="mr-empty">
+          <span class="mr-empty__icon">📭</span>
+          <p>Aún no estás asociado a ningún rubro</p>
+        </div>
+      }
+    </div>
+
+    <!-- ── RUBROS ACTIVOS ── -->
+    <div class="mr-section">
+      <div class="mr-section__header">
+        <h2 class="mr-section__titulo">🏁 Mis Rubros Activos</h2>
+        <span class="mr-section__count">{{ rubrosAsignados().length }}</span>
+      </div>
+
+      @if (rubrosAsignados().length > 0) {
+        <div class="mr-grid">
+          @for (rubro of rubrosAsignados(); track rubro.idRubro) {
+            <div class="mr-card mr-card--activo">
+              <div class="mr-card__head">
+                <span class="mr-badge mr-badge--activo">Miembro Activo</span>
+              </div>
+              <h3 class="mr-card__nombre">{{ obtenerNombreRubro(rubro.idRubro) }}</h3>
+              <div class="mr-card__info">
+                <span class="mr-info-item">
+                  <span class="mr-info-label">Tipo</span>
+                  <span class="mr-info-val">{{ rubro.tipoUsuario }}</span>
+                </span>
+                @if (rubro.fechaIngreso) {
+                  <span class="mr-info-item">
+                    <span class="mr-info-label">Miembro desde</span>
+                    <span class="mr-info-val">{{ rubro.fechaIngreso | date: 'dd/MM/yyyy' }}</span>
+                  </span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="mr-empty">
+          <span class="mr-empty__icon">📭</span>
+          <p>Aún no eres miembro de ningún rubro</p>
+        </div>
+      }
+    </div>
+
+  }
+
+</section>

@@ -1,0 +1,118 @@
+<app-header-admin></app-header-admin>
+
+<div class="contenedor">
+
+  <section class="cabecera">
+    <h1 class="titulo">Solicitudes Pendientes de Jugadores</h1>
+    <p class="subtitulo">
+      Gestioná las solicitudes de nuevos jugadores y dales acceso al sistema.
+    </p>
+  </section>
+
+  @if (cargando && pendiente.length > 0) {
+    <div class="loading-bar">
+       <p>⏳ Procesando solicitud, por favor espera...</p>
+    </div>
+  }
+
+  <section class="lista">
+
+    @if (pendiente.length === 0 && !cargando) {
+      <div class="sin-pendientes">
+        <div class="icono-check">✅</div>
+        <h2>¡Todo al día!</h2>
+        <p>No tienes solicitudes pendientes de jugadores en este momento.</p>
+      </div>
+    }
+
+    @for (pen of pendiente; track pen.id) {
+
+      <article class="card">
+
+        <div class="info">
+
+          <div class="dato">
+            <span class="label">Jugador</span>
+            <span class="valor">{{ pen.nombre }} {{ pen.apellido }}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">📧 Correo Electrónico</span>
+            <span class="valor">{{ pen.email }}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">📞 Contacto</span>
+            <span class="valor">{{ pen.codigoArea }} - {{pen.numeroCelular}}</span>
+          </div>
+
+          <div class="dato">
+            <span class="label">📅 Fecha Solicitud</span>
+            <span class="valor">{{ pen.fechaSolicitud | date:'short' }}</span>
+          </div>
+
+          @if (pen.patente) {
+            <div class="dato">
+              <span class="label">🚗 Patente vehículo</span>
+              <span class="valor">{{ pen.patente }}</span>
+            </div>
+          }
+
+          @if (pen.posicion) {
+            <div class="dato">
+              <span class="label">⚽ Posición</span>
+              <span class="valor">{{ pen.posicion }}</span>
+            </div>
+          }
+
+          @if (pen.numeroJersey) {
+            <div class="dato">
+              <span class="label">👕 Número de Jersey</span>
+              <span class="valor">{{ pen.numeroJersey }}</span>
+            </div>
+          }
+
+          @if (pen.motivo) {
+            <div class="dato">
+              <span class="label">💬 Motivo/Observación</span>
+              <span class="valor">{{ pen.motivo }}</span>
+            </div>
+          }
+
+        </div>
+
+        <div class="acciones">
+          <button
+            class="btn btn-aceptar"
+            [disabled]="cargando"
+            (click)="abrirModalAceptar(pen.id)">
+            ✓ Aceptar
+          </button>
+
+          <button
+            class="btn btn-rechazar"
+            [disabled]="cargando"
+            (click)="abrirModalRechazar(pen.id)">
+            ✕ Rechazar
+          </button>
+        </div>
+
+      </article>
+
+    }
+
+  </section>
+
+</div>
+
+<!-- Modal de Confirmación -->
+<app-modal-confirmacion
+  [visible]="modalState.visible"
+  [titulo]="getTextoModal().titulo"
+  [mensaje]="getTextoModal().mensaje"
+  [textoBtnConfirmar]="getTextoModal().texto"
+  [tipoAccion]="getTipoModal()"
+  [cargando]="cargando"
+  (confirmar)="confirmarAccion()"
+  (cancelar)="cerrarModal()">
+</app-modal-confirmacion>

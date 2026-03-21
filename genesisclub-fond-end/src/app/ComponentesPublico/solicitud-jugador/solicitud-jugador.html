@@ -11,74 +11,135 @@
 
     <form class="formulario" (ngSubmit)="enviarSolicitud()" #solicitudForm="ngForm">
 
+      <!-- Nombre y Apellido -->
       <div class="grid-campos">
         <div class="campos">
           <label>Nombre</label>
-          <input type="text" placeholder="Ej: Juan" required name="nombre" [(ngModel)]="nombre">
+          <input type="text" placeholder="Ej: Juan" required name="nombre" [(ngModel)]="nombre"
+                 #nombreCtrl="ngModel" (blur)="validarCampo(nombreCtrl, 'nombre')">
+          @if (errores.nombre) {
+            <small class="error">{{ errores.nombre }}</small>
+          }
         </div>
 
         <div class="campos">
           <label>Apellido</label>
-          <input type="text" placeholder="Ej: Pérez" required name="apellido" [(ngModel)]="apellido">
+          <input type="text" placeholder="Ej: Pérez" required name="apellido" [(ngModel)]="apellido"
+                 #apellidoCtrl="ngModel" (blur)="validarCampo(apellidoCtrl, 'apellido')">
+          @if (errores.apellido) {
+            <small class="error">{{ errores.apellido }}</small>
+          }
         </div>
       </div>
 
+      <!-- Email -->
       <div class="campos">
         <label>Correo electrónico</label>
-        <input type="email" placeholder="ejemplo@email.com" required name="email" [(ngModel)]="email">
+        <input type="email" placeholder="ejemplo@email.com" required name="email" [(ngModel)]="email"
+               #emailCtrl="ngModel" (blur)="validarCampo(emailCtrl, 'email')">
+        @if (errores.email) {
+          <small class="error">{{ errores.email }}</small>
+        }
       </div>
 
+      <!-- Teléfono -->
       <div class="campos">
         <label>Número de Contacto</label>
-        <input type="text" placeholder="WhatsApp o teléfono fijo" required name="contacto" [(ngModel)]="contacto">
+        <div class="telefono-grupo">
+          <div>
+            <label>Cód. área</label>
+            <input type="text" name="codigoArea" [(ngModel)]="codigoArea" #codigoAreaCtrl="ngModel" required
+                   placeholder="351" pattern="\d+" (blur)="validarCampo(codigoAreaCtrl, 'codigoArea')">
+            @if (errores.codigoArea) {
+              <small class="error">{{ errores.codigoArea }}</small>
+            }
+          </div>
+          <div>
+            <label>Celular</label>
+            <input type="text" name="numeroCelular" [(ngModel)]="numeroCelular" #numeroCelularCtrl="ngModel" required
+                   placeholder="612345678" pattern="\d+" (blur)="validarCampo(numeroCelularCtrl, 'numeroCelular')">
+            @if (errores.numeroCelular) {
+              <small class="error">{{ errores.numeroCelular }}</small>
+            }
+          </div>
+        </div>
       </div>
 
-      <!-- datos de vehículo -->
+      <!-- Vehículo opcional -->
       <div class="grid-campos">
         <div class="campos">
           <label>Patente</label>
-          <input type="text" placeholder="ABC123" name="patente" [(ngModel)]="patente">
+          <input type="text" placeholder="ABC123" name="patente" [(ngModel)]="patente" (blur)="validarPatente()">
+          @if (errores.patente) {
+            <small class="error">{{ errores.patente }}</small>
+          }
         </div>
+
         <div class="campos">
           <label>Marca</label>
           <input type="text" placeholder="Ford, Toyota..." name="marca" [(ngModel)]="marca">
         </div>
       </div>
+
       <div class="grid-campos">
         <div class="campos">
           <label>Modelo</label>
           <input type="text" placeholder="Fiesta, Corolla..." name="modelo" [(ngModel)]="modelo">
         </div>
+
         <div class="campos">
           <label>Año</label>
           <input type="number" name="anio" [(ngModel)]="anio">
         </div>
       </div>
+
       <div class="campos">
-        <label><input type="checkbox" [(ngModel)]="tieneGnc" name="tieneGnc"> Tiene GNC</label>
+        <label>
+          <input type="checkbox" [(ngModel)]="tieneGnc" name="tieneGnc"> Tiene GNC
+        </label>
       </div>
 
+      <!-- Contraseña y Confirmar contraseña con opción ver/ocultar -->
       <div class="grid-campos">
         <div class="campos">
           <label>Contraseña</label>
-          <input type="password" placeholder="Creá una clave" required name="password" [(ngModel)]="password">
+          <div class="password-wrapper">
+            <input [type]="mostrarPassword ? 'text' : 'password'" placeholder="Creá una clave"
+                   required name="password" [(ngModel)]="password" #passwordCtrl="ngModel"
+                   pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$"
+                   (blur)="validarCampo(passwordCtrl, 'password')">
+            <button type="button" (click)="mostrarPassword = !mostrarPassword">
+              @if (mostrarPassword) { Ocultar } @else { Ver }
+            </button>
+          </div>
+          @if (errores.password) {
+            <small class="error">{{ errores.password }}</small>
+          }
         </div>
 
         <div class="campos">
           <label>Confirmar contraseña</label>
-          <input type="password" placeholder="Repetí tu clave" required name="confirmPassword" [(ngModel)]="confirmPassword">
+          <div class="password-wrapper">
+            <input [type]="mostrarConfirmPassword ? 'text' : 'password'" placeholder="Repetí tu clave"
+                   required name="confirmPassword" [(ngModel)]="confirmPassword" #confirmPasswordCtrl="ngModel"
+                   (blur)="validarConfirmPassword()">
+            <button type="button" (click)="mostrarConfirmPassword = !mostrarConfirmPassword">
+              @if (mostrarConfirmPassword) { Ocultar } @else { Ver }
+            </button>
+          </div>
+          @if (errores.confirmPassword) {
+            <small class="error">{{ errores.confirmPassword }}</small>
+          }
         </div>
       </div>
 
+      <!-- Botones -->
       <div class="botones">
-        <button type="submit" class="btn-enviar" [disabled]="cargando || !solicitudForm.valid">
-          @if (cargando) {
-            <span class="spinner"></span> Procesando...
-          } @else {
-            Enviar Solicitud
-          }
+        <button type="submit" class="btn-enviar"
+                [disabled]="cargando || !solicitudForm.valid || password !== confirmPassword || errores.patente || errores.contacto">
+          @if (cargando) { <span class="spinner"></span> Procesando... } @else { Enviar Solicitud }
         </button>
-        
+
         <button type="button" class="btn-cancelar" [routerLink]="['/inicio']">
           Cancelar
         </button>

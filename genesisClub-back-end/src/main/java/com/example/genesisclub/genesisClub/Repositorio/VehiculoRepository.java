@@ -9,4 +9,6 @@ import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
 @Repository
 public interface VehiculoRepository extends JpaRepository<VehiculoEntity, Long> {
     Optional<VehiculoEntity> findByPatente(String patente);
+
+    boolean existsByPatente(String patente);
 }

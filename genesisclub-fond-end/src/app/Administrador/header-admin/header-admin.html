@@ -11,16 +11,28 @@
 
   <nav class="nav-buttons" [class.open]="menuAbierto">
 
-    <button class="nav-btn" [routerLink]="['/solicitudesPendientes']" (click)="cerrarMenu()">
-      Solicitudes
+    <button class="nav-btn" [routerLink]="['/inicioAdmin']" (click)="cerrarMenu()">
+      inicio
     </button>
 
-    <button class="nav-btn" (click)="cerrarMenu()">
-      Invitaciones
+    <button class="nav-btn" [routerLink]="['/solicitudesPendientes']" (click)="cerrarMenu()">
+      Solicitudes Socios
+    </button>
+
+    <button class="nav-btn" [routerLink]="['/solicitudesJugadoresPendientes']" (click)="cerrarMenu()">
+      Solicitudes Jugadores
+    </button>
+
+    <button class="nav-btn" [routerLink]="['/solicitudesRubrosPendientes']" (click)="cerrarMenu()">
+      Solicitudes Rubros
     </button>
 
     <button class="nav-btn" [routerLink]="['/listaSocios']" (click)="cerrarMenu()">
       Socios
+    </button>
+
+    <button class="nav-btn" [routerLink]="['/listaJugadores']" (click)="cerrarMenu()">
+      Jugadores
     </button>
 
     <button class="nav-btn" [routerLink]="['/listaRubros']">Rubros</button>

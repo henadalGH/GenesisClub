@@ -1,0 +1,320 @@
+/* ============================================
+   RUBROS DISPONIBLES — GenesisClub Socio
+   Prefijo rb- para evitar conflictos
+   ============================================ */
+
+/* ── ALERTAS (flotantes, arriba del todo) ── */
+.rb-alert {
+  position: fixed;
+  top: 5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 0.8rem 1.4rem;
+  border-radius: 0.75rem;
+  border: 1px solid transparent;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  white-space: nowrap;
+  animation: rb-slide-in 0.35s ease both;
+  max-width: 90vw;
+}
+
+@keyframes rb-slide-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.rb-alert--success {
+  background: rgba(34, 197, 94, 0.12);
+  color: #22c55e;
+  border-color: rgba(34, 197, 94, 0.28);
+}
+
+.rb-alert--error {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.28);
+}
+
+/* ── PAGE ── */
+.rb-page {
+  min-height: calc(100vh - 60px);
+  padding: 2.5rem 5%;
+  background-color: #060810;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.rb-page::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(124, 58, 237, 0.13) 0%, transparent 60%),
+    radial-gradient(ellipse 55% 40% at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── HEADER ── */
+.rb-header {
+  position: relative;
+  z-index: 1;
+}
+
+.rb-titulo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 0.4rem;
+}
+
+.rb-subtitulo {
+  font-size: 0.9rem;
+  color: #8892a4;
+  font-weight: 300;
+}
+
+/* ── LOADING ── */
+.rb-loading {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  min-height: 30vh;
+  color: #8892a4;
+  font-size: 0.9rem;
+}
+
+.rb-spinner {
+  width: 2rem;
+  height: 2rem;
+  border: 2px solid rgba(0, 229, 255, 0.15);
+  border-top-color: #00e5ff;
+  border-radius: 50%;
+  animation: rb-spin 0.8s linear infinite;
+}
+
+@keyframes rb-spin { to { transform: rotate(360deg); } }
+
+/* ── GRID ── */
+.rb-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+  gap: 1.25rem;
+}
+
+/* ── CARD ── */
+.rb-card {
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  padding: 1.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 28px rgba(0, 0, 0, 0.4);
+  transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
+  animation: rb-fade 0.5s ease both;
+}
+
+.rb-card:nth-child(1) { animation-delay: 0.05s; }
+.rb-card:nth-child(2) { animation-delay: 0.1s; }
+.rb-card:nth-child(3) { animation-delay: 0.15s; }
+.rb-card:nth-child(4) { animation-delay: 0.2s; }
+.rb-card:nth-child(5) { animation-delay: 0.25s; }
+.rb-card:nth-child(6) { animation-delay: 0.3s; }
+
+@keyframes rb-fade {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.rb-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #00e5ff);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.rb-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(0, 229, 255, 0.18);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), 0 0 24px rgba(0, 229, 255, 0.08);
+}
+
+.rb-card:hover::before { opacity: 1; }
+
+/* ── CARD HEAD ── */
+.rb-card__head {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.rb-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.3em 0.85em;
+  border-radius: 100px;
+  background: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+  border: 1px solid rgba(34, 197, 94, 0.22);
+}
+
+.rb-card__nombre {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #e8eaf0;
+  margin: 0;
+  line-height: 1.3;
+}
+
+.rb-card__desc {
+  font-size: 0.84rem;
+  color: #8892a4;
+  line-height: 1.6;
+  flex: 1;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ── CARD FOOTER ── */
+.rb-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-wrap: wrap;
+}
+
+.rb-card__fecha {
+  font-size: 0.72rem;
+  color: #4b5563;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+/* ── BOTÓN SOLICITAR ── */
+.rb-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.55em 1.1em;
+  background: #00e5ff;
+  color: #060810;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  white-space: nowrap;
+  transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.18s ease;
+  flex-shrink: 0;
+}
+
+.rb-btn:not(:disabled):hover {
+  background: #33eaff;
+  box-shadow: 0 0 18px rgba(0, 229, 255, 0.4);
+  transform: translateY(-1px);
+}
+
+.rb-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* ── EMPTY STATE ── */
+.rb-empty {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 5rem 2rem;
+  gap: 0.75rem;
+}
+
+.rb-empty__icon {
+  font-size: 3.5rem;
+  filter: grayscale(1);
+  opacity: 0.25;
+  margin-bottom: 0.5rem;
+}
+
+.rb-empty h2 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem;
+  letter-spacing: 0.08em;
+  color: #374151;
+}
+
+.rb-empty p {
+  font-size: 0.88rem;
+  color: #374151;
+  font-weight: 300;
+  max-width: 22rem;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 40em) {
+  .rb-page { padding: 1.75rem 4%; }
+
+  .rb-grid { grid-template-columns: 1fr; }
+
+  .rb-card { padding: 1.4rem; }
+
+  .rb-card__footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .rb-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (min-width: 64em) {
+  .rb-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (min-width: 80em) {
+  .rb-page { padding: 3rem 7%; }
+}

@@ -1,0 +1,237 @@
+/* ============================================
+   LISTA JUGADORES — GenesisClub
+   ============================================ */
+
+.jugadores-container {
+  min-height: calc(100vh - 60px);
+  padding: 2.5rem 5%;
+  background-color: #060810;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+}
+
+/* Gradiente de fondo sutil */
+.jugadores-container::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ============================================
+   TOP BAR
+   ============================================ */
+.top-bar {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 2rem;
+}
+
+.titulo-seccion h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  letter-spacing: 0.06em;
+  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+  margin-bottom: 0.35rem;
+}
+
+.subtitulo {
+  font-size: 0.88rem;
+  color: #8892a4;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+}
+
+/* ============================================
+   TABLA WRAPPER
+   ============================================ */
+.tabla-wrapper {
+  position: relative;
+  z-index: 1;
+  background: #111827;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(0, 229, 255, 0.03);
+  overflow-x: auto;
+}
+
+/* Línea de acento superior */
+.tabla-wrapper::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #7c3aed, #00e5ff);
+  z-index: 2;
+}
+
+/* ============================================
+   TABLA
+   ============================================ */
+.tabla-jugadores {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+/* THEAD */
+.tabla-jugadores thead tr {
+  background: rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.tabla-jugadores th {
+  padding: 1rem 1.25rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #8892a4;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.tabla-jugadores th.text-center {
+  text-align: center;
+}
+
+/* TBODY ROWS */
+.tabla-jugadores tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: background 0.2s ease;
+}
+
+.tabla-jugadores tbody tr:last-child {
+  border-bottom: none;
+}
+
+.tabla-jugadores tbody tr:hover {
+  background: rgba(0, 229, 255, 0.04);
+}
+
+.tabla-jugadores td {
+  padding: 0.95rem 1.25rem;
+  color: #e8eaf0;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+/* Columnas especiales */
+.col-id {
+  color: #4b5563;
+  font-size: 0.8rem;
+  font-weight: 600;
+  width: 2.5rem;
+}
+
+.font-bold {
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.text-muted {
+  color: #8892a4;
+  font-size: 0.85rem;
+}
+
+.acciones-celda {
+  text-align: center;
+}
+
+/* ============================================
+   BOTONES DE ACCIÓN
+   ============================================ */
+.btn-icon {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.45em 1em;
+  border: none;
+  border-radius: 0.45rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.btn-view {
+  background: rgba(0, 229, 255, 0.1);
+  color: #00e5ff;
+  border: 1px solid rgba(0, 229, 255, 0.2);
+}
+
+.btn-view:hover {
+  background: rgba(0, 229, 255, 0.18);
+  border-color: rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 14px rgba(0, 229, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+/* ============================================
+   ESTADO VACÍO
+   ============================================ */
+.tabla-vacia {
+  padding: 3.5rem 1rem !important;
+  text-align: center;
+}
+
+.vacio-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.vacio-content::before {
+  content: '⚽';
+  font-size: 2.5rem;
+  filter: grayscale(1);
+  opacity: 0.3;
+}
+
+.vacio-content p {
+  color: #4b5563;
+  font-size: 0.9rem;
+  font-weight: 400;
+  max-width: 24rem;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 40em) {
+  .jugadores-container {
+    padding: 1.75rem 4%;
+  }
+
+  .tabla-jugadores th,
+  .tabla-jugadores td {
+    padding: 0.8rem 0.85rem;
+    font-size: 0.82rem;
+  }
+
+  /* Ocultar columna email en mobile muy pequeño */
+  .tabla-jugadores th:nth-child(4),
+  .tabla-jugadores td:nth-child(4) {
+    display: none;
+  }
+}
+
+@media (min-width: 80em) {
+  .jugadores-container {
+    padding: 3rem 7%;
+  }
+}

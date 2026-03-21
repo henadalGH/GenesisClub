@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,7 @@ public class EstadoSocioEnitity {
     private EstadoSocioEnums estado;
 
     @OneToMany(mappedBy = "estado")
+    @JsonIgnore // evita la serialización/inicialización perezosa al devolver JSON
     private List<SocioEntity> socio = new ArrayList<>();
 
 

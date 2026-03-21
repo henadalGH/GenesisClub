@@ -1,84 +1,174 @@
 <app-header-admin></app-header-admin>
 
-<div class="page">
+<div class="ds-page">
 
   @if (cargando()) {
-
-    <div class="loading">
-      <div class="spinner"></div>
+    <div class="ds-loading">
+      <div class="ds-spinner"></div>
       <p>Cargando información...</p>
     </div>
+  }
 
-  } @else if (socio()) {
+  @else if (socio()) {
+    <section class="ds-card">
 
-    <section class="profile-card">
+      <!-- ── HEADER ── -->
+      <div class="ds-header">
 
-      <header class="profile-header">
-        <i class="bi bi-person-circle avatar"></i>
-
-        <div>
-          <h2>{{ socio().nombre }} {{ socio().apellido }}</h2>
-          <span class="email">{{ socio().email }}</span>
-        </div>
-      </header>
-
-      <div class="info-grid">
-
-        <div class="info-item">
-          <span>Número de Socio</span>
-          <strong>{{ socio().id }}</strong>
-        </div>
-
-        <div class="info-item">
-          <span>Estado</span>
-
-          <span
-            class="badge"
-            [class.activo]="socio().estado === 'ACTIVO'"
-            [class.bloqueado]="socio().estado === 'BLOQUEADO'"
-            [class.suspendido]="socio().estado === 'SUSPENDIDO'">
-
-            {{ socio().estado || 'SIN ESTADO' }}
+        <div class="ds-avatar-wrap">
+          <i class="bi bi-person-circle ds-avatar"></i>
+          <span class="ds-dot"
+            [class.ds-dot--activo]="socio().estado === 'ACTIVO'"
+            [class.ds-dot--bloqueado]="socio().estado === 'BLOQUEADO'"
+            [class.ds-dot--suspendido]="socio().estado === 'SUSPENDIDO'">
           </span>
-
         </div>
+
+        <div class="ds-identity">
+          <h1 class="ds-nombre">{{ socio().nombre }} {{ socio().apellido }}</h1>
+          <div class="ds-contacto">
+            <span><i class="bi bi-envelope"></i> {{ socio().email }}</span>
+            <span><i class="bi bi-telephone"></i> {{ socio().codigoArea }} - {{ socio().numeroCelular }}</span>
+          </div>
+        </div>
+
+        <span class="ds-estado-pill"
+          [class.ds-estado-pill--activo]="socio().estado === 'ACTIVO'"
+          [class.ds-estado-pill--bloqueado]="socio().estado === 'BLOQUEADO'"
+          [class.ds-estado-pill--suspendido]="socio().estado === 'SUSPENDIDO'">
+          {{ socio().estado || 'SIN ESTADO' }}
+        </span>
 
       </div>
 
-      <div class="stats">
-
-        <div class="stat">
-          <i class="bi bi-envelope"></i>
-          <h3>{{ socio().cantidadInvitaciones }}</h3>
-          <p>Invitaciones</p>
+      <!-- ── STATS ── -->
+      <div class="ds-stats">
+        <div class="ds-stat">
+          <span class="ds-stat__label">Número de Socio</span>
+          <strong class="ds-stat__val">{{ socio().id }}</strong>
         </div>
-
-        <div class="stat">
-          <i class="bi bi-file-earmark-text"></i>
-          <h3>{{ socio().numeroPostulaciones }}</h3>
-          <p>Postulaciones</p>
+        <div class="ds-stat">
+          <span class="ds-stat__label">Invitaciones enviadas</span>
+          <strong class="ds-stat__val ds-stat__val--accent">{{ socio().cantidadInvitaciones }}</strong>
         </div>
-
-        <div class="stat">
-          <i class="bi bi-clock-history"></i>
-          <h3 class="small">{{ socio().ultimoMovimiento }}</h3>
-          <p>Último movimiento</p>
+        <div class="ds-stat">
+          <span class="ds-stat__label">Último movimiento</span>
+          <strong class="ds-stat__val ds-stat__val--sm">{{ socio().ultimoMovimiento }}</strong>
         </div>
-
       </div>
 
-      <footer class="actions">
-        <button class="btn btn-back" [routerLink]="['/listaSocios']">
+      <!-- ── VEHÍCULOS ── -->
+      <div class="ds-section">
+        <div class="ds-section__title">
+          <i class="bi bi-car-front-fill"></i>
+          <h2>Vehículos</h2>
+        </div>
+
+        @if (vehiculos().length > 0) {
+          <div class="ds-vehicles">
+            @for (v of vehiculos(); track v.id) {
+              <div class="ds-vehicle">
+                <strong>{{ v.marca }} {{ v.modelo }}</strong>
+                <ul>
+                  <li><span>Placa</span><em>{{ v.placa }}</em></li>
+                  <li><span>Año</span><em>{{ v.ano }}</em></li>
+                  @if (v.numeroMotor) { <li><span>Motor</span><em>{{ v.numeroMotor }}</em></li> }
+                  @if (v.numeroBastidor) { <li><span>Bastidor</span><em>{{ v.numeroBastidor }}</em></li> }
+                </ul>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="ds-empty">Sin vehículos registrados</p>
+        }
+      </div>
+
+      <!-- ── RUBROS ── -->
+      <div class="ds-section">
+        <div class="ds-section__title">
+          <i class="bi bi-bookmark-star-fill"></i>
+          <h2>Rubros Asociados</h2>
+        </div>
+
+        @if (rubrosAsociados().length > 0) {
+          <div class="ds-rubros">
+            @for (r of rubrosAsociados(); track r.idRubro) {
+              <div class="ds-rubro">
+                <div class="ds-rubro__head">
+                  <strong>{{ r.nombreRubro }}</strong>
+                  <button class="ds-btn-delete" [disabled]="procesando()" (click)="desasociarRubro(r.idRubro)">
+                    <i class="bi bi-trash3"></i>
+                  </button>
+                </div>
+                <p class="ds-rubro__fecha"><i class="bi bi-calendar3"></i> {{ r.fechaAsignacion }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="ds-empty">Sin rubros asociados</p>
+        }
+
+        <div class="ds-rubro-actions">
+          @if (!mostrarSelectorRubros()) {
+            <button class="ds-btn ds-btn--accent"
+              [disabled]="procesando() || rubrosDisponibles().length === 0"
+              (click)="mostrarSelectorRubros.set(true)">
+              <i class="bi bi-plus-circle"></i> Asociar Rubro
+            </button>
+          } @else {
+            <div class="ds-selector">
+              <select [(ngModel)]="rubroSeleccionado" class="ds-select" [disabled]="procesando()">
+                <option [value]="null">Selecciona un rubro</option>
+                @for (r of rubrosDisponibles(); track r.id) {
+                  @if (!isRubroAsociado(r.id)) {
+                    <option [value]="r.id">{{ r.nombre }}</option>
+                  }
+                }
+              </select>
+              <button class="ds-btn ds-btn--success" [disabled]="procesando() || !rubroSeleccionado()" (click)="asociarRubro()">
+                <i class="bi bi-check-circle"></i> Confirmar
+              </button>
+              <button class="ds-btn ds-btn--ghost" [disabled]="procesando()" (click)="mostrarSelectorRubros.set(false)">
+                <i class="bi bi-x-circle"></i> Cancelar
+              </button>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- ── ACCIONES ── -->
+      <div class="ds-section">
+        <div class="ds-section__title">
+          <i class="bi bi-shield-fill"></i>
+          <h2>Acciones de cuenta</h2>
+        </div>
+        <div class="ds-actions">
+          @if (socio().estado === 'ACTIVO') {
+            <button class="ds-btn ds-btn--warning" [disabled]="procesando()" (click)="suspenderSocio()">
+              <i class="bi bi-pause-circle"></i> Suspender
+            </button>
+            <button class="ds-btn ds-btn--danger" [disabled]="procesando()" (click)="bloquearSocio()">
+              <i class="bi bi-lock"></i> Bloquear
+            </button>
+          } @else if (socio().estado === 'SUSPENDIDO' || socio().estado === 'BLOQUEADO') {
+            <button class="ds-btn ds-btn--success" [disabled]="procesando()" (click)="activarSocio()">
+              <i class="bi bi-check-circle"></i> Activar
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- ── FOOTER ── -->
+      <footer class="ds-footer">
+        <button class="ds-btn ds-btn--ghost" [routerLink]="['/listaSocios']">
           <i class="bi bi-arrow-left"></i> Volver al listado
         </button>
-
-        <button class="btn btn-network" [routerLink]="['/verRedSocio', socio().id]">
+        <button class="ds-btn ds-btn--purple" [routerLink]="['/verRedSocio', socio().id]">
           <i class="bi bi-diagram-3"></i> Ver Red de Socio
         </button>
       </footer>
 
     </section>
-
   }
 
 </div>

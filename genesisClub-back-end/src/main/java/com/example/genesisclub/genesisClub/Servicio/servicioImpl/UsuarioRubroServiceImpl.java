@@ -36,4 +36,34 @@ public class UsuarioRubroServiceImpl implements UsuarioRubroService {
         usuarioRubroRepository.deleteById(id);
     }
 
+    @Override
+    public List<UsuarioRubroEntity> findByRubroId(Long idRubro) {
+        return usuarioRubroRepository.findByRubroId(idRubro);
+    }
+
+    @Override
+    public List<UsuarioRubroEntity> findByUsuarioId(Long idUsuario) {
+        return usuarioRubroRepository.findByUsuarioId(idUsuario);
+    }
+
+    @Override
+    public List<UsuarioRubroEntity> findByActivo(boolean activo) {
+        return usuarioRubroRepository.findByActivo(activo);
+    }
+
+    @Override
+    public List<UsuarioRubroEntity> findUsuariosActivosPorRubro(Long idRubro) {
+        return usuarioRubroRepository.findUsuariosActivosPorRubro(idRubro);
+    }
+
+    @Override
+    public List<UsuarioRubroEntity> findRubrosActivosPorUsuario(Long idUsuario) {
+        return usuarioRubroRepository.findRubrosActivosPorUsuario(idUsuario);
+    }
+
+    @Override
+    public boolean existsByRubroAndUsuario(Long idRubro, Long idUsuario) {
+        return usuarioRubroRepository.existsByRubroIdAndUsuarioId(idRubro, idUsuario);
+    }
+
 }

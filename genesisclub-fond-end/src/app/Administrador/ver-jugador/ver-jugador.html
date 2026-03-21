@@ -1,0 +1,111 @@
+<app-header-admin></app-header-admin>
+
+<div class="page">
+
+  @if (cargando()) {
+
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Cargando información...</p>
+    </div>
+
+  } @else if (jugador()) {
+
+    <section class="profile-card">
+
+      <header class="profile-header">
+        <i class="bi bi-person-circle avatar"></i>
+
+        <div>
+          <h2>{{ jugador().nombre }} {{ jugador().apellido }}</h2>
+        </div>
+      </header>
+
+      <div class="info-grid">
+
+        <div class="info-item">
+          <span>Numero de Jugador</span>
+          <strong>{{ jugador().id }}</strong>
+        </div>
+
+        <div class="info-item">
+          <span>Estado</span>
+
+          <span
+            class="badge"
+            [class.activo]="jugador().estado === 'ACTIVO'"
+            [class.bloqueado]="jugador().estado === 'BLOQUEADO'"
+          >
+            {{ jugador().estado }}
+          </span>
+        </div>
+
+        
+        <div class="info-item">
+          <span>Email</span>
+          <strong>{{ jugador().email }}</strong>
+        </div>
+
+        
+        <div class="info-item">
+          <span>Contacto</span>
+          <strong>{{ jugador().codigoArea }} - {{jugador().numeroCelular}}</strong>
+        </div>
+
+      </div>
+
+      <!-- SECCIÓN DE VEHÍCULOS -->
+      <div class="vehicles-section">
+        <h3><i class="bi bi-car-front"></i> Vehículos</h3>
+        @if (vehiculos().length > 0) {
+          <div class="vehicles-grid">
+            @for (vehiculo of vehiculos(); track vehiculo.id) {
+              <div class="vehicle-card">
+                <div class="vehicle-info">
+                  <strong>{{ vehiculo.marca }} {{ vehiculo.modelo }}</strong>
+                  <p>Placa: {{ vehiculo.placa }}</p>
+                  <p>Año: {{ vehiculo.ano }}</p>
+                  @if (vehiculo.numeroMotor) {
+                    <p>Motor: {{ vehiculo.numeroMotor }}</p>
+                  }
+                  @if (vehiculo.numeroBastidor) {
+                    <p>Bastidor: {{ vehiculo.numeroBastidor }}</p>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="no-data">Sin vehículos registrados</p>
+        }
+      </div>
+
+      <!-- SECCIÓN DE ACCIONES -->
+      <div class="actions-section">
+        <h3>Acciones</h3>
+        @if (jugador().estado === 'ACTIVO') {
+          <button class="btn btn-warning" [disabled]="procesando()" (click)="suspenderJugador()">
+            <i class="bi bi-pause-circle"></i> Suspender
+          </button>
+          <button class="btn btn-danger" [disabled]="procesando()" (click)="bloquearJugador()">
+            <i class="bi bi-lock"></i> Bloquear
+          </button>
+        } @else if (jugador().estado === 'SUSPENDIDO' || jugador().estado === 'BLOQUEADO') {
+          <button class="btn btn-success" [disabled]="procesando()" (click)="activarJugador()">
+            <i class="bi bi-check-circle"></i> Activar
+          </button>
+        }
+      </div>
+
+      <footer class="profile-footer">
+        <button class="btn btn-back" routerLink="/listaJugadores">
+          <i class="bi bi-arrow-left"></i> Volver al listado
+        </button>
+      </footer>
+
+    </section>
+
+    
+  }
+
+</div>
