@@ -18,6 +18,10 @@ public class SocioEntity {
     @Column(name = "id_socio")
     private Long id;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @Column(name = "cantidad_invitaciones", nullable = false)
     private Integer cantidadInvitaciones = 0;
 

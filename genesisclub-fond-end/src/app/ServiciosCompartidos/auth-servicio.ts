@@ -103,30 +103,77 @@ export class AuthServicio {
 
 
   // ========================
-  // 🔥 ID desde JWT
+  // 🔥 ID desde JWT - Versión Mejorada
   // ========================
+  
+  /**
+   * Obtiene el ID del usuario (tabla usuario)
+   * Almacenado en el claim 'sub' (subject) del JWT
+   */
   getUserId(): number | null {
-
     const token = this.getToken();
     if (!token) return null;
 
     const decoded: any = jwtDecode(token);
+    const rawId = decoded.sub || null;
 
-    // Prefer role-based IDs if present (e.g. socioId, jugadorId, adminId)
-    const rol = this.getRol();
+    if (!rawId) return null;
 
-    let rawId: any = null;
-    if (rol === 'ROLE_SOCIO') {
-      rawId = decoded.socioId || decoded.socio?.id;
-    } else if (rol === 'ROLE_JUGADOR') {
-      rawId = decoded.jugadorId || decoded.jugador?.id;
-    } else if (rol === 'ROLE_ADMIN') {
-      rawId = decoded.adminId || decoded.admin?.id;
-    }
+    const parsedId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
+    return Number.isNaN(parsedId) ? null : parsedId;
+  }
 
-    // Fallback to subject/id claims for backwards compatibility
-    rawId = rawId || decoded.sub || decoded.id || null;
+  /**
+   * Obtiene el ID del socio (tabla socio) 
+   * Almacenado en el claim 'socioId' del JWT
+   * ⚠️ Solo disponible para usuarios con rol SOCIO
+   */
+  getSocioId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
 
+    const decoded: any = jwtDecode(token);
+    
+    // El claim 'socioId' existe si el usuario tiene rol SOCIO
+    const rawId = decoded.socioId || null;
+    if (!rawId) return null;
+
+    const parsedId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
+    return Number.isNaN(parsedId) ? null : parsedId;
+  }
+
+  /**
+   * Obtiene el ID del jugador (tabla jugador)
+   * Almacenado en el claim 'jugadorId' del JWT
+   * ⚠️ Solo disponible para usuarios con rol JUGADOR
+   */
+  getJugadorId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded: any = jwtDecode(token);
+    
+    // El claim 'jugadorId' existe si el usuario tiene rol JUGADOR
+    const rawId = decoded.jugadorId || null;
+    if (!rawId) return null;
+
+    const parsedId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
+    return Number.isNaN(parsedId) ? null : parsedId;
+  }
+
+  /**
+   * Obtiene el ID del admin (tabla admin)
+   * Almacenado en el claim 'adminId' del JWT
+   * ⚠️ Solo disponible para usuarios con rol ADMIN
+   */
+  getAdminId(): number | null {
+    const token = this.getToken();
+    if (!token) return null;
+
+    const decoded: any = jwtDecode(token);
+    
+    // El claim 'adminId' existe si el usuario tiene rol ADMIN
+    const rawId = decoded.adminId || null;
     if (!rawId) return null;
 
     const parsedId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
@@ -153,7 +200,10 @@ export class AuthServicio {
       const decoded: any = jwtDecode(token);
       console.log('📋 Token Decodificado:', decoded);
       console.log('👤 Rol:', this.getRol());
-      console.log('🆔 User ID (desde JWT):', this.getUserId());
+      console.log('🆔 User ID (tabla usuario):', this.getUserId());
+      console.log('👥 Socio ID (tabla socio):', this.getSocioId());
+      console.log('⚽ Jugador ID (tabla jugador):', this.getJugadorId());
+      console.log('⚙️  Admin ID (tabla admin):', this.getAdminId());
       console.log('📧 Email:', localStorage.getItem('email'));
     } catch (e) {
       console.error('Error decodificando token:', e);

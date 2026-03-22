@@ -29,25 +29,44 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     @Value("classpath:jwtKeys/public_key.pem")
     private Resource publicResource;
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 4;
+    /**
+     * FASE 3.3 - JWT Security Hardening
+     * Expiración de token reducida de 4 horas a 15 minutos
+     * Por defecto: 900000 ms = 15 minutos
+     * Configurable via: jwt.expiration-time en application.properties
+     */
+    @Value("${jwt.expiration-time:900000}")
+    private long EXPIRATION_TIME;
 
     // ======================================================
     // GENERAR TOKEN
     // ======================================================
     @Override
-    public String generateJWT(Long userId, String rol) throws Exception {
+    public String generateJWT(Long userId, String rol, Long socioId, Long jugadorId, Long adminId) throws Exception {
 
         PrivateKey privateKey = loadPrivateKey(privateResource);
         JWSSigner signer = new RSASSASigner(privateKey);
 
         Date now = new Date();
 
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
+        JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder()
                 .subject(userId.toString())
                 .claim("rol", rol)
                 .issueTime(now)
-                .expirationTime(new Date(now.getTime() + EXPIRATION_TIME))
-                .build();
+                .expirationTime(new Date(now.getTime() + EXPIRATION_TIME));
+
+        // Agregar claims opcionales según el rol
+        if (socioId != null) {
+            claimsBuilder.claim("socioId", socioId);
+        }
+        if (jugadorId != null) {
+            claimsBuilder.claim("jugadorId", jugadorId);
+        }
+        if (adminId != null) {
+            claimsBuilder.claim("adminId", adminId);
+        }
+
+        JWTClaimsSet claimsSet = claimsBuilder.build();
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader(JWSAlgorithm.RS256),
@@ -92,6 +111,42 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     @Override
     public String getRol(String jwt) throws Exception {
         return parseJWT(jwt).getStringClaim("rol");
+    }
+
+    @Override
+    public Long getSocioId(String jwt) throws Exception {
+        Object socioIdClaim = parseJWT(jwt).getClaim("socioId");
+        if (socioIdClaim == null) {
+            return null;
+        }
+        if (socioIdClaim instanceof Number) {
+            return ((Number) socioIdClaim).longValue();
+        }
+        throw new JOSEException("socioId tiene formato inválido");
+    }
+
+    @Override
+    public Long getJugadorId(String jwt) throws Exception {
+        Object jugadorIdClaim = parseJWT(jwt).getClaim("jugadorId");
+        if (jugadorIdClaim == null) {
+            return null;
+        }
+        if (jugadorIdClaim instanceof Number) {
+            return ((Number) jugadorIdClaim).longValue();
+        }
+        throw new JOSEException("jugadorId tiene formato inválido");
+    }
+
+    @Override
+    public Long getAdminId(String jwt) throws Exception {
+        Object adminIdClaim = parseJWT(jwt).getClaim("adminId");
+        if (adminIdClaim == null) {
+            return null;
+        }
+        if (adminIdClaim instanceof Number) {
+            return ((Number) adminIdClaim).longValue();
+        }
+        throw new JOSEException("adminId tiene formato inválido");
     }
 
     @Override

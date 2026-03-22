@@ -14,6 +14,10 @@ public class RelacionUsuarioEntity {
     @Column(name = "id_relacaion") // Nombre exacto de tu diagrama
     private Long id;
 
+    @Version
+    @Column(name = "version")
+    private Long version;
+
     @Column(name = "fecha")
     private LocalDate fecha;
 

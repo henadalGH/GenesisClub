@@ -39,7 +39,7 @@ export class HeraderSocio implements OnInit {
   }
 
   enviarInvitacion() {
-    const socioId = this.authServicio.getUserId();
+    const socioId = this.authServicio.getSocioId();
 
     if (!socioId || !this.emailInvitado) return;
 

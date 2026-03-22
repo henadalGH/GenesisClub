@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.example.genesisclub.genesisClub.Modelo.DTO.CrearSolicitudRubroDTO;
@@ -34,7 +35,7 @@ public class SolicitudRubroController {
     private SolicitudRubroService solicitudRubroService;
 
     @PostMapping
-    public ResponseEntity<?> crearSolicitud(@Valid @RequestBody CrearSolicitudRubroDTO dto) {
+    public ResponseEntity<Object> crearSolicitud(@Valid @RequestBody CrearSolicitudRubroDTO dto) {
         log.info("Creando solicitud rubro: socioId={}, rubroId={}", dto.getSocioId(), dto.getRubroId());
         try {
             SolicitudRubroEntity solicitud = solicitudRubroService.crearSolicitud(dto.getSocioId(), dto.getRubroId(), dto.getClaveAcceso());
@@ -46,7 +47,7 @@ public class SolicitudRubroController {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleValidationExceptions(MethodArgumentNotValidException ex) {
         String errors = ex.getBindingResult().getFieldErrors().stream()
             .map(error -> error.getField() + ": " + error.getDefaultMessage())
             .collect(Collectors.joining(", "));
@@ -55,7 +56,7 @@ public class SolicitudRubroController {
     }
 
     @PutMapping("/{id}/aprobar")
-    public ResponseEntity<?> aprobarSolicitud(@PathVariable Long id) {
+    public ResponseEntity<Object> aprobarSolicitud(@PathVariable Long id) {
         try {
             SolicitudRubroEntity solicitud = solicitudRubroService.aprobarSolicitud(id);
             return ResponseEntity.ok(solicitud);
@@ -65,7 +66,7 @@ public class SolicitudRubroController {
     }
 
     @PutMapping("/{id}/rechazar")
-    public ResponseEntity<?> rechazarSolicitud(@PathVariable Long id) {
+    public ResponseEntity<Object> rechazarSolicitud(@PathVariable Long id) {
         try {
             SolicitudRubroEntity solicitud = solicitudRubroService.rechazarSolicitud(id);
             return ResponseEntity.ok(solicitud);

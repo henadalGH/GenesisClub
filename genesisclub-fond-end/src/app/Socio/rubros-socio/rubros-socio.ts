@@ -44,11 +44,20 @@ export class RubrosSocio implements OnInit {
 
   obtenerIdUsuario(): void {
     const userId = this.authServicio.getUserId();
+    const socioId = this.authServicio.getSocioId();
+
+    console.log('🔍 DEBUG obtenerIdUsuario:');
+    console.log('  userId:', userId);
+    console.log('  socioId:', socioId);
+
     if (userId && userId > 0) {
       this.usuarioId.set(userId);
-      // Aquí deberías obtener el socioId del usuario
-      // Por ahora usa el usuarioId como referencia
-      this.socioId.set(userId);
+    }
+
+    if (socioId && socioId > 0) {
+      this.socioId.set(socioId);
+    } else {
+      console.warn('⚠️  socioId no disponible o es 0:', socioId);
     }
   }
 

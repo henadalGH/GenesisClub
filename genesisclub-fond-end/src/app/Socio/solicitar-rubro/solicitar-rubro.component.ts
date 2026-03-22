@@ -72,11 +72,11 @@ export class SolicitarRubroComponent implements OnInit {
   }
 
   private getCurrentUserId(): number {
-    const userId = this.authService.getUserId();
-    if (!userId) {
-      throw new Error('Usuario no autenticado');
+    const socioId = this.authService.getSocioId();
+    if (!socioId) {
+      throw new Error('Usuario (socio) no autenticado o sin socioId');
     }
-    return userId;
+    return socioId;
   }
 
 }

@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Entity
@@ -25,6 +26,10 @@ public class NotificacionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_notificacion")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @Column(name = "tipo_notificacion")
     @Enumerated(EnumType.STRING)

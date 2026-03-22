@@ -88,12 +88,8 @@ public class RegistroUsuarioServicioImpl implements RegistroUsuarioServicio {
             usuario.setNumeroCelular("15" + dto.getNumeroCelular());
         }
 
-        // contraseña
-        if (desdeSolicitud) {
-            usuario.setPassword(dto.getPassword());
-        } else {
-            usuario.setPassword(encoder.encode(dto.getPassword()));
-        }
+        // contraseña - SIEMPRE encriptada con BCrypt
+        usuario.setPassword(encoder.encode(dto.getPassword()));
 
         // 3️⃣ Obtener rol
         RolEntity rol = rolRepository

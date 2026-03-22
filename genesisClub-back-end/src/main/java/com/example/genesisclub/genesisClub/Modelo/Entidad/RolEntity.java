@@ -14,6 +14,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -26,6 +27,10 @@ public class RolEntity {
     @GeneratedValue( strategy = GenerationType.IDENTITY)
     @Column(name = "id_rol")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
 
     @Column(name = "nombre")

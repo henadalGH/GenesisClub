@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Entity
@@ -21,6 +22,10 @@ public class VehiculoEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_vehiculo")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @Column(name = "patente", length = 20, unique = true, nullable = false)
     private String patente;

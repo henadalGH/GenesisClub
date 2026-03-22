@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Entity
@@ -25,7 +26,9 @@ public class RubroAccesoLogEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_acceso_log")
     private Long id;
-
+    @Version
+    @Column(name = "version")
+    private Long version;
     @Column(name = "fecha_acceso")
     private LocalDateTime fechaAcceso;
 

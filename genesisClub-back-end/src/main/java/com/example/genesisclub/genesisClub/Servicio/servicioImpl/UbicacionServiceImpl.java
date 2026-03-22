@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.genesisclub.genesisClub.Modelo.Entidad.UbicacionEntity;
 import com.example.genesisclub.genesisClub.Repositorio.UbicacionRepository;
 import com.example.genesisclub.genesisClub.Servicio.UbicacionService;
 
 @Service
+@Transactional(readOnly = true)
 public class UbicacionServiceImpl implements UbicacionService {
 
      @Autowired

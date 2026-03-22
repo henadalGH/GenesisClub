@@ -5,12 +5,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.genesisclub.genesisClub.Modelo.Entidad.UsuarioRubroEntity;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRubroRepository;
 import com.example.genesisclub.genesisClub.Servicio.UsuarioRubroService;
 
 @Service
+@Transactional(readOnly = true)
 public class UsuarioRubroServiceImpl implements UsuarioRubroService {
 
     @Autowired

@@ -10,7 +10,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/relacion-socio")
-@CrossOrigin(origins = "*") // Para conectar con tu Angular sin problemas de CORS
+// CORS está configurado globalmente en SecurityConfig
 public class RelacionSocioController {
 
     @Autowired

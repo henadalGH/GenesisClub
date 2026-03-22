@@ -20,15 +20,19 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.Arrays;
+import com.example.genesisclub.genesisClub.Servicio.AuthService;
+
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
 
     private final JWTUtilityService jwtUtilityService;
+    private final AuthService authService;  // Para validar tokens revocados
 
-    public SecurityConfig(JWTUtilityService jwtUtilityService) {
+    public SecurityConfig(JWTUtilityService jwtUtilityService, AuthService authService) {
         this.jwtUtilityService = jwtUtilityService;
+        this.authService = authService;
     }
 
     @Bean
@@ -65,7 +69,7 @@ public class SecurityConfig {
 
                 .anyRequest().authenticated()
             )
-            .addFilterBefore(new JWTAuthorizationFilter(jwtUtilityService), 
+            .addFilterBefore(new JWTAuthorizationFilter(jwtUtilityService, authService), 
                             UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -77,11 +81,16 @@ public class SecurityConfig {
         
         configuration.setAllowedOriginPatterns(Arrays.asList(
                 "http://localhost:4200", 
-                "https://*.onrender.com"
+                "https://genesisclub-frontend.onrender.com"
         ));
 
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Content-Type",
+                "Authorization",
+                "Accept",
+                "X-Requested-With"
+        ));
         configuration.setExposedHeaders(Arrays.asList("Authorization"));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);

@@ -83,10 +83,37 @@ public class AuthServiceImpl implements AuthService {
             }
         }
 
-        // ✅ GENERAR JWT CON EL ID CORRECTO
+        // ✅ OBTENER EL socioId CUANDO EL ROL ES SOCIO
+        Long socioId = null;
+        if ("SOCIO".equals(rolNombre)) {
+            socioId = socioRepository.findByUsuario_Id(usuario.getId())
+                    .map(s -> s.getId())
+                    .orElse(null);
+        }
+
+        // ✅ OBTENER EL jugadorId CUANDO EL ROL ES JUGADOR
+        Long jugadorId = null;
+        if ("JUGADOR".equals(rolNombre)) {
+            jugadorId = jugadorRepository.findByUsuario_Id(usuario.getId())
+                    .map(j -> j.getId())
+                    .orElse(null);
+        }
+
+        // ✅ OBTENER EL adminId CUANDO EL ROL ES ADMIN
+        Long adminId = null;
+        if ("ADMIN".equals(rolNombre)) {
+            adminId = adminRepository.findByUsuario_Id(usuario.getId())
+                    .map(a -> a.getId())
+                    .orElse(null);
+        }
+
+        // ✅ GENERAR JWT CON TODOS LOS IDS CORRESPONDIENTES
         String token = jwtUtilityService.generateJWT(
                 tokenSubjectId,
-                rolNombre
+                rolNombre,
+                socioId,
+                jugadorId,
+                adminId
         );
 
         // ✅ RESPUESTA LIMPIA
@@ -111,7 +138,8 @@ public class AuthServiceImpl implements AuthService {
         revokedTokens.put(token, "revoked");
     }
 
-    public boolean isRevoked(String token) {
+    @Override
+    public boolean isTokenRevoked(String token) {
         return revokedTokens.containsKey(token);
     }
 }

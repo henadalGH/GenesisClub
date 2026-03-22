@@ -40,7 +40,6 @@ public class SolicitudSocioController {
         if (response.getNumOfErrors() > 0) {
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-        System.out.println(solicitud.getPassword());
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 

@@ -28,7 +28,6 @@ public class InvitacionController {
     public ResponseEntity<InvitacionResponseDTO> crearInvitacion(
             @PathVariable Long socioId,
             @RequestBody InvitacionRequestDTO dto) throws MessagingException {
-
         // Al especificar <InvitacionResponseDTO>, eliminamos el "?"
         return ResponseEntity.ok(invitacionService.crearInvitacion(socioId, dto));
     }

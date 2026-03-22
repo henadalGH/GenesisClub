@@ -23,7 +23,6 @@ public class RegistroController {
 
     @PostMapping("/registro")
     public ResponseEntity<ResponceDTO> registrar(@Valid @RequestBody RegistroDTO dto) {
-        System.out.println(dto.getPassword());
         return ResponseEntity.ok(registroService.registrarUsuario(dto));
     }
 }

@@ -13,6 +13,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -25,6 +26,10 @@ public class InvitacionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_invitacion")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     // 1. CORRECCIÓN CLAVE: El nombre debe ser 'id_socio_origen' para que coincida con tu DB
     @ManyToOne

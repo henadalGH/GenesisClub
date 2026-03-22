@@ -17,14 +17,18 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+import com.example.genesisclub.genesisClub.Servicio.AuthService;
+
 public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private static final Logger log = LoggerFactory.getLogger(JWTAuthorizationFilter.class);
 
     private final JWTUtilityService jwtUtilityService;
+    private final AuthService authService;  // Para verificar tokens revocados
 
-    public JWTAuthorizationFilter(JWTUtilityService jwtUtilityService) {
+    public JWTAuthorizationFilter(JWTUtilityService jwtUtilityService, AuthService authService) {
         this.jwtUtilityService = jwtUtilityService;
+        this.authService = authService;
     }
 
     @Override
@@ -43,6 +47,13 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
         try {
             String token = header.substring(7);
+
+            // ✅ VALIDAR REVOCACIÓN (logout)
+            if (authService.isTokenRevoked(token)) {
+                log.warn("Token revocado intentando usarse - RECHAZADO");
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
 
             // Verificar validez del token
             if (!jwtUtilityService.isTokenValid(token)) {

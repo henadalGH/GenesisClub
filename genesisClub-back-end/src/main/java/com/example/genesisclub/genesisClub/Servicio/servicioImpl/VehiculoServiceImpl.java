@@ -5,12 +5,14 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.genesisclub.genesisClub.Modelo.Entidad.VehiculoEntity;
 import com.example.genesisclub.genesisClub.Repositorio.VehiculoRepository;
 import com.example.genesisclub.genesisClub.Servicio.VehiculoService;
 
 @Service
+@Transactional(readOnly = true)
 public class VehiculoServiceImpl implements VehiculoService {
 
     @Autowired

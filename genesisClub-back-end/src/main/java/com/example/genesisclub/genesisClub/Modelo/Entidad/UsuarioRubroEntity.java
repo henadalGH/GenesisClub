@@ -14,6 +14,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Entity
@@ -25,6 +26,10 @@ public class UsuarioRubroEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario_rubro")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @Column(name = "fecha_ingreso")
     private LocalDate fechaIngreso;

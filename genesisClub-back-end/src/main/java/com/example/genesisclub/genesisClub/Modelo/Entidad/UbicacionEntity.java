@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Entity
@@ -20,6 +21,10 @@ public class UbicacionEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_ubicacion")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     // 🌎 Siempre Argentina (lo podés dejar fijo o eliminar más adelante)
     @Column(name = "pais", length = 100)

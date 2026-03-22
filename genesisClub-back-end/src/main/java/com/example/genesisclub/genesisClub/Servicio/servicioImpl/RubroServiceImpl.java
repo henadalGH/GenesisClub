@@ -127,7 +127,13 @@ public class RubroServiceImpl implements RubroService {
     // ===============================
     @Override
     public List<RubroDTO> buscarPorNombre(String nombre) {
-        return rubroRepository.buscarActivosPorNombre(nombre)
+        // Escapar caracteres especiales de LIKE
+        String escapedNombre = nombre
+                .replace("\\", "\\\\")
+                .replace("%", "\\%")
+                .replace("_", "\\_");
+        
+        return rubroRepository.buscarActivosPorNombre(escapedNombre)
                 .stream()
                 .map(this::toDTO)
                 .toList();

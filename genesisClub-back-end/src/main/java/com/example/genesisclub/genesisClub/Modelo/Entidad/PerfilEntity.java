@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Version;
 import lombok.Data;
 
 @Entity
@@ -19,6 +20,10 @@ public class PerfilEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_perfil")
     private Long id;
+
+    @Version
+    @Column(name = "version")
+    private Long version;
 
     @Column(name = "foto")
     private String foto;
