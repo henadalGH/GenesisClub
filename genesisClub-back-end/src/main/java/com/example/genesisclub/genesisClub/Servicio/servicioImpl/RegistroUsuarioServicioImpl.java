@@ -13,6 +13,7 @@ import com.example.genesisclub.genesisClub.Modelo.Entidad.AdminEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.JugadorEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.RolEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.SocioEntity;
+import com.example.genesisclub.genesisClub.Modelo.Entidad.UbicacionEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.UsuarioEntity;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.EstadoSocioEnitity;
 import com.example.genesisclub.genesisClub.Modelo.Enums.EstadoSocioEnums;
@@ -23,6 +24,7 @@ import com.example.genesisclub.genesisClub.Repositorio.SocioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.UsuarioRepository;
 import com.example.genesisclub.genesisClub.Repositorio.EstadoSocioRepository;
 import com.example.genesisclub.genesisClub.Servicio.RegistroUsuarioServicio;
+import com.example.genesisclub.genesisClub.Servicio.UbicacionService;
 
 @Service
 @Transactional
@@ -30,6 +32,7 @@ public class RegistroUsuarioServicioImpl implements RegistroUsuarioServicio {
 
     @Autowired private UsuarioRepository usuarioRepository;
     @Autowired private RolRepository rolRepository;
+    @Autowired private UbicacionService ubicacionService;
     @Autowired private JugadorRepository jugadorRepository;
     @Autowired private AdminRepository adminRepository;
     @Autowired private SocioRepository socioRepository;
@@ -99,6 +102,20 @@ public class RegistroUsuarioServicioImpl implements RegistroUsuarioServicio {
 
         usuario.setRol(rol);
 
+        try {
+            if (usuario.getCodigoArea() != null) {
+                UbicacionEntity ubicacion = ubicacionService
+                        .asignarUbicacionPorTelefono(
+                                usuario.getCodigoArea(),
+                                usuario.getNumeroCelular()
+                        );
+
+                usuario.setUbicacion(ubicacion);
+            }
+        } catch (Exception e) {
+            // log opcional
+            System.out.println("No se pudo asignar ubicación: " + e.getMessage());
+        }
         // 4️⃣ Guardar usuario
         UsuarioEntity usuarioGuardado = usuarioRepository.save(usuario);
 

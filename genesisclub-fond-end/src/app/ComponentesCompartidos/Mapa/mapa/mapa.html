@@ -1,0 +1,16 @@
+<div class="contenedor-mapa">
+
+  <div class="filtro">
+    <label>Zona:</label>
+    <select (change)="cambiarZona($event)">
+      <option value="LITORAL">Litoral</option>
+      <option value="CENTRO">Centro</option>
+      <option value="NORTE">Norte</option>
+      <option value="SUR">Sur</option>
+      <option value="CUYO">Cuyo</option>
+    </select>
+  </div>
+
+  <div id="map"></div>
+
+</div>

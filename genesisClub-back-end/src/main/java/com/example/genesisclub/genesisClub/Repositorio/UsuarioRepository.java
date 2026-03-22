@@ -1,5 +1,6 @@
 package com.example.genesisclub.genesisClub.Repositorio;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface UsuarioRepository extends JpaRepository<UsuarioEntity, Long> {
 
     
     boolean existsByEmail(String email);
+    List<UsuarioEntity> findByUbicacionProvincia(String provincia);
+
+List<UsuarioEntity> findByUbicacionZona(String zona);
 }

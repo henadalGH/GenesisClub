@@ -1,7 +1,6 @@
 package com.example.genesisclub.genesisClub.Servicio.servicioImpl;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,27 +12,32 @@ import com.example.genesisclub.genesisClub.Servicio.UbicacionService;
 @Service
 public class UbicacionServiceImpl implements UbicacionService {
 
-    @Autowired
+     @Autowired
     private UbicacionRepository ubicacionRepository;
 
     @Override
-    public List<UbicacionEntity> findAllUbicacion() {
-        return ubicacionRepository.findAll();
-    }
+    public UbicacionEntity asignarUbicacionPorTelefono(String codigoArea, String numero) {
 
-    @Override
-    public Optional<UbicacionEntity> findById(Long id) {
-        return ubicacionRepository.findById(id);
-    }
+        if (codigoArea == null || codigoArea.isEmpty()) {
+            throw new RuntimeException("Código de área inválido");
+        }
 
-    @Override
-    public UbicacionEntity save(UbicacionEntity ubicacion) {
-        return ubicacionRepository.save(ubicacion);
-    }
+        // 🔥 Limpiar código (0342 → 342)
+        String codigoLimpio = codigoArea.replaceFirst("^0+", "");
 
-    @Override
-    public void deleteById(Long id) {
-        ubicacionRepository.deleteById(id);
-    }
+        List<UbicacionEntity> ubicaciones = ubicacionRepository.findByCodigoArea(codigoLimpio);
 
+        if (ubicaciones.isEmpty()) {
+            throw new RuntimeException("No se encontró ubicación para el código de área: " + codigoLimpio);
+        }
+
+        // 🧠 Si hay varias ciudades con mismo código
+        if (ubicaciones.size() == 1) {
+            return ubicaciones.get(0);
+        }
+
+        // 👉 lógica simple (por ahora)
+        // elegimos la primera (después se puede mejorar)
+        return ubicaciones.get(0);
+    }
 }
