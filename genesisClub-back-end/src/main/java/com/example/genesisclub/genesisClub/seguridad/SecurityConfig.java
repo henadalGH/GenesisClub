@@ -57,11 +57,17 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PUT, "/api/solicitudes-rubro/*/rechazar").hasRole("ADMIN")
                 
                 .requestMatchers("/api/jugador/**", "/api/socio/**", "/api/auth/admin/solo").hasRole("ADMIN")
-                .requestMatchers("/api/rubro/**", "/api/rubro-socio/**", "/api/historial-rubro/**", "/api/rubro-acceso-log/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/rubro/**", "/api/historial-rubro/**", "/api/rubro-acceso-log/**").hasAnyRole("ADMIN", "SOCIO")
+                .requestMatchers(HttpMethod.GET, "/api/rubro-socio/**").hasAnyRole("ADMIN", "SOCIO")
+                .requestMatchers(HttpMethod.POST, "/api/rubro-socio/socio/**").hasAnyRole("ADMIN", "SOCIO")
+                .requestMatchers(HttpMethod.DELETE, "/api/rubro-socio/**").hasAnyRole("ADMIN", "SOCIO")
+                .requestMatchers(HttpMethod.PUT, "/api/rubro-socio/**").hasRole("ADMIN")
 
                 // --- RUTAS DE SOCIO / MIXTAS ---
                 .requestMatchers(HttpMethod.POST, "/api/solicitudes-rubro").hasAnyRole("SOCIO", "ADMIN")
-                .requestMatchers("/api/usuario-rubro/**", "/api/relacion-socio/**", "/api/invitacion/**").hasAnyRole("SOCIO", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/invitacion/crear/**").hasAnyRole("SOCIO", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/invitacion/**").hasAnyRole("SOCIO", "ADMIN")
+                .requestMatchers("/api/usuario-rubro/**", "/api/relacion-socio/**").hasAnyRole("SOCIO", "ADMIN")
 
                 .anyRequest().authenticated()
             )

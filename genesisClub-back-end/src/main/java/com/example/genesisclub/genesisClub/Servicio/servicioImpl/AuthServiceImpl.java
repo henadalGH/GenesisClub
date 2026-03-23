@@ -62,31 +62,40 @@ public class AuthServiceImpl implements AuthService {
         String rolNombre = usuario.getRol().getNombre().name();
 
         // ✅ DETERMINAR QUÉ ID DEBE USARSE EN EL TOKEN
-        // (usuario.id es el id de la tabla usuario;
-        //  para SOCIO/JUGADOR/ADMIN necesitamos el id de la tabla relacionada)
+        // (usuario.id es el id de la tabla usuario)
         Long tokenSubjectId = usuario.getId();
-        switch (rolNombre) {
-            case "SOCIO" -> {
-                tokenSubjectId = socioRepository.findByUsuario_Id(usuario.getId())
-                        .map(s -> s.getId())
-                        .orElse(usuario.getId());
-            }
-            case "JUGADOR" -> {
-                tokenSubjectId = jugadorRepository.findByUsuario_Id(usuario.getId())
-                        .map(j -> j.getId())
-                        .orElse(usuario.getId());
-            }
-            case "ADMIN" -> {
-                tokenSubjectId = adminRepository.findByUsuario_Id(usuario.getId())
-                        .map(a -> a.getId())
-                        .orElse(usuario.getId());
-            }
+
+        // ✅ OBTENER EL socioId CUANDO EL ROL ES SOCIO
+        Long socioId = null;
+        if ("SOCIO".equals(rolNombre)) {
+            socioId = socioRepository.findByUsuario_Id(usuario.getId())
+                    .map(s -> s.getId())
+                    .orElse(null);
         }
 
-        // ✅ GENERAR JWT CON EL ID CORRECTO
+        // ✅ OBTENER EL jugadorId CUANDO EL ROL ES JUGADOR
+        Long jugadorId = null;
+        if ("JUGADOR".equals(rolNombre)) {
+            jugadorId = jugadorRepository.findByUsuario_Id(usuario.getId())
+                    .map(j -> j.getId())
+                    .orElse(null);
+        }
+
+        // ✅ OBTENER EL adminId CUANDO EL ROL ES ADMIN
+        Long adminId = null;
+        if ("ADMIN".equals(rolNombre)) {
+            adminId = adminRepository.findByUsuario_Id(usuario.getId())
+                    .map(a -> a.getId())
+                    .orElse(null);
+        }
+
+        // ✅ GENERAR JWT CON TODOS LOS IDS CORRESPONDIENTES
         String token = jwtUtilityService.generateJWT(
                 tokenSubjectId,
-                rolNombre
+                rolNombre,
+                socioId,
+                jugadorId,
+                adminId
         );
 
         // ✅ RESPUESTA LIMPIA
@@ -95,7 +104,7 @@ public class AuthServiceImpl implements AuthService {
         response.put("rol", rolNombre); // opcional (útil para frontend)
         response.put("email", usuario.getEmail());
         response.put("userId", usuario.getId());
-        response.put("profileId", tokenSubjectId); // id real del rol (socio/jugador/admin)
+        response.put("profileId", socioId != null ? socioId : (jugadorId != null ? jugadorId : (adminId != null ? adminId : usuario.getId()))); // id real del rol (socio/jugador/admin)
 
         return response;
     }
@@ -111,7 +120,8 @@ public class AuthServiceImpl implements AuthService {
         revokedTokens.put(token, "revoked");
     }
 
-    public boolean isRevoked(String token) {
+    @Override
+    public boolean isTokenRevoked(String token) {
         return revokedTokens.containsKey(token);
     }
 }

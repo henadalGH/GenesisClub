@@ -35,19 +35,30 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     // GENERAR TOKEN
     // ======================================================
     @Override
-    public String generateJWT(Long userId, String rol) throws Exception {
+    public String generateJWT(Long userId, String rol, Long socioId, Long jugadorId, Long adminId) throws Exception {
 
         PrivateKey privateKey = loadPrivateKey(privateResource);
         JWSSigner signer = new RSASSASigner(privateKey);
 
         Date now = new Date();
 
-        JWTClaimsSet claimsSet = new JWTClaimsSet.Builder()
-                .subject(userId.toString())
+        JWTClaimsSet.Builder claimsBuilder = new JWTClaimsSet.Builder()
+                .subject(userId.toString()) 
                 .claim("rol", rol)
                 .issueTime(now)
-                .expirationTime(new Date(now.getTime() + EXPIRATION_TIME))
-                .build();
+                .expirationTime(new Date(now.getTime() + EXPIRATION_TIME));
+
+        if (socioId != null) {
+            claimsBuilder.claim("socioId", socioId);
+        }
+        if (jugadorId != null) {
+            claimsBuilder.claim("jugadorId", jugadorId);
+        }
+        if (adminId != null) {
+            claimsBuilder.claim("adminId", adminId);
+        }
+
+        JWTClaimsSet claimsSet = claimsBuilder.build();
 
         SignedJWT signedJWT = new SignedJWT(
                 new JWSHeader(JWSAlgorithm.RS256),
@@ -87,6 +98,21 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     @Override
     public Long getUserId(String jwt) throws Exception {
         return Long.parseLong(parseJWT(jwt).getSubject());
+    }
+
+    @Override
+    public Long getSocioId(String jwt) throws Exception {
+        return parseJWT(jwt).getLongClaim("socioId");
+    }
+
+    @Override
+    public Long getJugadorId(String jwt) throws Exception {
+        return parseJWT(jwt).getLongClaim("jugadorId");
+    }
+
+    @Override
+    public Long getAdminId(String jwt) throws Exception {
+        return parseJWT(jwt).getLongClaim("adminId");
     }
 
     @Override

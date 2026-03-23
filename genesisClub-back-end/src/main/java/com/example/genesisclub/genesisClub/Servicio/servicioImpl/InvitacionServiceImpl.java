@@ -44,13 +44,13 @@ public class InvitacionServiceImpl implements InvitacionService {
 
     @Transactional
     @Override
-public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO dto) throws MessagingException {
+    public InvitacionResponseDTO crearInvitacion(Long socioId, InvitacionRequestDTO dto) throws MessagingException {
 
-    // ✅ buscar socio por usuarioId (NO por id de socio)
-    SocioEntity socioOrigen = socioRepository.findByUsuario_Id(socioId)
-            .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
+        // ✅ buscar socio directamente por ID de Socio (desde el token)
+        SocioEntity socioOrigen = socioRepository.findById(socioId)
+                .orElseThrow(() -> new RuntimeException("Socio no encontrado"));
 
-    EstadoInvitacionEntity estado = estadoRepository
+        EstadoInvitacionEntity estado = estadoRepository
             .findByEstado(EstadoinvitacionEnums.PENDIENTE)
             .orElseThrow(() -> new RuntimeException("Estado no configurado"));
 

@@ -8,5 +8,6 @@ public interface AuthService {
 
     public Map<String, Object> login(LoginDTO login) throws Exception;
     public void logout(String token);
+    public boolean isTokenRevoked(String token);
 
 }

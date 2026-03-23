@@ -4,7 +4,7 @@ import com.nimbusds.jwt.JWTClaimsSet;
 
 public interface JWTUtilityService {
 
-    String generateJWT(Long userId, String rol) throws Exception;
+    String generateJWT(Long userId, String rol, Long socioId, Long jugadorId, Long adminId) throws Exception;
 
     JWTClaimsSet parseJWT(String jwt) throws Exception;
 
@@ -13,5 +13,11 @@ public interface JWTUtilityService {
     String getRol(String jwt) throws Exception;
 
     boolean isTokenValid(String jwt);
+
+    Long getSocioId(String jwt) throws Exception;
+
+    Long getJugadorId(String jwt) throws Exception;
+
+    Long getAdminId(String jwt) throws Exception;
 
 }

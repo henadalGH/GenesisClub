@@ -32,19 +32,18 @@ export class AuthServicio {
         }
       }),
       catchError((err: any) => {
-        // transform HTTP errors to friendly message
         let msg = 'Usuario o contraseña incorrectos';
+
         if (err.status === 0) {
           msg = 'No se pudo conectar al servidor';
         } else if (err.status === 401) {
-          // prefer backend message if present
-          msg = err.error?.message || 'Usuario o contraseña incorrectos';
+          msg = err.error?.message || msg;
         }
+
         return throwError(() => new Error(msg));
       })
     );
   }
-
 
   // ========================
   // 🚪 LOGOUT
@@ -55,11 +54,9 @@ export class AuthServicio {
     this.router.navigate(['/inicio']);
   }
 
-
   // ========================
   // ✅ HELPERS
   // ========================
-
   isLogged(): boolean {
     return this.hasToken();
   }
@@ -72,78 +69,91 @@ export class AuthServicio {
     return localStorage.getItem('token');
   }
 
-
-  // 🔥🔥🔥 MÉTODO CLAVE ARREGLADO
-  // Lee rol del JWT + normaliza a ROLE_XXX
+  // ========================
+  // 🎭 ROL DESDE JWT
+  // ========================
   getRol(): string | null {
 
     const token = this.getToken();
     if (!token) return null;
 
-    const decoded: any = jwtDecode(token);
+    try {
+      const decoded: any = jwtDecode(token);
 
+      let role =
+        decoded.authorities?.[0] ||
+        decoded.roles?.[0] ||
+        decoded.role ||
+        decoded.rol ||
+        null;
 
-    let role =
-      decoded.authorities?.[0] ||
-      decoded.roles?.[0] ||
-      decoded.role ||
-      decoded.rol ||
-      null;
+      if (!role) return null;
 
-    if (!role) return null;
+      // 🔥 Normalizamos (case-insensitive)
+      role = role.toString().toUpperCase();
 
-    // ✅ Normalizamos formato
-    // ADMIN -> ROLE_ADMIN
-    if (!role.startsWith('ROLE_')) {
-      role = `ROLE_${role}`;
+      if (!role.startsWith('ROLE_')) {
+        role = `ROLE_${role}`;
+      }
+
+      return role;
+
+    } catch (e) {
+      console.error('Error leyendo rol del token', e);
+      return null;
     }
-
-    return role;
   }
 
-
   // ========================
-  // 🔥 ID desde JWT
+  // 🆔 ID DESDE JWT (FIX CLAVE)
   // ========================
   getUserId(): number | null {
 
     const token = this.getToken();
     if (!token) return null;
 
-    const decoded: any = jwtDecode(token);
+    try {
+      const decoded: any = jwtDecode(token);
 
-    // Prefer role-based IDs if present (e.g. socioId, jugadorId, adminId)
-    const rol = this.getRol();
+      const rol = this.getRol();
 
-    let rawId: any = null;
-    if (rol === 'ROLE_SOCIO') {
-      rawId = decoded.socioId || decoded.socio?.id;
-    } else if (rol === 'ROLE_JUGADOR') {
-      rawId = decoded.jugadorId || decoded.jugador?.id;
-    } else if (rol === 'ROLE_ADMIN') {
-      rawId = decoded.adminId || decoded.admin?.id;
+      let rawId: any = null;
+
+      if (rol === 'ROLE_SOCIO') {
+        rawId = decoded.socioId;
+      } else if (rol === 'ROLE_JUGADOR') {
+        rawId = decoded.jugadorId;
+      } else if (rol === 'ROLE_ADMIN') {
+        rawId = decoded.adminId;
+      } else {
+        // Fallback a sub o id general
+        rawId = decoded.sub || decoded.id;
+      }
+
+      if (!rawId) return null;
+
+      const parsedId =
+        typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
+
+      return Number.isNaN(parsedId) ? null : parsedId;
+
+    } catch (e) {
+      console.error('Error leyendo ID del token', e);
+      return null;
     }
-
-    // Fallback to subject/id claims for backwards compatibility
-    rawId = rawId || decoded.sub || decoded.id || null;
-
-    if (!rawId) return null;
-
-    const parsedId = typeof rawId === 'number' ? rawId : parseInt(rawId, 10);
-    return Number.isNaN(parsedId) ? null : parsedId;
   }
-
 
   private hasToken(): boolean {
     return !!this.getToken();
   }
 
-
   // ========================
-  // � DEBUG - INSPECCIONAR TOKEN
+  // 🧪 DEBUG TOKEN
   // ========================
   debugToken(): void {
+
     const token = this.getToken();
+
     if (!token) {
       console.warn('❌ No hay token');
       return;
@@ -151,18 +161,19 @@ export class AuthServicio {
 
     try {
       const decoded: any = jwtDecode(token);
+
       console.log('📋 Token Decodificado:', decoded);
       console.log('👤 Rol:', this.getRol());
-      console.log('🆔 User ID (desde JWT):', this.getUserId());
+      console.log('🆔 User ID:', this.getUserId());
       console.log('📧 Email:', localStorage.getItem('email'));
+
     } catch (e) {
-      console.error('Error decodificando token:', e);
+      console.error('❌ Error decodificando token:', e);
     }
   }
 
-
   // ========================
-  // �🔁 REDIRECCIÓN POR ROL
+  // 🔁 REDIRECCIÓN POR ROL
   // ========================
   redirectByRole(): void {
 
