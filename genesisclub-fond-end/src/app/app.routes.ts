@@ -27,6 +27,8 @@ import { MisSocios } from './Socio/mis-socios/mis-socios';
 import { RubrosDisponibles } from './Socio/rubros-disponibles/rubros-disponibles';
 import { SolicitarRubroComponent } from './Socio/solicitar-rubro/solicitar-rubro.component';
 import { SolicitudesRubrosPendientesComponent } from './Administrador/solicitudes-rubros-pendientes/solicitudes-rubros-pendientes.component';
+import { EntrarRubroSocio } from './Socio/Rubro/entrar-rubro-socio/entrar-rubro-socio';
+import { EntrarRubroJugador } from './Jugador/Rubro/entrar-rubro-jugador/entrar-rubro-jugador';
 
 
 export const routes: Routes = [
@@ -40,6 +42,8 @@ export const routes: Routes = [
   { path: 'solicitud', component: SolicitudSocio },
   { path: 'solicitud-jugador', component: SolicitudJugador },
   { path: "registroInvitado", component: RegistroInvitado},
+  {path: "entrarRubroSocio/:id", component: EntrarRubroSocio},
+  {path: "entrarRubroJugador/:id", component: EntrarRubroJugador},
 
 
   // =========================
