@@ -350,3 +350,55 @@
 @media (min-width: 80em) {
   .mr-page { padding: 3rem 7%; }
 }
+
+/*nuevo boton */
+.mr-btn2 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  padding: 0.55em 1.1em;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  width: 100%;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.mr-btn2:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+.mr-btn2--danger {
+  background: rgba(68, 239, 77, 0.1);
+  color: #62e566;
+  border-color: rgba(85, 239, 68, 0.22);
+}
+
+.mr-btn2--danger:not(:disabled):hover {
+  background: rgba(68, 239, 125, 0.18);
+  border-color: rgba(68, 239, 142, 0.5);
+  box-shadow: 0 0 14px rgba(68, 239, 71, 0.2);
+  transform: translateY(-1px);
+}
+
+
+.mr-btn--danger2 {
+  background: rgba(68, 239, 68, 0.1);
+  color: #44ef6f;
+  border-color: rgba(68, 239, 77, 0.22);
+}
+
+.mr-btn--danger2:not(:disabled):hover {
+  background: rgba(68, 239, 105, 0.18);
+  border-color: rgba(68, 239, 139, 0.5);
+  box-shadow: 0 0 14px rgba(68, 239, 119, 0.2);
+  transform: translateY(-1px);
+}

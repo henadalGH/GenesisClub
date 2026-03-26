@@ -13,7 +13,6 @@ import { SolicitudesJugadoresPendientes } from './Administrador/solicitudes-juga
 import { ListaSocio } from './Administrador/lista-socio/lista-socio';
 import { ListaJugador } from './Administrador/lista-jugador/lista-jugador';
 import { VerJugador } from './Administrador/ver-jugador/ver-jugador';
-import { InicioRubros } from './Rubros/inicio-rubros/inicio-rubros';
 import { HeraderSocio } from './Socio/herader-socio/herader-socio';
 import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
 import { VerSocio } from './Administrador/ver-socio/ver-socio';
@@ -40,7 +39,6 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'solicitud', component: SolicitudSocio },
   { path: 'solicitud-jugador', component: SolicitudJugador },
-  { path: 'inicioRubro', component: InicioRubros },
   { path: "registroInvitado", component: RegistroInvitado},
 
 

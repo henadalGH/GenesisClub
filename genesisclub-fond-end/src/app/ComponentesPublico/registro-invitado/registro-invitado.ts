@@ -22,7 +22,13 @@ export class RegistroInvitado implements OnInit {
     dni: '',
     telefono: '',
     email: '',
-    password: ''   // ✨ importante para el registro
+    password: '',   // ✨ importante para el registro
+    codigoArea: '',
+    numeroCel: '',
+    patente: '',
+    marca: '',
+    modelo: '',
+    anio: ''
   };
 
   constructor(
