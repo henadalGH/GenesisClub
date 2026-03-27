@@ -13,7 +13,6 @@ import { SolicitudesJugadoresPendientes } from './Administrador/solicitudes-juga
 import { ListaSocio } from './Administrador/lista-socio/lista-socio';
 import { ListaJugador } from './Administrador/lista-jugador/lista-jugador';
 import { VerJugador } from './Administrador/ver-jugador/ver-jugador';
-import { InicioRubros } from './Rubros/inicio-rubros/inicio-rubros';
 import { HeraderSocio } from './Socio/herader-socio/herader-socio';
 import { InvitacionesSocio } from './Socio/invitaciones-socio/invitaciones-socio';
 import { VerSocio } from './Administrador/ver-socio/ver-socio';
@@ -28,6 +27,8 @@ import { MisSocios } from './Socio/mis-socios/mis-socios';
 import { RubrosDisponibles } from './Socio/rubros-disponibles/rubros-disponibles';
 import { SolicitarRubroComponent } from './Socio/solicitar-rubro/solicitar-rubro.component';
 import { SolicitudesRubrosPendientesComponent } from './Administrador/solicitudes-rubros-pendientes/solicitudes-rubros-pendientes.component';
+import { EntrarRubroSocio } from './Socio/Rubro/entrar-rubro-socio/entrar-rubro-socio';
+import { EntrarRubroJugador } from './Jugador/Rubro/entrar-rubro-jugador/entrar-rubro-jugador';
 
 
 export const routes: Routes = [
@@ -40,8 +41,9 @@ export const routes: Routes = [
   { path: 'login', component: Login },
   { path: 'solicitud', component: SolicitudSocio },
   { path: 'solicitud-jugador', component: SolicitudJugador },
-  { path: 'inicioRubro', component: InicioRubros },
   { path: "registroInvitado", component: RegistroInvitado},
+  {path: "entrarRubroSocio/:id", component: EntrarRubroSocio},
+  {path: "entrarRubroJugador/:id", component: EntrarRubroJugador},
 
 
   // =========================

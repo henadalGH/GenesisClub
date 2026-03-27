@@ -1,88 +1,87 @@
-<div class="registro-wrapper">
+<div class="ri-wrapper">
 
-  <div class="card">
+  <div class="ri-card">
 
-    <h2 class="titulo">Registro por invitación</h2>
-    <p class="subtitulo">Completá tus datos para crear tu cuenta</p>
+    <!-- HEADER -->
+    <div class="ri-header">
+      <span class="ri-badge">✉️ Invitación</span>
+      <h2 class="ri-titulo">Registro por invitación</h2>
+      <p class="ri-subtitulo">Completá tus datos para crear tu cuenta en GenesisClub</p>
+    </div>
 
-    <form (ngSubmit)="registrar()" #form="ngForm">
+    <form (ngSubmit)="registrar()" #form="ngForm" class="ri-form">
 
-      <div class="grid">
-
-        <div class="input-group">
+      <!-- Nombre y Apellido -->
+      <div class="ri-grid">
+        <div class="ri-field">
           <label>Nombre</label>
-          <input
-            type="text"
-            [(ngModel)]="datos.nombre"
-            name="nombre"
-            required
-            placeholder="Juan"
-          />
+          <input type="text" [(ngModel)]="datos.nombre" name="nombre" required placeholder="Juan">
         </div>
-
-        <div class="input-group">
+        <div class="ri-field">
           <label>Apellido</label>
-          <input
-            type="text"
-            [(ngModel)]="datos.apellido"
-            name="apellido"
-            required
-            placeholder="Pérez"
-          />
+          <input type="text" [(ngModel)]="datos.apellido" name="apellido" required placeholder="Pérez">
         </div>
-
       </div>
 
-      <div class="input-group">
-        <label>DNI</label>
-        <input
-          type="number"
-          [(ngModel)]="datos.dni"
-          name="dni"
-          required
-          placeholder="12345678"
-        />
+      <!-- Contacto -->
+      <div class="ri-field">
+        <label class="ri-label-main">Número de Contacto</label>
+        <div class="ri-telefono">
+          <div class="ri-telefono__cod">
+            <label>Cód. área</label>
+            <input type="text" [(ngModel)]="datos.codigoArea" name="codigoArea" placeholder="351">
+          </div>
+          <div class="ri-telefono__num">
+            <label>Celular</label>
+            <input type="text" [(ngModel)]="datos.numeroCel" name="numeroCelular" placeholder="612345678">
+          </div>
+        </div>
       </div>
 
-      <div class="input-group">
-        <label>Teléfono</label>
-        <input
-          type="text"
-          [(ngModel)]="datos.telefono"
-          name="telefono"
-          placeholder="3415551234"
-        />
-      </div>
-
-      <div class="input-group">
+      <!-- Email -->
+      <div class="ri-field">
         <label>Email</label>
-        <input
-          type="email"
-          [(ngModel)]="datos.email"
-          name="email"
-          required
-          placeholder="correo@email.com"
-        />
+        <input type="email" [(ngModel)]="datos.email" name="email" required placeholder="correo@email.com">
       </div>
 
-      <!-- NUEVO: Campo de Password -->
-      <div class="input-group">
+      <!-- Vehículo -->
+      <div class="ri-field">
+        <label class="ri-label-main">
+          Vehículo
+        </label>
+        <div class="ri-grid">
+          <div class="ri-field">
+            <label>Patente</label>
+            <input type="text" [(ngModel)]="datos.patente" name="patente" placeholder="ABC123">
+          </div>
+          <div class="ri-field">
+            <label>Marca</label>
+            <input type="text" [(ngModel)]="datos.marca" name="marca" placeholder="Ford, Toyota...">
+          </div>
+          <div class="ri-field">
+            <label>Modelo</label>
+            <input type="text" [(ngModel)]="datos.modelo" name="modelo" placeholder="Fiesta, Corolla...">
+          </div>
+          <div class="ri-field">
+            <label>Año</label>
+            <input type="number" [(ngModel)]="datos.anio" name="anio" placeholder="2020">
+          </div>
+        </div>
+      </div>
+
+      <!-- Contraseña -->
+      <div class="ri-field">
         <label>Contraseña</label>
-        <input
-          type="password"
-          [(ngModel)]="datos.password"
-          name="password"
-          required
-          placeholder="Ingrese su contraseña"
-        />
+        <input type="password" [(ngModel)]="datos.password" name="password" required placeholder="Ingresá tu contraseña">
       </div>
 
-      <button
-        type="submit"
-        [disabled]="cargando || form.invalid"
-        class="btn"
-      >
-        {{ cargando ? 'Registrando...' : 'Registrarme' }}
+      <!-- Submit -->
+      <button type="submit" class="ri-btn" [disabled]="cargando || form.invalid">
+        @if (cargando) {
+          <span class="ri-spinner"></span> Registrando...
+        } @else {
+          Registrarme
+        }
       </button>
 
     </form>
