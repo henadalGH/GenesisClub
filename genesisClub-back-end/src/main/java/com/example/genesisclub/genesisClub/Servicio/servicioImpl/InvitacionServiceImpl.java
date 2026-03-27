@@ -4,9 +4,9 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.example.genesisclub.genesisClub.config.AppProperties;
 import com.example.genesisclub.genesisClub.Modelo.DTO.Reques.InvitacionRequestDTO;
 import com.example.genesisclub.genesisClub.Modelo.DTO.Responce.InvitacionResponseDTO;
 import com.example.genesisclub.genesisClub.Modelo.Entidad.EstadoInvitacionEntity;
@@ -39,8 +39,8 @@ public class InvitacionServiceImpl implements InvitacionService {
     @Autowired
     private EmailService emailService;
 
-    @Value("${app.front.url}")
-    private String frontUrl;
+    @Autowired
+    private AppProperties appProperties;
 
     @Transactional
     @Override
@@ -82,7 +82,7 @@ public class InvitacionServiceImpl implements InvitacionService {
     
     private void enviarEmailInvitacion(InvitacionEntity invitacion, String nombreSocio) throws MessagingException {
         // Ajusta esta URL a la ruta de tu Front-end o Controller de registro
-        String urlRegistro = frontUrl + "/registroInvitado?token=" + invitacion.getToken();
+        String urlRegistro = appProperties.getFrontUrl() + "/registroInvitado?token=" + invitacion.getToken();
 
         com.example.genesisclub.genesisClub.Modelo.DTO.EmailDTO emailDTO = new com.example.genesisclub.genesisClub.Modelo.DTO.EmailDTO();
         emailDTO.setDestinatario(invitacion.getEmailDestino());

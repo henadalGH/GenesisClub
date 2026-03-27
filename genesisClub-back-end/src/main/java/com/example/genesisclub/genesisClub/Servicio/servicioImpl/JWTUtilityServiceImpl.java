@@ -11,9 +11,12 @@ import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
+
+import com.example.genesisclub.genesisClub.config.JwtProperties;
 
 import com.example.genesisclub.genesisClub.Servicio.JWTUtilityService;
 import com.nimbusds.jose.*;
@@ -29,7 +32,8 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
     @Value("classpath:jwtKeys/public_key.pem")
     private Resource publicResource;
 
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 4;
+    @Autowired
+    private JwtProperties jwtProperties;
 
     // ======================================================
     // GENERAR TOKEN
@@ -46,7 +50,7 @@ public class JWTUtilityServiceImpl implements JWTUtilityService {
                 .subject(userId.toString()) 
                 .claim("rol", rol)
                 .issueTime(now)
-                .expirationTime(new Date(now.getTime() + EXPIRATION_TIME));
+                .expirationTime(new Date(now.getTime() + jwtProperties.getExpirationTime()));
 
         if (socioId != null) {
             claimsBuilder.claim("socioId", socioId);
