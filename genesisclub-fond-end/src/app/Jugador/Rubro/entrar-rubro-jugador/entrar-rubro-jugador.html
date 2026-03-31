@@ -1,1 +1,10 @@
-<p>entrar-rubro-jugador works!</p>
+<div class="mr-page">
+  <h1>Rubro Jugador</h1>
+  @if (rubro()) {
+    <h2>{{ rubro().nombre }}</h2>
+    <p>{{ rubro().descripcion }}</p>
+    <p><strong>Creado por ID:</strong> {{ rubro().idCreador }}</p>
+  } @else {
+    <p>Cargando información del rubro...</p>
+  }
+</div>
