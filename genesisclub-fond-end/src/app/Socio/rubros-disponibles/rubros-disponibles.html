@@ -64,3 +64,13 @@
   }
 
 </section>
+
+<!-- ── MODAL DE SOLICITUD DE RUBRO ── -->
+<app-modal-solicitud-rubro
+  [visible]="modalVisible()"
+  [rubroNombre]="rubroSeleccionado()?.nombre || ''"
+  [cargando]="procesandoModal()"
+  [errorMessage]="mensajeErrorModal()"
+  (confirmar)="confirmarSolicitudRubro($event)"
+  (cancelar)="cerrarModal()">
+</app-modal-solicitud-rubro>

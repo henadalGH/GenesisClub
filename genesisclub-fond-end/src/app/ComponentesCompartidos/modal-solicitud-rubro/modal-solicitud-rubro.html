@@ -1,0 +1,52 @@
+<div class="modal-overlay" [ngClass]="{ 'active': visible }">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h2>Solicitar Acceso a Rubro</h2>
+      <button class="btn-cerrar" (click)="onCancelar()" [disabled]="cargando">×</button>
+    </div>
+
+    <div class="modal-body">
+      @if (rubroNombre) {
+        <p class="modal-subtitle">Rubro: <strong>{{ rubroNombre }}</strong></p>
+      }
+
+      @if (errorMessage) {
+        <div class="alert alert-error">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ errorMessage }}</span>
+        </div>
+      }
+
+      <div class="form-group">
+        <label for="claveAcceso">Clave de Acceso:</label>
+        <input
+          type="password"
+          id="claveAcceso"
+          [(ngModel)]="claveAcceso"
+          [disabled]="cargando"
+          placeholder="Ingresá la clave de acceso"
+          class="form-control"
+        />
+        <small class="form-text">Solicitá la clave al administrador si no la posees</small>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button
+        class="btn btn-secundario"
+        (click)="onCancelar()"
+        [disabled]="cargando">
+        Cancelar
+      </button>
+      <button
+        class="btn btn-primario"
+        (click)="onConfirmar()"
+        [disabled]="cargando || !claveAcceso.trim()">
+        @if (cargando) {
+          <span class="spinner"></span>
+        }
+        {{ cargando ? 'Enviando...' : 'Solicitar Acceso' }}
+      </button>
+    </div>
+  </div>
+</div>
