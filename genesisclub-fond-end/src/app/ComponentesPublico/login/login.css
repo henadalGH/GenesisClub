@@ -1,227 +1,165 @@
-    /* ============================================
-    LOGIN COMPONENT — GenesisClub
-    ============================================ */
+/* =========================================
+   VARIABLES DE COLOR Y ESTILO
+   (Las mismas que usamos en el inicio)
+   ========================================= */
+:host {
+  --bg-principal: #0F172A;
+  --bg-secundario: #1E293B;
+  --color-primario: #E07B2A;
+  --color-primario-hover: #F28C38;
+  --color-primario-glow: rgba(224, 123, 42, 0.3);
+  --texto-principal: #F8FAFC;
+  --texto-secundario: #94A3B8;
+  --borde-suave: rgba(255, 255, 255, 0.08);
+  --error-color: #EF4444; /* Rojo suave para errores */
+  --fuente-principal: 'Inter', system-ui, -apple-system, sans-serif;
 
-    /* Fondo de página centrado */
-    :host {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 2rem 1.25rem;
-    background-color: #060810;
-    font-family: 'DM Sans', sans-serif;
-    }
+  /* Hacemos que el componente ocupe toda la pantalla y centre la tarjeta */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: var(--bg-principal);
+  font-family: var(--fuente-principal);
+  padding: 20px;
+  box-sizing: border-box;
+}
 
-    /* Fondo con gradiente igual al hero */
-    :host::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 70% 50% at 30% 20%, rgba(124, 58, 237, 0.25) 0%, transparent 60%),
-        radial-gradient(ellipse 60% 50% at 80% 80%, rgba(0, 229, 255, 0.15) 0%, transparent 60%);
-    z-index: 0;
-    pointer-events: none;
-    }
+/* =========================================
+   TARJETA DEL LOGIN
+   ========================================= */
+.contenedor {
+  background-color: var(--bg-secundario);
+  border: 1px solid var(--borde-suave);
+  border-radius: 16px;
+  padding: 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+  text-align: center;
+  animation: fadeUp 0.4s ease-out forwards;
+}
 
-    /* ============================================
-    CONTENEDOR / CARD
-    ============================================ */
-    .contenedor {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 26rem;
-    background: #111827;
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 1.5rem;
-    padding: 2.5rem 2.25rem;
-    box-shadow:
-        0 8px 48px rgba(0, 0, 0, 0.6),
-        0 0 0 1px rgba(0, 229, 255, 0.04);
-    animation: fadeUp 0.6s ease both;
-    }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
-    /* Línea de acento superior */
-    .contenedor::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 2rem;
-    right: 2rem;
-    height: 2px;
-    background: linear-gradient(90deg, #7c3aed, #00e5ff);
-    border-radius: 0 0 4px 4px;
-    }
+.titulo h1 {
+  color: var(--texto-principal);
+  font-size: 1.8rem;
+  margin: 0 0 8px 0;
+  font-weight: 700;
+}
 
-    @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(24px); }
-    to   { opacity: 1; transform: translateY(0); }
-    }
+.titulo p {
+  color: var(--texto-secundario);
+  margin: 0 0 32px 0;
+  font-size: 0.95rem;
+}
 
-    /* ============================================
-    TÍTULO
-    ============================================ */
-    .titulo {
-    text-align: center;
-    margin-bottom: 2rem;
-    }
+/* =========================================
+   FORMULARIO Y CAMPOS
+   ========================================= */
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 
-    .titulo h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 5vw, 2.8rem);
-    letter-spacing: 0.06em;
-    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.1;
-    margin-bottom: 0.4rem;
-    }
+.campos {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  gap: 8px;
+}
 
-    .titulo p {
-    font-size: 0.88rem;
-    color: #8892a4;
-    font-weight: 300;
-    letter-spacing: 0.03em;
-    }
+.campos label {
+  color: var(--texto-secundario);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
 
-    /* ============================================
-    FORMULARIO
-    ============================================ */
-    .formulario {
-    display: flex;
-    flex-direction: column;
-    gap: 1.25rem;
-    }
+.campos input {
+  background-color: var(--bg-principal);
+  border: 1px solid var(--borde-suave);
+  color: var(--texto-principal);
+  padding: 14px 16px;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  outline: none;
+  font-family: inherit;
+}
 
-    /* ============================================
-    CAMPOS
-    ============================================ */
-    .campos {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-    }
+/* Efecto glow cuando el usuario hace clic en el input */
+.campos input:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(224, 123, 42, 0.15);
+}
 
-    .campos label {
-    font-size: 0.78rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #8892a4;
-    }
+/* =========================================
+   MENSAJE DE ERROR
+   ========================================= */
+.mensaje-error {
+  min-height: 24px; /* Evita que el botón salte si aparece el error */
+  text-align: left;
+}
 
-    .campos input {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    color: #e8eaf0;
-    background: rgba(255, 255, 255, 0.04);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.65rem;
-    padding: 0.75em 1em;
-    outline: none;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-    width: 100%;
-    }
+.error {
+  color: var(--error-color);
+  font-size: 0.85rem;
+  margin: 0;
+  background-color: rgba(239, 68, 68, 0.1);
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
 
-    .campos input::placeholder {
-    color: #4b5563;
-    }
+/* =========================================
+   BOTONES
+   ========================================= */
+button {
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 600;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  font-size: 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-    .campos input:focus {
-    border-color: #00e5ff;
-    background: rgba(0, 229, 255, 0.05);
-    box-shadow: 0 0 0 3px rgba(0, 229, 255, 0.1);
-    }
+.iniciar {
+  background-color: var(--color-primario);
+  color: #fff;
+  border: none;
+  padding: 14px;
+  box-shadow: 0 4px 14px var(--color-primario-glow);
+  margin-top: 8px;
+}
 
-    .campos input:focus + .campos label {
-    color: #00e5ff;
-    }
+.iniciar:hover {
+  background-color: var(--color-primario-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px var(--color-primario-glow);
+}
 
-    /* Autofill override para Chrome/Edge */
-    .campos input:-webkit-autofill,
-    .campos input:-webkit-autofill:hover,
-    .campos input:-webkit-autofill:focus {
-    -webkit-text-fill-color: #e8eaf0;
-    -webkit-box-shadow: 0 0 0px 1000px #111827 inset;
-    transition: background-color 5000s ease-in-out 0s;
-    }
+.cancelar {
+  background-color: transparent;
+  color: var(--texto-secundario);
+  border: 1px solid var(--borde-suave);
+  padding: 12px;
+  margin-top: 16px;
+}
 
-    /* ============================================
-    BOTONES
-    ============================================ */
-    .iniciar {
-    margin-top: 0.5rem;
-    width: 100%;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    padding: 0.8em 1.5em;
-    border: none;
-    border-radius: 0.65rem;
-    cursor: pointer;
-    background: #00e5ff;
-    color: #060810;
-    transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
-    }
-
-    .iniciar:hover {
-    background: #33eaff;
-    box-shadow: 0 0 28px rgba(0, 229, 255, 0.45);
-    transform: translateY(-2px);
-    }
-
-    .iniciar:active {
-    transform: translateY(0);
-    box-shadow: none;
-    }
-
-    .cancelar {
-    display: block;
-    width: 100%;
-    margin-top: 0.85rem;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    padding: 0.7em 1.5em;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 0.65rem;
-    cursor: pointer;
-    background: transparent;
-    color: #8892a4;
-    transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
-    }
-
-    .cancelar:hover {
-    color: #ef4444;
-    }
-
-    /* mensaje de error dentro del formulario */
-    .mensaje-error {
-    
-    color: #fff;
-    padding: 0.75rem 1rem;
-    border-radius: 0.65rem;
-    font-size: 0.9rem;
-    text-align: center;
-    margin-top: 0.5rem;
-    }
-
-
-    /* ============================================
-    RESPONSIVE
-    ============================================ */
-    @media (max-width: 30em) {
-    .contenedor {
-        padding: 2rem 1.5rem;
-        border-radius: 1.25rem;
-    }
-
-    .titulo h1 {
-        font-size: 2rem;
-    }
-    }
+.cancelar:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--texto-principal);
+  border-color: var(--texto-secundario);
+}

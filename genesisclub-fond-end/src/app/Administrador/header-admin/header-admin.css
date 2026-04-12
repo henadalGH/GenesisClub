@@ -1,203 +1,167 @@
-/* ============================================
-   ADMIN HEADER — GenesisClub
-   ============================================ */
+:host {
+  --bg-header: #0F172A;
+  --bg-dropdown: #1E293B;
+  --color-accent: #E07B2A;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-color: rgba(255, 255, 255, 0.08);
+  --header-height: 65px;
+}
 
 .admin-header {
+  background-color: var(--bg-header);
+  height: var(--header-height);
+  border-bottom: 1px solid var(--border-color);
   position: sticky;
   top: 0;
-  z-index: 100;
+  z-index: 1000;
+  width: 100%;
+}
+
+.header-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 100%;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  padding: 0.85rem 5%;
-  background: rgba(6, 8, 16, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  font-family: 'DM Sans', sans-serif;
+  padding: 0 20px;
 }
 
-/* Línea de acento superior */
-.admin-header::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #7c3aed, #00e5ff, #f59e0b);
-}
-
-/* ============================================
+/* =========================================
    LOGO
-   ============================================ */
-.logo h2 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1.4rem, 3vw, 1.9rem);
-  letter-spacing: 0.1em;
-  color: #00e5ff;
-  text-shadow: 0 0 18px rgba(0, 229, 255, 0.35);
-  white-space: nowrap;
-  cursor: default;
-}
-
-/* ============================================
-   HAMBURGUESA (mobile)
-   ============================================ */
-.menu-toggle {
-  display: none;
-  font-size: 1.4rem;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  color: #e8eaf0;
-  border-radius: 0.5rem;
-  padding: 0.35em 0.6em;
+   ========================================= */
+.logo {
+  color: var(--text-main);
+  font-size: 1.2rem;
+  font-weight: 500;
+  margin-right: 40px;
   cursor: pointer;
-  transition: border-color 0.2s, color 0.2s;
-  line-height: 1;
+}
+.logo strong { color: var(--color-accent); }
+
+/* =========================================
+   NAV HORIZONTAL & DROPDOWNS
+   ========================================= */
+.nav-horizontal {
+  display: flex;
+  gap: 10px;
+  height: 100%;
 }
 
-.menu-toggle:hover {
-  border-color: #00e5ff;
-  color: #00e5ff;
-}
-
-/* ============================================
-   NAV BUTTONS
-   ============================================ */
-.nav-buttons {
+.dropdown {
+  position: relative;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  gap: 0.3rem;
+  height: 100%;
 }
 
-.nav-btn {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
+.dropdown-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  padding: 0 15px;
+  height: calc(var(--header-height) - 10px);
+  font-size: 0.95rem;
   font-weight: 600;
-  letter-spacing: 0.03em;
-  padding: 0.5em 0.95em;
-  background: transparent;
-  color: #8892a4;
-  border: 1px solid transparent;
-  border-radius: 0.5rem;
   cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
-  white-space: nowrap;
-}
-
-.nav-btn:hover {
-  color: #e8eaf0;
-  background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255, 255, 255, 0.1);
-}
-
-.nav-btn.active,
-.nav-btn:focus-visible {
-  color: #00e5ff;
-  background: rgba(0, 229, 255, 0.08);
-  border-color: rgba(0, 229, 255, 0.25);
-  outline: none;
-}
-
-/* ============================================
-   ACCIONES / LOGOUT
-   ============================================ */
-.acciones {
   display: flex;
   align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  border-radius: 8px;
 }
 
-.logout {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 0.5em 1.1em;
+.dropdown-btn:hover, .parent-activo {
+  color: var(--text-main);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.parent-activo {
+  color: var(--color-accent) !important;
+}
+
+.arrow {
+  font-size: 0.6rem;
+  opacity: 0.5;
+  transition: transform 0.3s;
+}
+
+/* MOSTRAR DROPDOWN */
+.dropdown-content {
+  position: absolute;
+  top: 90%; /* Un poquito abajo del botón */
+  left: 0;
+  min-width: 220px;
+  background-color: var(--bg-dropdown);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+  padding: 8px;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+}
+
+.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.dropdown:hover .arrow {
+  transform: rotate(180deg);
+}
+
+/* ITEMS DEL DROPDOWN */
+.dropdown-content a {
+  display: block;
+  color: var(--text-muted);
+  padding: 12px 16px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.dropdown-content a:hover {
+  background: rgba(224, 123, 42, 0.1);
+  color: var(--color-accent);
+  padding-left: 20px; /* Efecto sutil de desplazamiento */
+}
+
+.dropdown-content a.activo {
+  background: rgba(224, 123, 42, 0.15);
+  color: var(--color-accent);
+}
+
+/* =========================================
+   ACCIONES (LOGOUT)
+   ========================================= */
+.header-actions {
+  margin-left: auto;
+}
+
+.btn-logout {
   background: transparent;
+  border: 1px solid #ef444455;
   color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.3);
-  border-radius: 0.5rem;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
   cursor: pointer;
-  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  white-space: nowrap;
+  transition: all 0.3s;
 }
 
-.logout:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.6);
-  box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
+.btn-logout:hover {
+  background: #ef4444;
+  color: white;
 }
 
-/* ============================================
-   HELPERS DE VISIBILIDAD
-   ============================================ */
-.mobile-only  { display: none; }
-.desktop-only { display: flex; }
-
-/* ============================================
-   RESPONSIVE — MOBILE
-   ============================================ */
-@media (max-width: 56em) {
-  .menu-toggle  { display: block; }
-  .desktop-only { display: none !important; }
-
-  /* Nav colapsado por defecto */
-  .nav-buttons {
-    display: none;
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 0.25rem;
-    padding: 0.75rem 0 0.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.07);
-    animation: slideDown 0.25s ease both;
-  }
-
-  /* Nav abierto con clase .open */
-  .nav-buttons.open {
-    display: flex;
-  }
-
-  @keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-  .nav-btn {
-    font-size: 0.88rem;
-    padding: 0.7em 1em;
-    text-align: left;
-    border-radius: 0.5rem;
-    border: 1px solid transparent;
-  }
-
-  .nav-btn:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  /* Logout al final del menú mobile */
-  .mobile-only {
-    display: block;
-    margin-top: 0.5rem;
-    text-align: center;
-  }
-}
-
-/* ============================================
-   RESPONSIVE — DESKTOP GRANDE
-   ============================================ */
-@media (min-width: 80em) {
-  .admin-header {
-    padding: 0.85rem 6%;
-  }
-
-  .nav-btn {
-    font-size: 0.85rem;
-    padding: 0.5em 1.1em;
-  }
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 850px) {
+  .nav-horizontal { display: none; } /* Aquí podrías meter un menú hamburguesa clásico */
 }

@@ -1,195 +1,116 @@
-/* ============================================
-   SOLICITUD JUGADOR — GenesisClub (MEDIUM DARK)
-   Acento ámbar/naranja · Teléfono lado a lado
-   ============================================ */
-
+/* =========================================
+   BASE Y CONTENEDOR (GeesisClub Style)
+   ========================================= */
 :host {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  --bg-principal: #0F172A;
+  --bg-secundario: #1E293B;
+  --color-primario: #E07B2A;
+  --color-primario-hover: #F28C38;
+  --texto-principal: #F8FAFC;
+  --texto-secundario: #94A3B8;
+  --borde-suave: rgba(255, 255, 255, 0.08);
+  --error-color: #EF4444;
+  --fuente-principal: 'Inter', system-ui, sans-serif;
+
+  display: block;
+  background-color: var(--bg-principal);
   min-height: 100vh;
-  padding: 2.5rem 1.25rem;
-  background: #1e2235;
-  font-family: 'DM Sans', sans-serif;
+  padding: 40px 20px;
+  font-family: var(--fuente-principal);
 }
 
-:host::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(245, 158, 11, 0.1) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(239, 68, 68, 0.07) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ============================================
-   CONTENEDOR
-   ============================================ */
-.contenedor {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 40rem;
-  animation: fadeUp 0.6s ease both;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ============================================
-   CARD
-   ============================================ */
 .card {
-  background: #2a3148;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.5rem;
-  padding: 2.5rem 2.25rem;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
-  position: relative;
+  background-color: var(--bg-secundario);
+  border: 1px solid var(--borde-suave);
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-.card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #f59e0b, #ef4444);
-  border-radius: 1.5rem 1.5rem 0 0;
-  pointer-events: none;
-}
-
-/* ============================================
-   HEADER
-   ============================================ */
 .header-card {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 35px;
 }
 
 .titulo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
-  letter-spacing: 0.07em;
-  background: linear-gradient(135deg, #ffffff 0%, #fcd34d 50%, #fb923c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.1;
-  margin-bottom: 0.5rem;
+  color: var(--texto-principal);
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 12px;
 }
 
 .descripcion {
-  font-size: 0.85rem;
-  color: #94a3b8;
-  font-weight: 400;
-  line-height: 1.6;
-  max-width: 28rem;
-  margin: 0 auto;
+  color: var(--texto-secundario);
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
-/* ============================================
-   FORMULARIO
-   ============================================ */
+/* =========================================
+   FORMULARIO Y CAMPOS
+   ========================================= */
 .formulario {
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 20px;
+}
+
+.campos {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .grid-campos {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1rem;
-  width: 100%;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
 }
 
-/* ============================================
-   CAMPOS
-   ============================================ */
-.campos {
-  display: flex;
-  flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
+label {
+  color: var(--texto-principal);
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-left: 4px;
 }
 
-.campos > label {
-  font-size: 0.73rem;
-  font-weight: 700;
-  letter-spacing: 0.09em;
-  text-transform: uppercase;
-  color: #94a3b8;
+input[type="text"],
+input[type="email"],
+input[type="number"],
+input[type="password"] {
+  background-color: var(--bg-principal);
+  border: 1px solid var(--borde-suave);
+  color: var(--texto-principal);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
 }
 
-/* ============================================
-   TELÉFONO — cód área (1fr) + celular (3fr)
-   ============================================ */
+input:focus {
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(224, 123, 42, 0.15);
+}
+
+/* Estilo para el Checkbox */
+input[type="checkbox"] {
+  accent-color: var(--color-primario);
+  margin-right: 8px;
+  transform: scale(1.1);
+}
+
+/* =========================================
+   TELÉFONO Y CONTRASEÑA (GRUPOS)
+   ========================================= */
 .telefono-grupo {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-  gap: 0.75rem;
-  align-items: start;
+  grid-template-columns: 100px 1fr;
+  gap: 15px;
 }
 
-.telefono-grupo > div {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
-.telefono-grupo label {
-  font-size: 0.68rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
-/* ============================================
-   INPUTS
-   ============================================ */
-input:not([type="checkbox"]) {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.92rem;
-  color: #e2e8f0;
-  background: #1e2235;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.65rem;
-  padding: 0.72em 1em;
-  outline: none;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-
-input:not([type="checkbox"])::placeholder {
-  color: #4b5563;
-  font-size: 0.85rem;
-}
-
-input:not([type="checkbox"]):focus {
-  border-color: #f59e0b;
-  background: #26293f;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.12);
-}
-
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #e2e8f0;
-  -webkit-box-shadow: 0 0 0px 1000px #1e2235 inset;
-  transition: background-color 5000s ease-in-out 0s;
-}
-
-/* ============================================
-   PASSWORD WRAPPER
-   ============================================ */
 .password-wrapper {
   position: relative;
   display: flex;
@@ -197,175 +118,117 @@ input:-webkit-autofill:focus {
 }
 
 .password-wrapper input {
-  padding-right: 5rem;
+  width: 100%;
+  padding-right: 80px; /* Espacio para el botón Ver/Ocultar */
 }
 
-.password-wrapper button[type="button"] {
+.password-wrapper button {
   position: absolute;
-  right: 0.75rem;
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: #f59e0b;
-  background: transparent;
-  border: none;
+  right: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--borde-suave);
+  color: var(--texto-secundario);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
   cursor: pointer;
-  padding: 0.25em 0;
-  transition: color 0.2s ease;
-  white-space: nowrap;
+  transition: all 0.2s;
 }
 
-.password-wrapper button[type="button"]:hover {
-  color: #fbbf24;
+.password-wrapper button:hover {
+  color: var(--texto-principal);
+  background: rgba(255, 255, 255, 0.1);
 }
 
-/* ============================================
-   ERRORES
-   ============================================ */
+/* =========================================
+   ERRORES Y VALIDACIONES
+   ========================================= */
 .error {
-  font-size: 0.72rem;
-  font-weight: 600;
-  color: #f87171;
-  letter-spacing: 0.02em;
-  margin-top: 0.1rem;
-  line-height: 1.4;
+  color: var(--error-color);
+  font-size: 0.75rem;
+  margin-top: 4px;
+  margin-left: 4px;
+  font-weight: 500;
 }
 
-/* ============================================
-   CHECKBOX GNC
-   ============================================ */
-.campos label:has(input[type="checkbox"]) {
-  display: flex;
-  align-items: center;
-  gap: 0.55rem;
-  font-size: 0.82rem;
-  font-weight: 600;
-  letter-spacing: 0.05em;
-  color: #94a3b8;
-  cursor: pointer;
-  text-transform: uppercase;
-}
-
-input[type="checkbox"] {
-  width: 1rem;
-  height: 1rem;
-  accent-color: #f59e0b;
-  cursor: pointer;
-  flex-shrink: 0;
-}
-
-/* ============================================
+/* =========================================
    BOTONES
-   ============================================ */
+   ========================================= */
 .botones {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  margin-top: 0.5rem;
+  gap: 12px;
+  margin-top: 20px;
 }
 
 .btn-enviar {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 0.82em 1.5em;
-  background: linear-gradient(135deg, #f59e0b, #ef4444);
-  color: #ffffff;
+  background-color: var(--color-primario);
+  color: white;
   border: none;
-  border-radius: 0.65rem;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 700;
   cursor: pointer;
-  width: 100%;
+  transition: all 0.3s ease;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  box-shadow: 0 4px 18px rgba(245, 158, 11, 0.3);
-  transition: opacity 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  align-items: center;
+  gap: 10px;
 }
 
-.btn-enviar:not(:disabled):hover {
-  opacity: 0.92;
-  box-shadow: 0 6px 28px rgba(245, 158, 11, 0.45);
+.btn-enviar:hover:not(:disabled) {
+  background-color: var(--color-primario-hover);
   transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(224, 123, 42, 0.2);
 }
 
 .btn-enviar:disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+  filter: grayscale(0.8);
 }
 
+.btn-cancelar {
+  background-color: transparent;
+  color: var(--texto-secundario);
+  border: 1px solid var(--borde-suave);
+  padding: 12px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--texto-principal);
+}
+
+/* Spinner animado */
 .spinner {
-  display: inline-block;
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 18px;
+  height: 18px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #ffffff;
   border-radius: 50%;
-  animation: spin 0.7s linear infinite;
-  flex-shrink: 0;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
 
-.btn-cancelar {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.88rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
-  padding: 0.75em 1.5em;
-  background: transparent;
-  color: #94a3b8;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.65rem;
-  cursor: pointer;
-  width: 100%;
-  transition: color 0.22s ease, border-color 0.22s ease, background 0.22s ease;
-}
-
-.btn-cancelar:hover {
-  color: #f87171;
-  border-color: rgba(248, 113, 113, 0.35);
-  background: rgba(248, 113, 113, 0.06);
-}
-
-/* ============================================
+/* =========================================
    RESPONSIVE
-   ============================================ */
-@media (max-width: 32em) {
-  :host {
-    align-items: flex-start;
-    padding: 1.5rem 1rem;
-  }
-
-  .card {
-    padding: 2rem 1.25rem;
-    border-radius: 1.25rem;
-  }
-
-  .grid-campos {
+   ========================================= */
+@media (max-width: 600px) {
+  .grid-campos, .telefono-grupo {
     grid-template-columns: 1fr;
   }
-
-  /* El teléfono mantiene sus columnas en mobile */
-  .telefono-grupo {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
+  .card {
+    padding: 25px 20px;
   }
-}
-
-@media (min-width: 48em) {
-  .botones {
-    flex-direction: row;
-  }
-
-  .btn-enviar,
-  .btn-cancelar {
-    flex: 1;
+  .titulo {
+    font-size: 1.5rem;
   }
 }

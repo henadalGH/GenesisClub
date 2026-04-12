@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-inicio',
@@ -8,5 +8,27 @@ import { RouterLink } from "@angular/router";
   styleUrl: './inicio.css',
 })
 export class Inicio {
+ 
+   modalAbierto = false;
 
+  constructor(private router: Router) {}
+
+  abrirModal() {
+    this.modalAbierto = true;
+  }
+
+  cerrarModal() {
+    this.modalAbierto = false;
+  }
+
+  irRegistro(tipo: string) {
+    this.modalAbierto = false;
+
+    if (tipo === 'jugador') {
+      this.router.navigate(['/solicitud-jugador']);
+    } else {
+      this.router.navigate(['/solicitud']);
+    }
+  }
 }
+

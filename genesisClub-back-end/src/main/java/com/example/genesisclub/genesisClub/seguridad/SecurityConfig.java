@@ -49,6 +49,7 @@ public class SecurityConfig {
                 // --- RUTAS DE ADMINISTRADOR ---
                 .requestMatchers("/api/solicitud/socio/pendientes", "/api/solicitud/socio/actualizar/**").hasRole("ADMIN")
                 .requestMatchers("/api/solicitud/jugador/pendientes", "/api/solicitud/jugador/actualizar/**").hasRole("ADMIN")
+                .requestMatchers("/api/admin/**").hasRole("ADMIN")
                 
                 // --- CORRECCIÓN AQUÍ: Endpoints de Solicitudes Rubro ---
                 // Se cambia ** por * porque el ID está en el medio de la ruta

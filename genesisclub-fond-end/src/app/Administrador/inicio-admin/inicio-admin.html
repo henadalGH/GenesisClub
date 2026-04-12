@@ -10,6 +10,7 @@
       <span class="badge-admin">⚙️ Panel de Administración</span>
       <h1>Bienvenido, Administrador</h1>
       <p>Revisá el estado del sistema y gestioná los accesos desde acá.</p>
+      <p class="texto-secundario">Resumen cargado: {{ cargandoResumen ? 'Obteniendo datos...' : 'Última actualización automática' }}</p>
     </div>
   </div> 
 
@@ -19,7 +20,7 @@
     <div class="stat-card">
       <div class="stat-icon">👥</div>
       <div class="stat-info">
-        <span class="stat-numero">10</span>
+        <span class="stat-numero">{{ resumen.sociosActivos }}</span>
         <span class="stat-label">Socios activos</span>
       </div>
     </div>
@@ -27,23 +28,31 @@
     <div class="stat-card">
       <div class="stat-icon">🎮</div>
       <div class="stat-info">
-        <span class="stat-numero">20</span>
-        <span class="stat-label">Jugadores</span>
+        <span class="stat-numero">{{ resumen.jugadoresActivos }}</span>
+        <span class="stat-label">Jugadores activos</span>
       </div>
     </div>
 
     <div class="stat-card stat-alerta" routerLink="/solicitudesPendientes">
       <div class="stat-icon">⏳</div>
       <div class="stat-info">
-        <span class="stat-numero">47</span>
-        <span class="stat-label">Solicitudes pendientes</span>
+        <span class="stat-numero">{{ resumen.solicitudesPendientes }}</span>
+        <span class="stat-label">Solicitudes socios</span>
+      </div>
+    </div>
+
+    <div class="stat-card stat-alerta" routerLink="/solicitudesJugadoresPendientes">
+      <div class="stat-icon">🧑‍💻</div>
+      <div class="stat-info">
+        <span class="stat-numero">{{ resumen.solicitudesJugadoresPendientes }}</span>
+        <span class="stat-label">Solicitudes jugadores</span>
       </div>
     </div>
 
     <div class="stat-card" routerLink="/solicitudesRubrosPendientes">
       <div class="stat-icon">📋</div>
       <div class="stat-info">
-        <span class="stat-numero">--</span>
+        <span class="stat-numero">{{ resumen.solicitudesRubrosPendientes }}</span>
         <span class="stat-label">Solicitudes de rubros</span>
       </div>
     </div>
@@ -51,7 +60,7 @@
     <div class="stat-card">
       <div class="stat-icon">💼</div>
       <div class="stat-info">
-        <span class="stat-numero"></span>
+        <span class="stat-numero">{{ resumen.rubrosActivos }}</span>
         <span class="stat-label">Rubros activos</span>
       </div>
     </div>
