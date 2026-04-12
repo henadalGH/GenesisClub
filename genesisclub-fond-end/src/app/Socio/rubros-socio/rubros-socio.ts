@@ -1,7 +1,7 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { RubroDTO, UsuarioRubroDTO } from '../../Modelos/rubro.model';
 import { RubroServicio } from '../../ServiciosCompartidos/rubro-servicio';
 import { RubroSocioServicio } from '../../ServiciosCompartidos/rubro-socio-servicio';
@@ -18,11 +18,17 @@ import { RubrosDisponibles } from '../rubros-disponibles/rubros-disponibles';
   styleUrl: './rubros-socio.css'
 })
 export class RubrosSocio implements OnInit {
+
   // Inyecciones
   private rubroServicio = inject(RubroServicio);
   private rubroSocioServicio = inject(RubroSocioServicio);
   private usuarioRubroServicio = inject(UsuarioRubroServicio);
   private authServicio = inject(AuthServicio);
+
+  constructor(private router: Router){
+
+  }
+ 
 
   // Signals
   rubrosAsignados = signal<UsuarioRubroDTO[]>([]);
@@ -36,6 +42,7 @@ export class RubrosSocio implements OnInit {
   claveAccesoIngresada = signal<string>('');
   usuarioId = signal<number>(0);
   socioId = signal<number>(0);
+  rubro: any;
 
   ngOnInit(): void {
     this.obtenerIdUsuario();
@@ -143,5 +150,17 @@ export class RubrosSocio implements OnInit {
         this.procesando.set(false);
       }
     });
+  }
+
+
+  entraRubro(rubroId: number) {
+    this.rubroSocioServicio.obtenerPorId(rubroId).subscribe(
+      {
+        next: (repuesta: any) => {
+          this.rubro = repuesta;
+          this.router.navigate(['entrarRubroSocio/', rubroId]);
+      }
+    }
+    )
   }
 }

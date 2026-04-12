@@ -1,237 +1,166 @@
-/* ============================================
-   LISTA JUGADORES — GenesisClub
-   ============================================ */
-
-.jugadores-container {
-  min-height: calc(100vh - 60px);
-  padding: 2.5rem 5%;
-  background-color: #060810;
-  font-family: 'DM Sans', sans-serif;
-  position: relative;
+:host {
+  --bg-dark: #080C14;
+  --bg-card: #121826;
+  --color-accent: #E07B2A;
+  --color-disponible: #34D399;
+  --text-main: #F1F5F9;
+  --text-muted: #64748B;
+  --border: rgba(255, 255, 255, 0.06);
+  
+  display: block;
+  background-color: var(--bg-dark);
+  min-height: 100vh;
+  font-family: 'Inter', sans-serif;
 }
 
-/* Gradiente de fondo sutil */
-.jugadores-container::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
+.jugadores-page { padding: 40px 20px; }
+.jugadores-container { max-width: 1400px; margin: 0 auto; }
 
-/* ============================================
-   TOP BAR
-   ============================================ */
+/* HEADER */
 .top-bar {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.titulo-seccion { display: flex; align-items: center; gap: 15px; }
+.decorator {
+  width: 4px;
+  height: 45px;
+  background: var(--color-accent);
+  border-radius: 2px;
 }
 
 .titulo-seccion h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  letter-spacing: 0.06em;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.1;
-  margin-bottom: 0.35rem;
-}
-
-.subtitulo {
-  font-size: 0.88rem;
-  color: #8892a4;
-  font-weight: 300;
-  letter-spacing: 0.02em;
-}
-
-/* ============================================
-   TABLA WRAPPER
-   ============================================ */
-.tabla-wrapper {
-  position: relative;
-  z-index: 1;
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 1.25rem;
-  overflow: hidden;
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(0, 229, 255, 0.03);
-  overflow-x: auto;
-}
-
-/* Línea de acento superior */
-.tabla-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #7c3aed, #00e5ff);
-  z-index: 2;
-}
-
-/* ============================================
-   TABLA
-   ============================================ */
-.tabla-jugadores {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
-}
-
-/* THEAD */
-.tabla-jugadores thead tr {
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.tabla-jugadores th {
-  padding: 1rem 1.25rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
+  font-size: 1.8rem;
+  font-weight: 900;
   text-transform: uppercase;
-  color: #8892a4;
-  text-align: left;
-  white-space: nowrap;
+  margin: 0;
+  color: var(--text-main);
 }
 
-.tabla-jugadores th.text-center {
+.stats-rapidas .value {
+  font-size: 1.5rem;
+  font-weight: 900;
+  color: var(--color-accent);
+  display: block;
+}
+
+.stats-rapidas .label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  letter-spacing: 1px;
+}
+
+/* TABLA */
+.tabla-roster {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 8px;
+}
+
+.tabla-roster thead th {
+  padding: 12px 20px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.roster-row {
+  background: var(--bg-card);
+  transition: transform 0.2s, background 0.2s;
+}
+
+.roster-row:hover {
+  background: #1A2235;
+  transform: translateX(5px); /* Efecto de entrada */
+}
+
+.roster-row td {
+  padding: 15px 20px;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.roster-row td:first-child { border-left: 1px solid var(--border); border-radius: 8px 0 0 8px; }
+.roster-row td:last-child { border-right: 1px solid var(--border); border-radius: 0 8px 8px 0; }
+
+/* COLUMNA DORSAL */
+.col-dorsal {
+  font-family: 'Monaco', monospace;
+  font-weight: 800;
+  color: var(--color-accent);
+  font-size: 1.1rem;
   text-align: center;
 }
 
-/* TBODY ROWS */
-.tabla-jugadores tbody tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 0.2s ease;
-}
+/* PERFIL JUGADOR */
+.player-info { display: flex; align-items: center; gap: 12px; }
 
-.tabla-jugadores tbody tr:last-child {
-  border-bottom: none;
-}
-
-.tabla-jugadores tbody tr:hover {
-  background: rgba(0, 229, 255, 0.04);
-}
-
-.tabla-jugadores td {
-  padding: 0.95rem 1.25rem;
-  color: #e8eaf0;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-/* Columnas especiales */
-.col-id {
-  color: #4b5563;
-  font-size: 0.8rem;
-  font-weight: 600;
-  width: 2.5rem;
-}
-
-.font-bold {
-  font-weight: 600;
-  color: #ffffff;
-}
-
-.text-muted {
-  color: #8892a4;
-  font-size: 0.85rem;
-}
-
-.acciones-celda {
-  text-align: center;
-}
-
-/* ============================================
-   BOTONES DE ACCIÓN
-   ============================================ */
-.btn-icon {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0.45em 1em;
-  border: none;
-  border-radius: 0.45rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.btn-view {
-  background: rgba(0, 229, 255, 0.1);
-  color: #00e5ff;
-  border: 1px solid rgba(0, 229, 255, 0.2);
-}
-
-.btn-view:hover {
-  background: rgba(0, 229, 255, 0.18);
-  border-color: rgba(0, 229, 255, 0.5);
-  box-shadow: 0 0 14px rgba(0, 229, 255, 0.2);
-  transform: translateY(-1px);
-}
-
-/* ============================================
-   ESTADO VACÍO
-   ============================================ */
-.tabla-vacia {
-  padding: 3.5rem 1rem !important;
-  text-align: center;
-}
-
-.vacio-content {
+.avatar-box {
+  width: 42px;
+  height: 42px;
+  background: #1e293b;
+  border-radius: 6px; /* Más cuadrado tipo cromo */
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  border-bottom: 3px solid var(--color-accent);
 }
 
-.vacio-content::before {
-  content: '⚽';
-  font-size: 2.5rem;
-  filter: grayscale(1);
-  opacity: 0.3;
+.initials { font-weight: 800; color: white; font-size: 0.8rem; }
+
+.player-name .nombre { display: block; font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; }
+.player-name .apellido { display: block; font-size: 1rem; font-weight: 800; text-transform: uppercase; color: white; }
+
+/* PATENTE STICKER */
+.patente-sticker {
+  background: #FACC15;
+  color: #000;
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 4px;
+  font-weight: 900;
+  font-size: 0.8rem;
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.2);
 }
 
-.vacio-content p {
-  color: #4b5563;
-  font-size: 0.9rem;
-  font-weight: 400;
-  max-width: 24rem;
+/* BADGE ESTADO */
+.badge-status {
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 900;
+  text-transform: uppercase;
 }
 
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-@media (max-width: 40em) {
-  .jugadores-container {
-    padding: 1.75rem 4%;
-  }
-
-  .tabla-jugadores th,
-  .tabla-jugadores td {
-    padding: 0.8rem 0.85rem;
-    font-size: 0.82rem;
-  }
-
-  /* Ocultar columna email en mobile muy pequeño */
-  .tabla-jugadores th:nth-child(4),
-  .tabla-jugadores td:nth-child(4) {
-    display: none;
-  }
+.badge-status.disponible {
+  background: rgba(52, 211, 153, 0.1);
+  color: var(--color-disponible);
+  border: 1px solid var(--color-disponible);
 }
 
-@media (min-width: 80em) {
-  .jugadores-container {
-    padding: 3rem 7%;
-  }
+/* ACCIONES */
+.btn-group { display: flex; gap: 5px; justify-content: center; }
+
+.btn-action {
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  color: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.2s;
 }
+
+.btn-action:hover { background: var(--color-accent); border-color: var(--color-accent); transform: translateY(-2px); }
+.btn-action.delete:hover { background: #EF4444; border-color: #EF4444; }
+
+/* VACIO */
+.tabla-vacia { text-align: center; padding: 100px !important; color: var(--text-muted); }
+.vacio-icon { font-size: 3rem; display: block; margin-bottom: 10px; opacity: 0.2; }

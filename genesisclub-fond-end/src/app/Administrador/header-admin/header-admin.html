@@ -1,54 +1,52 @@
 <header class="admin-header">
+  <div class="header-container">
+    
+    <div class="logo" [routerLink]="['/']">
+      Geesis<strong>Admin</strong>
+    </div>
 
-  <div class="logo">
-    <h2>Panel Admin</h2>
+    <nav class="nav-horizontal">
+
+      <div class="dropdown">
+        <button class="dropdown-btn" [routerLink]="['/inicioAdmin']">Inicio</button>
+      </div>
+
+      
+      <div class="dropdown">
+        <button class="dropdown-btn" [class.parent-activo]="esActivoGrupo(['/solicitudesPendientes', '/solicitudesJugadoresPendientes', '/solicitudesRubrosPendientes'])">
+          Solicitudes <span class="arrow">▼</span>
+        </button>
+        <div class="dropdown-content">
+          <a [routerLink]="['/solicitudesPendientes']" [class.activo]="esActivo('/solicitudesPendientes')">📥 Socios</a>
+          <a [routerLink]="['/solicitudesJugadoresPendientes']" [class.activo]="esActivo('/solicitudesJugadoresPendientes')">🛠 Jugadores</a>
+          <a [routerLink]="['/solicitudesRubrosPendientes']" [class.activo]="esActivo('/solicitudesRubrosPendientes')">📂 Rubros</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="dropdown-btn" [class.parent-activo]="esActivoGrupo(['/listaSocios', '/listaJugadores'])">
+          Usuarios <span class="arrow">▼</span>
+        </button>
+        <div class="dropdown-content">
+          <a [routerLink]="['/listaSocios']" [class.activo]="esActivo('/listaSocios')">👥 Lista Socios</a>
+          <a [routerLink]="['/listaJugadores']" [class.activo]="esActivo('/listaJugadores')">🧑‍🔧 Lista Jugadores</a>
+        </div>
+      </div>
+
+      <div class="dropdown">
+        <button class="dropdown-btn" [class.parent-activo]="esActivo('/listaRubros')">
+          Sistema <span class="arrow">▼</span>
+        </button>
+        <div class="dropdown-content">
+          <a [routerLink]="['/listaRubros']" [class.activo]="esActivo('/listaRubros')">⚙️ Gestionar Rubros</a>
+        </div>
+      </div>
+
+    </nav>
+
+    <div class="header-actions">
+      <button class="btn-logout" (click)="logout()">Cerrar sesión</button>
+    </div>
+
   </div>
-
-  <!-- ☰ Hamburguesa (solo mobile) -->
-  <button class="menu-toggle" (click)="toggleMenu()">
-    ☰
-  </button>
-
-  <nav class="nav-buttons" [class.open]="menuAbierto">
-
-    <button class="nav-btn" [routerLink]="['/inicioAdmin']" (click)="cerrarMenu()">
-      inicio
-    </button>
-
-    <button class="nav-btn" [routerLink]="['/solicitudesPendientes']" (click)="cerrarMenu()">
-      Solicitudes Socios
-    </button>
-
-    <button class="nav-btn" [routerLink]="['/solicitudesJugadoresPendientes']" (click)="cerrarMenu()">
-      Solicitudes Jugadores
-    </button>
-
-    <button class="nav-btn" [routerLink]="['/solicitudesRubrosPendientes']" (click)="cerrarMenu()">
-      Solicitudes Rubros
-    </button>
-
-    <button class="nav-btn" [routerLink]="['/listaSocios']" (click)="cerrarMenu()">
-      Socios
-    </button>
-
-    <button class="nav-btn" [routerLink]="['/listaJugadores']" (click)="cerrarMenu()">
-      Jugadores
-    </button>
-
-    <button class="nav-btn" [routerLink]="['/listaRubros']">Rubros</button>
-
-    <!-- logout mobile -->
-    <button class="logout mobile-only" (click)="logout()">
-      Cerrar sesión
-    </button>
-
-  </nav>
-
-  <!-- logout desktop -->
-  <div class="acciones desktop-only">
-    <button class="logout" (click)="logout()">
-      Cerrar sesión
-    </button>
-  </div>
-
 </header>

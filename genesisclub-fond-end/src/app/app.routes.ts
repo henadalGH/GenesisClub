@@ -29,6 +29,8 @@ import { SolicitarRubroComponent } from './Socio/solicitar-rubro/solicitar-rubro
 import { SolicitudesRubrosPendientesComponent } from './Administrador/solicitudes-rubros-pendientes/solicitudes-rubros-pendientes.component';
 import { EntrarRubroSocio } from './Socio/Rubro/entrar-rubro-socio/entrar-rubro-socio';
 import { EntrarRubroJugador } from './Jugador/Rubro/entrar-rubro-jugador/entrar-rubro-jugador';
+import { RubrosJugador } from './Jugador/Rubro/rubros-jugador';
+import { HeaderJugador } from './Jugador/header-jugador/header-jugador';
 
 
 export const routes: Routes = [
@@ -44,6 +46,7 @@ export const routes: Routes = [
   { path: "registroInvitado", component: RegistroInvitado},
   {path: "entrarRubroSocio/:id", component: EntrarRubroSocio},
   {path: "entrarRubroJugador/:id", component: EntrarRubroJugador},
+  {path: "headerJugador", component: HeaderJugador},
 
 
   // =========================
@@ -88,6 +91,12 @@ export const routes: Routes = [
   {
     path: 'inicioJugador',
     component: IncioJugador,
+    canActivate: [AuthGuard],
+    data: { role: ['ROLE_JUGADOR'] }
+  },
+  {
+    path: 'rubrosDisponiblesJugador',
+    component: RubrosJugador,
     canActivate: [AuthGuard],
     data: { role: ['ROLE_JUGADOR'] }
   },

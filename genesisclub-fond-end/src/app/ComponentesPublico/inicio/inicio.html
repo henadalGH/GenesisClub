@@ -1,71 +1,173 @@
-<!-- ================= NAVBAR ================= -->
-<header class="navbar">
+<div class="plataforma-inicio">
 
-    <h2 class="logo">GenesisClub</h2>
+  <!-- HEADER -->
+  <header class="header-principal">
+    <div class="contenedor">
+      <nav class="nav-flex">
+        <div class="logo">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="11" cy="11" r="10" stroke="#E07B2A" stroke-width="1.5"/>
+            <path d="M7 11h8M11 7v8" stroke="#E07B2A" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Geesis<strong>Club</strong>
+          <span class="badge-beta">Beta</span>
+        </div>
 
-    <div class="nav-actions">
-        <button class="btn-outline" [routerLink]="['/solicitud']">
-            Solicitar ser socio
-        </button>
-        <button class="btn-outline" [routerLink]="['/solicitud-jugador']">
-            Solicitar ser jugador
-        </button>
+        <div class="menu-publico">
+          <a href="#">Inicio</a>
+          <a href="#">Rubros</a>
+          <a href="#">Cómo funciona</a>
+        </div>
 
-        <button class="btn-primary" [routerLink]="['/login']">
+        <div class="grupo-botones">
+          <button class="btn-secundario" [routerLink]="['/login']">
             Iniciar sesión
-        </button>
+          </button>
+        </div>
+      </nav>
     </div>
+  </header>
 
-</header>
-
-
-
-<!-- ================= HERO PRINCIPAL ================= -->
-<section class="hero">
-
-    <div class="hero-content">
-
-        <h1>Todo tu club en un solo lugar</h1>
-
-        <p>
-            Gestioná socios, negocios y rubros desde una plataforma simple,
-            rápida y segura.
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-bg-pattern"></div>
+    <div class="contenedor">
+      <div class="hero-contenido">
+        <span class="hero-eyebrow">Red profesional</span>
+        <h1>Formá parte de una red de trabajo o crea la tuya propia</h1>
+        <p class="subtitulo">
+          Conectate con oportunidades reales dentro del rubro mecánico, GNC y servicios técnicos. Una comunidad pensada por y para profesionales del sector.
         </p>
+        <div class="grupo-botones">
+          <button class="btn-primario btn-grande" (click)="abrirModal()">
+            Solicitar acceso
+          </button>
+          <button class="btn-secundario btn-grande" [routerLink]="['/login']">
+            Ya tengo cuenta
+          </button>
+        </div>
+        <p class="hero-nota">Más de 200 profesionales ya forman parte de la red.</p>
+      </div>
+    </div>
+  </section>
 
-        <!-- CTA PRINCIPAL (único acceso libre) -->
-        <button class="btn-guest hero-cta" [routerLink]="['/login']">
-            🎮 Entrar como jugador
+  <!-- CÓMO FUNCIONA -->
+  <section class="seccion-como">
+    <div class="contenedor">
+      <span class="seccion-eyebrow">Simple y directo</span>
+      <h2>Cómo funciona</h2>
+      <div class="pasos-grilla">
+        <div class="paso">
+          <div class="paso-numero">01</div>
+          <h3>Registrate</h3>
+          <p>Elegí tu perfil — Jugador o Socio — y completá tus datos en minutos.</p>
+        </div>
+        <div class="paso-separador"></div>
+        <div class="paso">
+          <div class="paso-numero">02</div>
+          <h3>Conectate</h3>
+          <p>Accedé a la red de profesionales y servicios dentro del rubro automotriz.</p>
+        </div>
+        <div class="paso-separador"></div>
+        <div class="paso">
+          <div class="paso-numero">03</div>
+          <h3>Trabajá</h3>
+          <p>Generá oportunidades reales y hacé crecer tu presencia en el sector.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- RUBROS -->
+  <section class="seccion-rubros" id="rubros">
+    <div class="contenedor">
+      <span class="seccion-eyebrow">Especialidades</span>
+      <h2>Algunos rubros</h2>
+      <div class="grilla-rubros">
+        <div class="tarjeta">
+          <span class="tarjeta-icono">🔧</span>
+          <span>Mecánica</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">⛽</span>
+          <span>GNC</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">⚡</span>
+          <span>Electricidad</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">🛠️</span>
+          <span>Talleres</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">🚗</span>
+          <span>Chapa y Pintura</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">🔩</span>
+          <span>Gomería</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">❄️</span>
+          <span>Aire Acondicionado</span>
+        </div>
+        <div class="tarjeta">
+          <span class="tarjeta-icono">📋</span>
+          <span>Gestorías</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="seccion-cta">
+    <div class="contenedor">
+      <h2>¿Listo para sumarte?</h2>
+      <p>La red crece con cada profesional que se incorpora.</p>
+      <button class="btn-primario btn-grande" (click)="abrirModal()">
+        Solicitar acceso ahora
+      </button>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="contenedor">
+      <div class="logo footer-logo">Geesis<strong>Club</strong></div>
+      <p class="footer-copy">© 2025 GeesisClub. Red profesional automotriz.</p>
+    </div>
+  </footer>
+
+  <!-- MODAL -->
+  @if (modalAbierto) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+      <div class="modal" (click)="$event.stopPropagation()">
+        <button class="cerrar" (click)="cerrarModal()">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+            <path d="M2 2l12 12M14 2L2 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
         </button>
-
+        <div class="modal-header">
+          <h2>¿Cómo querés registrarte?</h2>
+          <p>Elegí tu perfil dentro de la red</p>
+        </div>
+        <div class="opciones">
+          <div class="card-opcion" (click)="irRegistro('jugador')">
+            <div class="card-opcion-icono">🛠</div>
+            <h3>Jugador</h3>
+            <p>Trabajás en el rubro y ofrecés tus servicios</p>
+            <span class="card-opcion-arrow">→</span>
+          </div>
+          <div class="card-opcion" (click)="irRegistro('socio')">
+            <div class="card-opcion-icono">🤝</div>
+            <h3>Socio</h3>
+            <p>Buscás servicios o contactos del sector</p>
+            <span class="card-opcion-arrow">→</span>
+          </div>
+        </div>
+      </div>
     </div>
+  }
 
-</section>
-
-
-
-<!-- ================= BENEFICIOS (menos cards) ================= -->
-<section class="features">
-
-    <div class="card">
-        <h3>⚡ Gestión rápida</h3>
-        <p>Administrá socios y negocios en segundos.</p>
-    </div>
-
-    <div class="card">
-        <h3>🔒 Acceso seguro</h3>
-        <p>Roles y permisos para cada tipo de usuario.</p>
-    </div>
-
-    <div class="card">
-        <h3>🎮 Exploración libre</h3>
-        <p>Los jugadores pueden ver rubros sin registrarse.</p>
-    </div>
-
-</section>
-
-
-
-<!-- ================= FOOTER SIMPLE ================= -->
-<footer class="footer">
-    <p>© 2026 GenesisClub — Sistema de Gestión</p>
-</footer>
+</div>

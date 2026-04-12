@@ -1,0 +1,51 @@
+<div class="modal-overlay" [ngClass]="{ 'active': visible }">
+  <div class="modal-contenido">
+    <div class="modal-header">
+      <h2>Solicitar Acceso a Rubro</h2>
+      <button class="btn-cerrar" (click)="onCancelar()" [disabled]="cargando">×</button>
+    </div>
+
+    <div class="modal-body">
+      @if (rubroNombre) {
+        <div class="rubro-info">
+          <h3>{{ rubroNombre }}</h3>
+        </div>
+
+        <div class="motivo-section">
+          <label for="clave">Clave de acceso:</label>
+          <input
+            type="password"
+            id="clave"
+            [(ngModel)]="claveAcceso"
+            placeholder="Ingresa la clave de acceso..."
+            [disabled]="cargando"
+          />
+        </div>
+
+        @if (errorMessage) {
+          <div class="error-message">
+            {{ errorMessage }}
+          </div>
+        }
+      }
+    </div>
+
+    <div class="modal-footer">
+      <button
+        class="btn btn-secundario"
+        (click)="onCancelar()"
+        [disabled]="cargando">
+        Cancelar
+      </button>
+      <button
+        class="btn btn-primary"
+        (click)="onSolicitar()"
+        [disabled]="cargando || !claveAcceso.trim()">
+        @if (cargando) {
+          <span class="spinner"></span>
+        }
+        Solicitar Acceso
+      </button>
+    </div>
+  </div>
+</div>

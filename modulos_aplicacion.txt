@@ -1,0 +1,44 @@
+Lista de Funcionalidades por Módulo - GenesisClub
+===============================================
+
+**Módulo Administrador:**
+- Gestiona solicitudes pendientes de socios, jugadores y rubros (aprobar/rechazar)
+- Lista y visualización de socios y jugadores registrados
+- Gestión de invitaciones para nuevos miembros
+- Verificación de resultados por socio
+- Gestión de rubros (crear, modificar, asignar)
+
+**Módulo Socio:**
+- Acceso a rubros asignados por el administrador
+- Visualización de resultados y actividades del club
+
+**Módulo Jugador:**
+- Inicio y participación en actividades del club
+- Gestión y acceso a rubros disponibles
+
+**Módulo Componentes Públicos:**
+- Página de inicio del club
+- Sistema de login y registro de usuarios
+- Solicitud de membresía como invitado, socio o jugador
+
+**Módulo Componentes Compartidos:**
+- Modal de confirmación para acciones importantes
+- Sistema de notificaciones (toast) para feedback al usuario
+- Interceptores de autenticación para seguridad
+
+**Módulo Servicios Compartidos:**
+- Comunicación HTTP con el backend para datos
+- Gestión centralizada de notificaciones
+- Modelos de datos (DTOs) para tipado fuerte
+
+**Backend (API):**
+- Proporciona endpoints para gestionar usuarios, solicitudes y rubros
+- Autenticación y autorización con JWT
+- Envío de emails y notificaciones
+- Gestión de base de datos relacional
+
+**Configuración y Recursos:**
+- Archivos de configuración para entornos (desarrollo/producción)
+- Plantillas de email
+- Claves de seguridad JWT
+- Documentación del proyecto

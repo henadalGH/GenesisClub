@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
-import { AuthServicio } from '../../ServiciosCompartidos/auth-servicio';
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 
 @Component({
   selector: 'app-header-admin',
@@ -11,19 +10,29 @@ import { RouterLink } from "@angular/router";
 })
 export class HeaderAdmin {
 
-  constructor(private authServicio: AuthServicio) {}
-  
-    logout() {
-      this.authServicio.logout();
-    }
+   menuAbierto = false;
 
-    menuAbierto = false;
+  constructor(private router: Router) {}
 
-toggleMenu() {
-  this.menuAbierto = !this.menuAbierto;
-}
+  toggleMenu() {
+    this.menuAbierto = !this.menuAbierto;
+  }
 
-cerrarMenu() {
-  this.menuAbierto = false;
-}
+  esActivoGrupo(rutas: string[]): boolean {
+  return rutas.some(ruta => this.router.url.includes(ruta));
+ }
+
+  cerrarMenu() {
+    this.menuAbierto = false;
+  }
+
+  logout() {
+    // lógica real después (token, etc)
+    console.log('Cerrar sesión');
+    this.router.navigate(['/login']);
+  }
+
+  esActivo(ruta: string): boolean {
+    return this.router.url.includes(ruta);
+  }
 }

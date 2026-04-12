@@ -1,0 +1,112 @@
+/* ============================================
+   INICIO JUGADOR — GenesisClub
+   Acento ámbar para diferenciarse del panel socio
+   ============================================ */
+
+.jugador-inicio {
+  min-height: 30vh;
+  padding: 4rem 5% 2.5rem;
+  background-color: #060810;
+  font-family: 'DM Sans', sans-serif;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+
+.jugador-inicio-header {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  z-index: 1;
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.btn-logout {
+  background-color: #ef4444;
+  border: 0;
+  color: #fff;
+  padding: 0.56rem 0.95rem;
+  border-radius: 0.45rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.25s ease;
+}
+
+.btn-logout:hover {
+  opacity: 0.9;
+}
+
+/* Grilla decorativa */
+.jugador-inicio::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 30%, transparent 100%);
+  -webkit-mask-image: radial-gradient(ellipse 80% 100% at 50% 50%, black 30%, transparent 100%);
+  pointer-events: none;
+}
+
+@keyframes ji-pulse {
+  from { opacity: 0.7; transform: scale(1); }
+  to   { opacity: 1;   transform: scale(1.05); }
+}
+
+/* ── TÍTULO ── */
+.jugador-inicio h1 {
+  position: relative;
+  z-index: 1;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  letter-spacing: 0.06em;
+  line-height: 1.05;
+  margin-bottom: 0.9rem;
+  background: linear-gradient(135deg, #ffffff 0%, #fcd34d 45%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: ji-up 0.7s ease both;
+}
+
+/* ── DESCRIPCIÓN ── */
+.jugador-inicio p {
+  position: relative;
+  z-index: 1;
+  font-size: clamp(0.88rem, 2vw, 1.05rem);
+  color: #94a3b8;
+  font-weight: 300;
+  max-width: 36rem;
+  line-height: 1.65;
+  animation: ji-up 0.7s 0.1s ease both;
+}
+
+@keyframes ji-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ── DIVISOR visual entre el hero y el componente de rubros ── */
+.jugador-inicio + app-rubros-jugador {
+  display: block;
+  background-color: #060810;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 40em) {
+  .jugador-inicio {
+    padding: 2.5rem 6% 1.5rem;
+    min-height: 22vh;
+  }
+}

@@ -1,12 +1,46 @@
-<div class="container">
-  <h2>Solicitar Unión a Rubro</h2>
-  <form (ngSubmit)="solicitar()" *ngIf="!loading">
-    <div class="form-group">
-      <label for="clave">Clave de Acceso:</label>
-      <input type="password" id="clave" [(ngModel)]="claveAcceso" name="clave" required>
+<div class="sl-container">
+  
+  <div class="sl-header">
+    <div class="sl-icon-shield">
+      <i class="bi bi-shield-lock-fill"></i>
     </div>
-    <button type="submit">Enviar Solicitud</button>
-  </form>
-  <div *ngIf="loading" class="loading">Enviando solicitud...</div>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
+    <h2>Acceso Protegido</h2>
+    <p>Ingresá la clave del rubro para enviar tu solicitud de unión.</p>
+  </div>
+
+  @if (loading) {
+    <div class="sl-loading">
+      <div class="sl-spinner"></div>
+      <p>Validando credenciales...</p>
+    </div>
+  } @else {
+    <form (ngSubmit)="solicitar()" class="sl-form">
+      <div class="sl-form-group">
+        <label for="clave">Clave de Acceso</label>
+        <div class="sl-input-wrapper">
+          <i class="bi bi-key"></i>
+          <input 
+            type="password" 
+            id="clave" 
+            [(ngModel)]="claveAcceso" 
+            name="clave" 
+            placeholder="••••••••"
+            required
+          >
+        </div>
+      </div>
+
+      <button type="submit" class="sl-btn-submit" [disabled]="!claveAcceso">
+        Confirmar Solicitud
+      </button>
+    </form>
+  }
+
+  @if (errorMessage) {
+    <div class="sl-error-box">
+      <i class="bi bi-exclamation-circle"></i>
+      <span>{{ errorMessage }}</span>
+    </div>
+  }
+
 </div>

@@ -2,6 +2,8 @@ package com.example.genesisclub.genesisClub.Configuracion;
 
 import java.util.Properties;
 
+import org.springframework.lang.NonNull;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +24,7 @@ public class EmailConfig {
     private String password;
 
 
-    private Properties getMailProperties() {
+    private @NonNull Properties getMailProperties() {
     Properties properties = new Properties();
 
     properties.put("mail.smtp.auth", "true");

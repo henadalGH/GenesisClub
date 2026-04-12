@@ -1,54 +1,105 @@
 <app-header-admin></app-header-admin>
 
-<section class="jugadores-container">
+<main class="jugadores-page">
+  <section class="jugadores-container">
 
-  <div class="top-bar">
-    <div class="titulo-seccion">
-      <h1>⚽ Gestión de jugadores</h1>
-      <p class="subtitulo">Visualiza y administra la lista completa de jugadores registrados</p>
+    <header class="top-bar">
+      <div class="titulo-seccion">
+        <div class="decorator"></div>
+        <div class="textos">
+          <h1>Fichaje de Jugadores</h1>
+          <p class="subtitulo">Administración de la plantilla oficial y registros técnicos</p>
+        </div>
+      </div>
+      
+      <div class="stats-rapidas desktop-only">
+        <div class="stat-item">
+          <span class="value">{{ jugadores.length }}</span>
+          <span class="label">Inscriptos</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="tabla-wrapper">
+      <table class="tabla-roster">
+        <thead>
+          <tr>
+            <th class="text-center">Dorsal</th>
+            <th>Jugador</th>
+            <th>Contacto</th>
+            <th>Identificación / Patente</th>
+            <th class="text-center">Estado</th>
+            <th class="text-center">Acciones</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          @for (jug of jugadores; track jug.id) {
+            <tr class="roster-row">
+              
+              <td class="col-dorsal">
+                #{{ $index + 1 }}
+              </td>
+
+              <td class="col-perfil">
+                <div class="player-info">
+                  <div class="avatar-box">
+                    <span class="initials">{{ jug.nombre[0] }}{{ jug.apellido[0] }}</span>
+                  </div>
+                  <div class="player-name">
+                    <span class="nombre">{{ jug.nombre }}</span>
+                    <span class="apellido">{{ jug.apellido }}</span>
+                  </div>
+                </div>
+              </td>
+
+              <td class="col-contacto">
+                <div class="contacto-wrapper">
+                  <span class="email">{{ jug.email }}</span>
+                  <span class="tag-link">Consultar ficha</span>
+                </div>
+              </td>
+
+              <td class="col-vehiculo">
+                <div class="patente-sticker">
+                  {{ jug.patente || 'SIN VEHÍCULO' }}
+                </div>
+              </td>
+
+              <td class="text-center">
+                <span class="badge-status" [class.disponible]="true">
+                  Disponible
+                </span>
+              </td>
+
+              <td class="acciones-celda">
+                <div class="btn-group">
+                  <button class="btn-action view" (click)="verJugador(jug.id)" title="Ver Perfil">
+                    👁️
+                  </button>
+                  <button class="btn-action edit" title="Editar Contrato">
+                    ✏️
+                  </button>
+                  <button class="btn-action delete" title="Dar de baja">
+                    🗑️
+                  </button>
+                </div>
+              </td>
+
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="6" class="tabla-vacia">
+                <div class="vacio-content">
+                  <span class="vacio-icon">👟</span>
+                  <p>Sin jugadores registrados en el plantel actual.</p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
     </div>
-  </div>
 
-  <div class="tabla-wrapper">
-
-    <table class="tabla-jugadores">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Email</th>
-          <th>Patente</th>
-          <th class="text-center">Acciones</th>
-        </tr>
-      </thead>
-
-      <tbody>
-        @for (jug of jugadores; track jug.id) {
-          <tr>
-            <td class="col-id">{{ $index + 1 }}</td>
-            <td class="font-bold">{{ jug.nombre }}</td>
-            <td>{{ jug.apellido }}</td>
-            <td class="text-muted">{{ jug.email }}</td>
-            <td>{{jug.patente}}</td>
-            <td class="acciones-celda">
-              <button class="btn-icon btn-view" title="Ver detalle" (click)="verJugador(jug.id)">
-                👁️ Ver
-              </button>
-            </td>
-          </tr>
-        } @empty {
-          <tr>
-            <td colspan="5" class="tabla-vacia">
-              <div class="vacio-content">
-                <p>No se encontraron jugadores registrados en el sistema.</p>
-              </div>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-
-  </div>
-
-</section>
+  </section>
+</main>

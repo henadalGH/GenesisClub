@@ -1,269 +1,193 @@
-/* ============================================
-   REGISTRO POR INVITACIÓN — GenesisClub
-   Prefijo ri- · Tono medio oscuro
-   ============================================ */
+/* =========================================
+   VARIABLES Y BASE (COHERENCIA VISUAL)
+   ========================================= */
+:host {
+  --bg-principal: #0F172A;
+  --bg-secundario: #1E293B;
+  --color-primario: #E07B2A;
+  --color-primario-hover: #F28C38;
+  --texto-principal: #F8FAFC;
+  --texto-secundario: #94A3B8;
+  --borde-suave: rgba(255, 255, 255, 0.08);
+  --fuente-principal: 'Inter', system-ui, sans-serif;
 
+  display: block;
+  background-color: var(--bg-principal);
+  min-height: 100vh;
+  padding: 40px 20px;
+}
+
+/* =========================================
+   CONTENEDOR Y TARJETA
+   ========================================= */
 .ri-wrapper {
   display: flex;
-  align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  padding: 2.5rem 1.25rem;
-  background: #1e2235;
-  font-family: 'DM Sans', sans-serif;
-  position: relative;
+  align-items: center;
 }
 
-.ri-wrapper::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 70% 50% at 20% 10%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 50% at 85% 90%, rgba(0, 229, 255, 0.09) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ── CARD ── */
 .ri-card {
-  position: relative;
-  z-index: 1;
+  background-color: var(--bg-secundario);
+  border: 1px solid var(--borde-suave);
+  border-radius: 20px;
+  padding: 40px;
   width: 100%;
-  max-width: 40rem;
-  background: #2a3148;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 1.5rem;
-  overflow: hidden;
-  box-shadow: 0 8px 48px rgba(0, 0, 0, 0.35);
-  animation: ri-up 0.6s ease both;
+  max-width: 650px; /* Un poco más ancho por los campos en grilla */
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
-.ri-card::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #7c3aed, #00e5ff);
-  pointer-events: none;
-}
-
-@keyframes ri-up {
-  from { opacity: 0; transform: translateY(20px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ── HEADER ── */
 .ri-header {
-  padding: 2rem 2.25rem 1.5rem;
   text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.02);
+  margin-bottom: 32px;
 }
 
 .ri-badge {
   display: inline-block;
-  font-size: 0.68rem;
+  background: rgba(224, 123, 42, 0.1);
+  color: var(--color-primario);
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 0.15em;
-  text-transform: uppercase;
-  color: #a5b4fc;
-  background: rgba(124, 58, 237, 0.12);
-  border: 1px solid rgba(124, 58, 237, 0.25);
-  padding: 0.3em 0.9em;
-  border-radius: 100px;
-  margin-bottom: 0.75rem;
+  margin-bottom: 12px;
+  border: 1px solid rgba(224, 123, 42, 0.2);
 }
 
 .ri-titulo {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1.7rem, 4vw, 2.3rem);
-  letter-spacing: 0.07em;
-  background: linear-gradient(135deg, #ffffff 0%, #c4b5fd 55%, #7dd3fc 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.1;
-  margin-bottom: 0.4rem;
-}
-
-.ri-subtitulo {
-  font-size: 0.84rem;
-  color: #94a3b8;
-  font-weight: 300;
-  line-height: 1.5;
+  color: var(--texto-principal);
+  font-size: 2rem;
   margin: 0;
 }
 
-/* ── FORM ── */
+.ri-subtitulo {
+  color: var(--texto-secundario);
+  margin-top: 8px;
+  font-size: 1rem;
+}
+
+/* =========================================
+   FORMULARIO Y CAMPOS
+   ========================================= */
 .ri-form {
-  padding: 2rem 2.25rem 2.25rem;
   display: flex;
   flex-direction: column;
-  gap: 1.1rem;
+  gap: 24px;
 }
 
-/* ── GRID 2 COLUMNAS ── */
-.ri-grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1rem;
-}
-
-/* ── FIELD ── */
 .ri-field {
   display: flex;
   flex-direction: column;
-  gap: 0.4rem;
-  min-width: 0;
+  gap: 8px;
 }
 
-.ri-field > label,
 .ri-label-main {
-  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.09em;
+  color: var(--color-primario) !important;
+  font-size: 0.9rem;
   text-transform: uppercase;
-  color: #94a3b8;
+  letter-spacing: 0.5px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid var(--borde-suave);
+  padding-bottom: 4px;
 }
 
-.ri-label-main {
-  display: block;
-  margin-bottom: 0.1rem;
-}
-
-.ri-opcional {
-  font-size: 0.62rem;
-  font-weight: 400;
-  letter-spacing: 0.04em;
-  color: #4b5563;
-  text-transform: lowercase;
-}
-
-/* ── TELÉFONO 1:3 ── */
-.ri-telefono {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
-  gap: 0.75rem;
-  align-items: end;
-}
-
-.ri-telefono__cod,
-.ri-telefono__num {
-  display: flex;
-  flex-direction: column;
-  gap: 0.35rem;
-  min-width: 0;
-}
-
-.ri-telefono__cod label,
-.ri-telefono__num label {
-  font-size: 0.67rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #64748b;
-}
-
-/* ── INPUTS ── */
-input:not([type="checkbox"]) {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.92rem;
-  color: #e2e8f0;
-  background: #1e2235;
-  border: 1.5px solid rgba(255, 255, 255, 0.1);
-  border-radius: 0.65rem;
-  padding: 0.72em 1em;
-  outline: none;
-  width: 100%;
-  min-width: 0;
-  box-sizing: border-box;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
-}
-
-input::placeholder {
-  color: #374151;
+label {
+  color: var(--texto-secundario);
   font-size: 0.85rem;
+  font-weight: 500;
+}
+
+input {
+  background-color: var(--bg-principal);
+  border: 1px solid var(--borde-suave);
+  color: var(--texto-principal);
+  padding: 12px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  outline: none;
 }
 
 input:focus {
-  border-color: #818cf8;
-  background: #252b42;
-  box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.15);
+  border-color: var(--color-primario);
+  box-shadow: 0 0 0 3px rgba(224, 123, 42, 0.15);
 }
 
-/* Fix autofill Chrome */
-input:-webkit-autofill,
-input:-webkit-autofill:focus {
-  -webkit-text-fill-color: #e2e8f0;
-  -webkit-box-shadow: 0 0 0px 1000px #1e2235 inset;
-  transition: background-color 5000s ease-in-out 0s;
+/* =========================================
+   GRIDS (DISTRIBUCIÓN)
+   ========================================= */
+.ri-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
-/* ── BOTÓN ── */
+/* Teléfono específico */
+.ri-telefono {
+  display: grid;
+  grid-template-columns: 100px 1fr;
+  gap: 12px;
+}
+
+/* Grid de vehículo (4 campos) */
+.ri-field .ri-grid {
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}
+
+/* =========================================
+   BOTÓN Y CARGA
+   ========================================= */
 .ri-btn {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 0.82em 1.5em;
-  background: linear-gradient(135deg, #7c3aed, #0ea5e9);
-  color: #ffffff;
+  background-color: var(--color-primario);
+  color: white;
   border: none;
-  border-radius: 0.65rem;
+  padding: 16px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
-  width: 100%;
+  transition: all 0.3s ease;
+  margin-top: 10px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
-  box-shadow: 0 4px 18px rgba(124, 58, 237, 0.3);
-  transition: opacity 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  align-items: center;
+  gap: 10px;
 }
 
-.ri-btn:not(:disabled):hover {
-  opacity: 0.9;
-  box-shadow: 0 6px 28px rgba(124, 58, 237, 0.45);
+.ri-btn:hover:not(:disabled) {
+  background-color: var(--color-primario-hover);
   transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(224, 123, 42, 0.3);
 }
 
 .ri-btn:disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: not-allowed;
-  transform: none !important;
-  box-shadow: none !important;
+  filter: grayscale(1);
 }
 
-/* ── SPINNER ── */
+/* Spinner animado */
 .ri-spinner {
-  display: inline-block;
-  width: 0.9rem;
-  height: 0.9rem;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255,255,255,0.3);
   border-radius: 50%;
-  animation: ri-spin 0.7s linear infinite;
-  flex-shrink: 0;
+  border-top-color: #fff;
+  animation: spin 0.8s linear infinite;
 }
 
-@keyframes ri-spin { to { transform: rotate(360deg); } }
-
-/* ── RESPONSIVE ── */
-@media (max-width: 32em) {
-  .ri-wrapper { align-items: flex-start; padding: 1.5rem 1rem; }
-
-  .ri-card { border-radius: 1.25rem; }
-
-  .ri-header { padding: 1.75rem 1.5rem 1.25rem; }
-
-  .ri-form { padding: 1.5rem; }
-
-  .ri-grid { grid-template-columns: 1fr; }
-
-  .ri-telefono { grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr); }
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
-@media (min-width: 48em) {
-  .ri-card { max-width: 44rem; }
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 600px) {
+  .ri-grid, .ri-telefono {
+    grid-template-columns: 1fr;
+  }
+  .ri-card {
+    padding: 24px;
+  }
 }

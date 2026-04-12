@@ -28,7 +28,7 @@ export class VerJugador implements OnInit {
       this.obtenerDatosJugador();
     }
   }
-
+ 
   obtenerDatosJugador() {
     this.cargando.set(true);
     this.jugadorServicio.obtenerJugadorPorId(this.id()).subscribe({

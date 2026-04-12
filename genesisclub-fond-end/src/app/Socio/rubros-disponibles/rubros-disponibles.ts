@@ -4,12 +4,15 @@ import { Router } from '@angular/router';
 import { RubroDTO, UsuarioRubroDTO } from '../../Modelos/rubro.model';
 import { RubroServicio } from '../../ServiciosCompartidos/rubro-servicio';
 import { UsuarioRubroServicio } from '../../ServiciosCompartidos/usuario-rubro-servicio';
+import { SolicitudRubroServicio, CrearSolicitudRubroDTO } from '../../ServicioAdministrador/solicitud-rubro-servicio';
+import { AuthServicio } from '../../ServiciosCompartidos/auth-servicio';
 import { HeraderSocio } from "../herader-socio/herader-socio";
+import { ModalSolicitudRubroComponent } from '../../ComponentesCompartidos/modal-solicitud-rubro/modal-solicitud-rubro';
 
 @Component({
   selector: 'app-rubros-disponibles',
   standalone: true,
-  imports: [CommonModule, HeraderSocio],
+  imports: [CommonModule, HeraderSocio, ModalSolicitudRubroComponent],
   templateUrl: './rubros-disponibles.html',
   styleUrl: './rubros-disponibles.css',
 })
@@ -17,6 +20,8 @@ export class RubrosDisponibles implements OnInit {
   // Inyecciones
   private rubroServicio = inject(RubroServicio);
   private usuarioRubroServicio = inject(UsuarioRubroServicio);
+  private solicitudRubroServicio = inject(SolicitudRubroServicio);
+  private authServicio = inject(AuthServicio);
   private router = inject(Router);
 
   // Inputs
@@ -30,6 +35,12 @@ export class RubrosDisponibles implements OnInit {
   procesando = signal<boolean>(false);
   mensajeExito = signal<string>('');
   mensajeError = signal<string>('');
+
+  // Signals para el modal
+  modalVisible = signal<boolean>(false);
+  rubroSeleccionado = signal<RubroDTO | null>(null);
+  procesandoModal = signal<boolean>(false);
+  mensajeErrorModal = signal<string>('');
 
   ngOnInit(): void {
     this.cargarRubrosDisponibles();
@@ -75,15 +86,71 @@ export class RubrosDisponibles implements OnInit {
     return this.rubrosDisponibles().some(r => !this.isRubroAsignado(r.id) && !this.isRubroAsociado(r.id));
   }
 
-  solicitarRubro(rubro: any): void {
-    // Aceptamos tanto objetos RubroDTO (id) como objetos que vengan con idRubro
-    const id = rubro?.id ?? rubro?.idRubro ?? rubro?.rubroId;
-
-    if (!id || Number.isNaN(Number(id))) {
+  solicitarRubro(rubro: RubroDTO): void {
+    if (!rubro || !rubro.id) {
       this.mensajeError.set('No se pudo determinar el ID del rubro. Por favor recargá la página y volvé a intentarlo.');
       return;
     }
 
-    this.router.navigate(['/solicitarRubro', id]);
+    this.rubroSeleccionado.set(rubro);
+    this.mensajeErrorModal.set('');
+    this.modalVisible.set(true);
+  }
+
+  confirmarSolicitudRubro(claveAcceso: string): void {
+    const rubro = this.rubroSeleccionado();
+    if (!rubro || !rubro.id) {
+      this.mensajeErrorModal.set('Rubro no válido. Por favor intentá de nuevo.');
+      return;
+    }
+
+    if (!claveAcceso || claveAcceso.trim().length === 0) {
+      this.mensajeErrorModal.set('Por favor ingresá la clave de acceso.');
+      return;
+    }
+
+    this.procesandoModal.set(true);
+    this.mensajeErrorModal.set('');
+
+    try {
+      const userId = this.authServicio.getUserId();
+      if (!userId) {
+        throw new Error('Usuario no autenticado');
+      }
+
+      const dto: CrearSolicitudRubroDTO = {
+        socioId: userId,
+        rubroId: rubro.id,
+        claveAcceso: claveAcceso
+      };
+
+      this.solicitudRubroServicio.crearSolicitud(dto).subscribe({
+        next: (response) => {
+          this.procesandoModal.set(false);
+          this.cerrarModal();
+          this.mensajeExito.set(`¡Solicitud enviada correctamente para ${rubro.nombre}!`);
+          // Limpiar el mensaje de éxito después de 5 segundos
+          setTimeout(() => this.mensajeExito.set(''), 5000);
+        },
+        error: (error) => {
+          this.procesandoModal.set(false);
+          console.error('Error al solicitar rubro:', error);
+          this.mensajeErrorModal.set(
+            error.error?.error ||
+            error.error?.message ||
+            'Error al enviar la solicitud. Por favor intentá de nuevo.'
+          );
+        }
+      });
+    } catch (error: any) {
+      this.procesandoModal.set(false);
+      this.mensajeErrorModal.set(error.message || 'Error al procesar la solicitud.');
+    }
+  }
+
+  cerrarModal(): void {
+    this.modalVisible.set(false);
+    this.rubroSeleccionado.set(null);
+    this.mensajeErrorModal.set('');
   }
 }
