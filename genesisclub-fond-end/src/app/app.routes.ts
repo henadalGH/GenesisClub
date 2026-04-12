@@ -30,6 +30,7 @@ import { SolicitudesRubrosPendientesComponent } from './Administrador/solicitude
 import { EntrarRubroSocio } from './Socio/Rubro/entrar-rubro-socio/entrar-rubro-socio';
 import { EntrarRubroJugador } from './Jugador/Rubro/entrar-rubro-jugador/entrar-rubro-jugador';
 import { RubrosJugador } from './Jugador/Rubro/rubros-jugador';
+import { HeaderJugador } from './Jugador/header-jugador/header-jugador';
 
 
 export const routes: Routes = [
@@ -45,6 +46,7 @@ export const routes: Routes = [
   { path: "registroInvitado", component: RegistroInvitado},
   {path: "entrarRubroSocio/:id", component: EntrarRubroSocio},
   {path: "entrarRubroJugador/:id", component: EntrarRubroJugador},
+  {path: "headerJugador", component: HeaderJugador},
 
 
   // =========================

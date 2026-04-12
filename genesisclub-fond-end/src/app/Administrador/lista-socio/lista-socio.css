@@ -1,299 +1,294 @@
-/* ============================================
-   LISTA SOCIOS — GenesisClub
-   ============================================ */
+/* =========================================
+   VARIABLES Y RESET
+   ========================================= */
+:host {
+  --bg-dark: #0B0F1A;
+  --bg-card: #161B2B;
+  --bg-row-hover: #1E253A;
+  --color-accent: #E07B2A; /* Naranja Genesis */
+  --color-success: #10B981;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --border-subtle: rgba(255, 255, 255, 0.05);
+  --font-sports: 'Inter', system-ui, sans-serif;
+  
+  display: block;
+  background-color: var(--bg-dark);
+  min-height: 100vh;
+  color: var(--text-main);
+  font-family: var(--font-sports);
+}
+
+.socios-page {
+  padding: 40px 20px;
+}
 
 .socios-container {
-  min-height: calc(100vh - 60px);
-  padding: 2.5rem 5%;
-  background-color: #060810;
-  font-family: 'DM Sans', sans-serif;
-  position: relative;
+  max-width: 1300px;
+  margin: 0 auto;
 }
 
-.socios-container::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 60% 40% at 10% 20%, rgba(124, 58, 237, 0.12) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 90% 80%, rgba(0, 229, 255, 0.08) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* ============================================
-   TOP BAR
-   ============================================ */
+/* =========================================
+   TOP BAR (ESTILO DEPORTIVO)
+   ========================================= */
 .top-bar {
-  position: relative;
-  z-index: 1;
   display: flex;
-  align-items: flex-start;
   justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.titulo-seccion {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.decorator {
+  width: 6px;
+  height: 50px;
+  background: var(--color-accent);
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(224, 123, 42, 0.4);
 }
 
 .titulo-seccion h1 {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: clamp(1.8rem, 4vw, 2.8rem);
-  letter-spacing: 0.06em;
-  background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  line-height: 1.1;
-  margin-bottom: 0.35rem;
+  font-size: 2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
 .subtitulo {
-  font-size: 0.88rem;
-  color: #8892a4;
-  font-weight: 300;
-  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 2px 0 0 0;
 }
 
-/* ============================================
-   BOTÓN PRIMARIO (+ Nuevo socio)
-   ============================================ */
 .btn-primary {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  padding: 0.65em 1.4em;
-  background: #00e5ff;
-  color: #060810;
+  background: var(--color-accent);
+  color: white;
   border: none;
-  border-radius: 0.6rem;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  white-space: nowrap;
-  align-self: center;
-  transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .btn-primary:hover {
-  background: #33eaff;
-  box-shadow: 0 0 24px rgba(0, 229, 255, 0.4);
-  transform: translateY(-2px);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(224, 123, 42, 0.4);
+  background: #f28c38;
 }
 
-.btn-primary:active {
-  transform: translateY(0);
-  box-shadow: none;
-}
-
-/* ============================================
-   TABLA WRAPPER
-   ============================================ */
+/* =========================================
+   TABLA ROSTER (EL CORAZÓN DEL DISEÑO)
+   ========================================= */
 .tabla-wrapper {
-  position: relative;
-  z-index: 1;
-  background: #111827;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 1.25rem;
-  overflow: hidden;
-  box-shadow:
-    0 8px 40px rgba(0, 0, 0, 0.5),
-    0 0 0 1px rgba(0, 229, 255, 0.03);
   overflow-x: auto;
 }
 
-.tabla-wrapper::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, #7c3aed, #00e5ff);
-  z-index: 2;
-}
-
-/* ============================================
-   TABLA
-   ============================================ */
-.tabla-socios {
+.tabla-roster {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 0.9rem;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* Espacio entre filas */
 }
 
-.tabla-socios thead tr {
-  background: rgba(255, 255, 255, 0.03);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
-
-.tabla-socios th {
-  padding: 1rem 1.25rem;
-  font-size: 0.72rem;
+.tabla-roster thead th {
+  padding: 15px 20px;
+  color: var(--text-muted);
+  font-size: 0.75rem;
   font-weight: 700;
-  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #8892a4;
-  text-align: left;
-  white-space: nowrap;
+  letter-spacing: 1.5px;
 }
 
-.tabla-socios th.text-center {
-  text-align: center;
+/* FILAS COMO TARJETAS */
+.roster-row {
+  background: var(--bg-card);
+  transition: all 0.3s ease;
 }
 
-.tabla-socios tbody tr {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  transition: background 0.2s ease;
-}
-
-.tabla-socios tbody tr:last-child {
-  border-bottom: none;
-}
-
-.tabla-socios tbody tr:hover {
-  background: rgba(0, 229, 255, 0.04);
-}
-
-.tabla-socios td {
-  padding: 0.95rem 1.25rem;
-  color: #e8eaf0;
+.roster-row td {
+  padding: 18px 20px;
   vertical-align: middle;
-  white-space: nowrap;
+  border-top: 1px solid var(--border-subtle);
+  border-bottom: 1px solid var(--border-subtle);
 }
 
-.col-id {
-  color: #4b5563;
-  font-size: 0.8rem;
-  font-weight: 600;
-  width: 2.5rem;
+/* Bordes redondeados por fila */
+.roster-row td:first-child {
+  border-left: 1px solid var(--border-subtle);
+  border-top-left-radius: 14px;
+  border-bottom-left-radius: 14px;
 }
 
-.font-bold {
-  font-weight: 600;
-  color: #ffffff;
+.roster-row td:last-child {
+  border-right: 1px solid var(--border-subtle);
+  border-top-right-radius: 14px;
+  border-bottom-right-radius: 14px;
 }
 
-.text-muted {
-  color: #8892a4;
-  font-size: 0.85rem;
+.roster-row:hover {
+  background: var(--bg-row-hover);
+  transform: scale(1.005);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
 }
 
-.acciones-celda {
+/* =========================================
+   COLUMNAS ESPECÍFICAS
+   ========================================= */
+
+/* DORSAL */
+.col-dorsal {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color-accent);
   text-align: center;
+  font-style: italic;
+  width: 60px;
+}
+
+/* JUGADOR / AVATAR */
+.player-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  border: 2px solid var(--color-accent);
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  font-weight: 800;
+  font-size: 0.85rem;
+  color: var(--color-accent);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
 }
 
-/* ============================================
-   BOTONES DE ACCIÓN
-   ============================================ */
-.btn-icon {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 0.78rem;
+.player-name {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-name .nombre {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.player-name .apellido {
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--text-main);
+}
+
+/* CONTACTO */
+.contacto-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.contacto-wrapper .email {
+  font-size: 0.9rem;
+}
+
+.tag-phone {
+  font-size: 0.7rem;
+  color: var(--color-accent);
   font-weight: 700;
-  letter-spacing: 0.04em;
-  padding: 0.45em 1em;
-  border-radius: 0.45rem;
+  text-transform: uppercase;
+  margin-top: 4px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-  border: 1px solid transparent;
 }
 
-.btn-view {
-  background: rgba(0, 229, 255, 0.1);
-  color: #00e5ff;
-  border-color: rgba(0, 229, 255, 0.2);
+/* PATENTE ESTILO PLACA */
+.patente-badge {
+  display: inline-block;
+  background: #000;
+  color: #fff;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-family: 'Courier New', monospace;
+  font-weight: 900;
+  font-size: 0.9rem;
+  border: 1px solid rgba(255,255,255,0.2);
+  letter-spacing: 1px;
 }
 
-.btn-view:hover {
-  background: rgba(0, 229, 255, 0.18);
-  border-color: rgba(0, 229, 255, 0.5);
-  box-shadow: 0 0 14px rgba(0, 229, 255, 0.2);
-  transform: translateY(-1px);
+/* ESTADO / BADGE */
+.status-badge {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  background: rgba(16, 185, 129, 0.1);
+  color: var(--color-success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
-.btn-edit {
-  background: rgba(245, 158, 11, 0.1);
-  color: #f59e0b;
-  border-color: rgba(245, 158, 11, 0.2);
+/* ACCIONES */
+.btn-group {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
 }
 
-.btn-edit:hover {
-  background: rgba(245, 158, 11, 0.18);
-  border-color: rgba(245, 158, 11, 0.5);
-  box-shadow: 0 0 14px rgba(245, 158, 11, 0.2);
-  transform: translateY(-1px);
+.btn-action {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--border-subtle);
+  color: white;
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* ============================================
-   ESTADO VACÍO
-   ============================================ */
+.btn-action.view:hover { background: var(--color-accent); border-color: var(--color-accent); }
+.btn-action.edit:hover { background: #3b82f6; border-color: #3b82f6; }
+
+/* ESTADO VACÍO */
 .tabla-vacia {
-  padding: 3.5rem 1rem !important;
+  background: var(--bg-card);
+  border-radius: 14px;
   text-align: center;
 }
 
 .vacio-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
+  padding: 60px;
 }
 
-.vacio-content::before {
-  content: '👥';
-  font-size: 2.5rem;
-  filter: grayscale(1);
+.vacio-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 15px;
   opacity: 0.3;
 }
 
-.vacio-content p {
-  color: #4b5563;
-  font-size: 0.9rem;
-  max-width: 24rem;
-}
-
-/* ============================================
+/* =========================================
    RESPONSIVE
-   ============================================ */
-@media (max-width: 40em) {
-  .socios-container {
-    padding: 1.75rem 4%;
-  }
-
-  .top-bar {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .btn-primary {
-    width: 100%;
-    text-align: center;
-  }
-
-  .tabla-socios th,
-  .tabla-socios td {
-    padding: 0.8rem 0.85rem;
-    font-size: 0.82rem;
-  }
-
-  /* Ocultar email en mobile */
-  .tabla-socios th:nth-child(4),
-  .tabla-socios td:nth-child(4) {
-    display: none;
-  }
-
-  .acciones-celda {
-    flex-direction: column;
-    gap: 0.35rem;
-  }
-}
-
-@media (min-width: 80em) {
-  .socios-container {
-    padding: 3rem 7%;
-  }
+   ========================================= */
+@media (max-width: 900px) {
+  .col-contacto, .col-vehiculo { display: none; }
+  .titulo-seccion h1 { font-size: 1.5rem; }
+  .decorator { height: 40px; }
 }

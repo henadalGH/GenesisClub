@@ -1,188 +1,145 @@
-    /* ============================================
-    INICIO SOCIO — GenesisClub
-    ============================================ */
+/* =========================================
+   LAYOUT GENERAL
+   ========================================= */
+.inicio-page {
+  background-color: #080C14;
+  min-height: calc(100vh - 75px);
+  padding: 40px 20px;
+  font-family: 'Inter', sans-serif;
+}
 
-    .inicio-container {
-    min-height: calc(100vh - 60px);
-    padding: 3rem 5%;
-    background-color: #060810;
-    font-family: 'DM Sans', sans-serif;
-    position: relative;
-    }
+.inicio-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
 
-    .inicio-container::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 65% 45% at 15% 25%, rgba(124, 58, 237, 0.15) 0%, transparent 60%),
-        radial-gradient(ellipse 55% 45% at 85% 75%, rgba(0, 229, 255, 0.1) 0%, transparent 60%);
-    pointer-events: none;
-    z-index: 0;
-    }
+/* =========================================
+   BIENVENIDA
+   ========================================= */
+.bienvenida-box {
+  background: linear-gradient(90deg, #161B2B 0%, #0F172A 100%);
+  padding: 40px;
+  border-radius: 24px;
+  border-left: 6px solid #E07B2A;
+  margin-bottom: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
 
-    /* ============================================
-    BIENVENIDA
-    ============================================ */
-    .bienvenida {
-    position: relative;
-    z-index: 1;
-    margin-bottom: 2.5rem;
-    }
+.bienvenida-text h1 {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin-bottom: 10px;
+  color: #F8FAFC;
+}
 
-    .bienvenida h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2.2rem, 5vw, 3.5rem);
-    letter-spacing: 0.06em;
-    background: linear-gradient(135deg, #ffffff 0%, #a5b4fc 50%, #00e5ff 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    line-height: 1.1;
-    margin-bottom: 0.4rem;
-    animation: fadeUp 0.6s ease both;
-    }
+.bienvenida-text p {
+  color: #94A3B8;
+  font-size: 1.1rem;
+}
 
-    .bienvenida p {
-    font-size: 0.95rem;
-    color: #8892a4;
-    font-weight: 300;
-    letter-spacing: 0.02em;
-    animation: fadeUp 0.6s 0.1s ease both;
-    }
+.bienvenida-text span {
+  color: #E07B2A;
+  font-weight: 700;
+}
 
-    @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(16px); }
-    to   { opacity: 1; transform: translateY(0); }
-    }
+.bienvenida-decoration {
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 150px;
+  height: 150px;
+  background: #E07B2A;
+  filter: blur(80px);
+  opacity: 0.15;
+}
 
-    /* ============================================
-    GRID DE CARDS
-    ============================================ */
-    .cards {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
-    gap: 1.25rem;
-    }
+/* =========================================
+   CARDS GRID
+   ========================================= */
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+}
 
-    /* ============================================
-    CARD
-    ============================================ */
-    .card {
-    background: #111827;
-    border: 1px solid rgba(255, 255, 255, 0.07);
-    border-radius: 1.25rem;
-    padding: 1.75rem 1.6rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    position: relative;
-    overflow: hidden;
-    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.45);
-    transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
-    animation: fadeUp 0.5s ease both;
-    }
+.card-glass {
+  background: rgba(30, 41, 59, 0.4);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 30px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+}
 
-    /* Animación escalonada por tarjeta */
-    .card:nth-child(1) { animation-delay: 0.1s; }
-    .card:nth-child(2) { animation-delay: 0.18s; }
-    .card:nth-child(3) { animation-delay: 0.26s; }
-    .card:nth-child(4) { animation-delay: 0.34s; }
+.card-glass:hover {
+  transform: translateY(-10px);
+  background: rgba(30, 41, 59, 0.6);
+  border-color: rgba(224, 123, 42, 0.3);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
 
-    /* Línea de acento superior */
-    .card::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, #7c3aed, #00e5ff);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-    }
+/* ICONOS DE CARDS */
+.card-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+}
 
-    .card:hover {
-    transform: translateY(-5px);
-    border-color: rgba(0, 229, 255, 0.18);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 28px rgba(0, 229, 255, 0.1);
-    }
+.card-icon.blue { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+.card-icon.orange { background: rgba(224, 123, 42, 0.1); color: #E07B2A; }
+.card-icon.purple { background: rgba(139, 92, 246, 0.1); color: #8b5cf6; }
+.card-icon.green { background: rgba(16, 185, 129, 0.1); color: #10b981; }
 
-    .card:hover::before {
-    opacity: 1;
-    }
+.card-info h3 {
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+  color: #F8FAFC;
+}
 
-    .card h3 {
-    font-size: 1.05rem;
-    font-weight: 700;
-    color: #e8eaf0;
-    letter-spacing: 0.01em;
-    }
+.card-info p {
+  color: #64748B;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
 
-    .card p {
-    font-size: 0.85rem;
-    color: #8892a4;
-    line-height: 1.55;
-    flex: 1;
-    }
+/* BOTONES DE CARD */
+.btn-card {
+  margin-top: auto;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #F8FAFC;
+  padding: 12px;
+  border-radius: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  transition: 0.3s;
+}
 
-    /* Botón dentro de card */
-    .card button {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    padding: 0.55em 1.1em;
-    margin-top: 0.5rem;
-    background: rgba(0, 229, 255, 0.1);
-    color: #00e5ff;
-    border: 1px solid rgba(0, 229, 255, 0.2);
-    border-radius: 0.5rem;
-    cursor: pointer;
-    width: fit-content;
-    transition: background 0.22s ease, border-color 0.22s ease,
-                box-shadow 0.22s ease, transform 0.18s ease;
-    }
+.btn-card:hover {
+  background: #E07B2A;
+  border-color: #E07B2A;
+  color: white;
+}
 
-    .card button:hover {
-    background: rgba(0, 229, 255, 0.18);
-    border-color: rgba(0, 229, 255, 0.5);
-    box-shadow: 0 0 16px rgba(0, 229, 255, 0.2);
-    transform: translateY(-1px);
-    }
-
-    /* ============================================
-    RESPONSIVE
-    ============================================ */
-    @media (max-width: 36em) {
-    .inicio-container {
-        padding: 2rem 4%;
-    }
-
-    .cards {
-        grid-template-columns: 1fr 1fr;
-        gap: 1rem;
-    }
-
-    .card {
-        padding: 1.4rem 1.2rem;
-    }
-    }
-
-    @media (max-width: 26em) {
-    .cards {
-        grid-template-columns: 1fr;
-    }
-    }
-
-    @media (min-width: 64em) {
-    .cards {
-        grid-template-columns: repeat(4, 1fr);
-    }
-    }
-
-    @media (min-width: 80em) {
-    .inicio-container {
-        padding: 3.5rem 7%;
-    }
-    }
+/* =========================================
+   RESPONSIVE
+   ========================================= */
+@media (max-width: 768px) {
+  .bienvenida-box { padding: 30px; }
+  .bienvenida-text h1 { font-size: 1.8rem; }
+  .cards-grid { grid-template-columns: 1fr; }
+}

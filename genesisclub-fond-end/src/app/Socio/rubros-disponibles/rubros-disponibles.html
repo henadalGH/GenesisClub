@@ -1,31 +1,36 @@
 <app-herader-socio></app-herader-socio>
 
-<!-- ── ALERTAS ── -->
-@if (mensajeExito()) {
-  <div class="rb-alert rb-alert--success">
-    <i class="bi bi-check-circle-fill"></i>
-    <span>{{ mensajeExito() }}</span>
-  </div>
-}
-@if (mensajeError()) {
-  <div class="rb-alert rb-alert--error">
-    <i class="bi bi-exclamation-triangle-fill"></i>
-    <span>{{ mensajeError() }}</span>
-  </div>
-}
+<div class="rb-alerts-container">
+  @if (mensajeExito()) {
+    <div class="rb-alert rb-alert--success">
+      <i class="bi bi-patch-check-fill"></i>
+      <span>{{ mensajeExito() }}</span>
+    </div>
+  }
+  @if (mensajeError()) {
+    <div class="rb-alert rb-alert--error">
+      <i class="bi bi-exclamation-octagon-fill"></i>
+      <span>{{ mensajeError() }}</span>
+    </div>
+  }
+</div>
 
-<!-- ── CONTENIDO ── -->
-<section class="rb-page">
+<main class="rb-page">
 
-  <div class="rb-header">
-    <h1 class="rb-titulo">💼 Rubros Disponibles</h1>
-    <p class="rb-subtitulo">Explorá las categorías y solicitá acceso a las que te interesen</p>
-  </div>
+  <header class="rb-header">
+    <div class="rb-titulo-box">
+      <div class="rb-icon-main"><i class="bi bi-grid-3x3-gap-fill"></i></div>
+      <div>
+        <h1 class="rb-titulo">Rubros Disponibles</h1>
+        <p class="rb-subtitulo">Explorá categorías exclusivas y solicitá tu membresía.</p>
+      </div>
+    </div>
+  </header>
 
   @if (loading()) {
     <div class="rb-loading">
       <div class="rb-spinner"></div>
-      <p>Cargando rubros disponibles...</p>
+      <p>Buscando nuevas oportunidades...</p>
     </div>
   } @else {
 
@@ -33,39 +38,43 @@
       <div class="rb-grid">
         @for (rubro of rubrosDisponibles(); track rubro.id) {
           @if (!isRubroAsignado(rubro.id) && !isRubroAsociado(rubro.id)) {
-            <div class="rb-card">
-              <div class="rb-card__head">
-                <span class="rb-badge">🔓 Disponible</span>
+            <article class="rb-card">
+              <div class="rb-card__glow"></div>
+              
+              <div class="rb-card__content">
+                <div class="rb-card__head">
+                  <span class="rb-badge">Disponible</span>
+                  <span class="rb-card__fecha">
+                    <i class="bi bi-calendar3"></i> {{ rubro.fechaCreacion | date: 'MM/yyyy' }}
+                  </span>
+                </div>
+
+                <h3 class="rb-card__nombre">{{ rubro.nombre }}</h3>
+                <p class="rb-card__desc">{{ rubro.descripcion || 'Sin descripción disponible para este rubro.' }}</p>
+                
+                <div class="rb-card__footer">
+                  <button class="rb-btn" (click)="solicitarRubro(rubro)" [disabled]="procesando()">
+                    <span>Solicitar Acceso</span>
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </div>
               </div>
-              <h3 class="rb-card__nombre">{{ rubro.nombre }}</h3>
-              <p class="rb-card__desc">{{ rubro.descripcion }}</p>
-              <div class="rb-card__footer">
-                <span class="rb-card__fecha">
-                  <i class="bi bi-calendar3"></i>
-                  {{ rubro.fechaCreacion | date: 'dd/MM/yyyy' }}
-                </span>
-                <button class="rb-btn" (click)="solicitarRubro(rubro)" [disabled]="procesando()">
-                  <i class="bi bi-send"></i> Solicitar
-                </button>
-              </div>
-            </div>
+            </article>
           }
         }
       </div>
 
     } @else {
       <div class="rb-empty">
-        <div class="rb-empty__icon">📭</div>
-        <h2>Sin rubros disponibles</h2>
-        <p>No hay rubros disponibles en este momento.</p>
+        <div class="rb-empty__icon"><i class="bi bi-inbox-fill"></i></div>
+        <h2>Todo al día</h2>
+        <p>Ya eres parte de todos los rubros disponibles o no hay nuevos actualmente.</p>
       </div>
     }
-
   }
 
-</section>
+</main>
 
-<!-- ── MODAL DE SOLICITUD DE RUBRO ── -->
 <app-modal-solicitud-rubro
   [visible]="modalVisible()"
   [rubroNombre]="rubroSeleccionado()?.nombre || ''"

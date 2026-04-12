@@ -1,40 +1,71 @@
-
 <app-herader-socio></app-herader-socio>
 
-<section class="inicio-container">
+<main class="inicio-page">
+  <section class="inicio-container">
 
-  <div class="bienvenida">
-    <h1>Bienvenido 👋</h1>
-    <p>Gestioná tu club desde el panel de control</p>
-  </div>
+    <header class="bienvenida-box">
+      <div class="bienvenida-text">
+        <h1>Bienvenido, Socio 👋</h1>
+        <p>Tu centro de mando para la gestión y crecimiento de <span>GeesisClub</span></p>
+      </div>
+      <div class="bienvenida-decoration"></div>
+    </header>
 
-  <div class="cards">
+    <div class="cards-grid">
 
-    <div class="card">
-      <h3>👥 Socios</h3>
-      <p>Administrá tus socios registrados</p>
-      <button routerLink="/socio/socios">Ver socios</button>
+      <div class="card-glass">
+        <div class="card-icon blue">
+          <i class="bi bi-people-fill"></i>
+        </div>
+        <div class="card-info">
+          <h3>Mis Socios</h3>
+          <p>Administrá y visualizá tu red de contactos registrados.</p>
+        </div>
+        <button class="btn-card" routerLink="/socio/socios">
+          Acceder <i class="bi bi-arrow-right-short"></i>
+        </button>
+      </div>
+
+      <div class="card-glass">
+        <div class="card-icon orange">
+          <i class="bi bi-send-check-fill"></i>
+        </div>
+        <div class="card-info">
+          <h3>Invitaciones</h3>
+          <p>Expandí la comunidad enviando pases por email.</p>
+        </div>
+        <button class="btn-card" routerLink="/invitaciones">
+          Enviar Ahora <i class="bi bi-arrow-right-short"></i>
+        </button>
+      </div>
+
+      <div class="card-glass">
+        <div class="card-icon purple">
+          <i class="bi bi-briefcase-fill"></i>
+        </div>
+        <div class="card-info">
+          <h3>Gestión Rubros</h3>
+          <p>Organizá tus categorías y servicios asociados.</p>
+        </div>
+        <button class="btn-card" routerLink="/socio/rubros">
+          Gestionar <i class="bi bi-arrow-right-short"></i>
+        </button>
+      </div>
+
+      <div class="card-glass">
+        <div class="card-icon green">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <div class="card-info">
+          <h3>Métricas</h3>
+          <p>Análisis detallado y reportes de crecimiento del club.</p>
+        </div>
+        <button class="btn-card" routerLink="/socio/estadisticas">
+          Ver Reportes <i class="bi bi-arrow-right-short"></i>
+        </button>
+      </div>
+
     </div>
 
-    <div class="card">
-      <h3>✉ Invitaciones</h3>
-      <p>Invitá nuevos socios por email</p>
-      <button routerLink="/invitaciones">Enviar invitación</button>
-    </div>
-
-    <div class="card">
-      <h3>💼 Rubros</h3>
-      <p>Organizá tus categorías</p>
-      <button routerLink="/socio/rubros">Gestionar</button>
-    </div>
-
-    <div class="card">
-      <h3>📊 Estadísticas</h3>
-      <p>Visualizá métricas del club</p>
-      <button routerLink="/socio/estadisticas">Ver reportes</button>
-    </div>
-
-  </div>
-
-</section>
-
+  </section>
+</main>

@@ -1,83 +1,88 @@
-    <header class="admin-header">
-
-        <div class="logo">
-            <h2>GenesisClub</h2>
-            <span class="panel-label">Panel Socio</span>
-        </div>
-
-
-        <nav class="nav-buttons">
-
-            <button type="button" [routerLink]="['/inicioSocio']">
-                🏠 Inicio
-            </button>
-
-            <button type="button" (click)="abrirModal()">
-                ✉️ Invitar socio
-            </button>
-
-            <button type="button" [routerLink]="['/misSocios']">
-                👥 Mis socios
-            </button>
-
-            <!-- Rubros asociados -->
-            <button type="button" class="rubros-btn" [routerLink]="['/misRubros']">
-                💼 Mis rubros 
-                
-            </button>
-
-            <button type="button" [routerLink]="['/rubrosDisponibles']">
-                🗂️ Rubros
-            </button>
-
-
-        </nav>
-
-
-        <div class="acciones">
-
-            <button type="button" class="perfil" routerLink="/socio/perfil">
-                👤 Mi perfil
-            </button>
-
-            <button type="button" class="logout" (click)="logout()">
-                🚪 Cerrar sesión
-            </button>
-
-        </div>
-
-    </header>
-
-    @if (modalAbierto) {
-    <div class="overlay" (click)="cerrarModal()">
-
-        <div class="modal" (click)="$event.stopPropagation()">
-
-        <span class="cerrar" (click)="cerrarModal()">✕</span>
-
-        <h2>Enviar invitación</h2>
-        <p class="subtitulo">Ingresá el email del invitado</p>
-
-        <form (ngSubmit)="enviarInvitacion()">
-            
-            <input 
-            type="email" 
-            name="emailInvitado"
-            placeholder="correo@mail.com" 
-            [(ngModel)]="emailInvitado"
-            required
-            [disabled]="cargando"
-            />
-
-            <button type="submit" [disabled]="!emailInvitado || cargando">
-            {{ cargando ? 'Enviando...' : 'Enviar invitación' }}
-            </button>
-
-            <button type="button" class="cancelar" (click)="cerrarModal()" [disabled]="cargando">
-            Cancelar
-            </button>
-        </form>
-
-        </div>
+<header class="admin-header">
+  <div class="header-container">
+    
+    <div class="logo" [routerLink]="['/inicioSocio']">
+      <div class="logo-icon">G</div>
+      <div class="logo-text">
+        <h2>Genesis<span>Club</span></h2>
+        <span class="panel-label">Portal Socio</span>
+      </div>
     </div>
-    }
+
+    <nav class="nav-horizontal">
+      <a class="nav-link" [routerLink]="['/inicioSocio']" routerLinkActive="active">
+        <i class="bi bi-house-door"></i> Inicio
+      </a>
+      
+      <a class="nav-link" [routerLink]="['/misSocios']" routerLinkActive="active">
+        <i class="bi bi-people"></i> Mi Red
+      </a>
+
+      <div class="dropdown">
+        <button class="nav-link dropdown-btn">
+          <i class="bi bi-briefcase"></i> Rubros <i class="bi bi-chevron-down arrow"></i>
+        </button>
+        <div class="dropdown-content">
+          <a [routerLink]="['/misRubros']">⭐ Mis Rubros</a>
+          <a [routerLink]="['/rubrosDisponibles']">🔍 Explorar Rubros</a>
+        </div>
+      </div>
+    </nav>
+
+    <div class="acciones">
+      <button class="btn-invitar" (click)="abrirModal()">
+        <i class="bi bi-plus-lg"></i> Invitar
+      </button>
+
+      <div class="user-menu">
+        <button class="perfil-btn" [routerLink]="['/socio/perfil']">
+          <div class="user-avatar">👤</div>
+          <span>Mi Perfil</span>
+        </button>
+        <button class="logout-btn" (click)="logout()" title="Cerrar Sesión">
+          <i class="bi bi-box-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+@if (modalAbierto) {
+<div class="overlay" (click)="cerrarModal()" [@fadeIn]>
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <button class="close-x" (click)="cerrarModal()">✕</button>
+    
+    <div class="modal-header">
+      <div class="icon-circle">
+        <i class="bi bi-envelope-paper-heart"></i>
+      </div>
+      <h2>Expandí tu Red</h2>
+      <p>Enviá una invitación directa a un nuevo socio</p>
+    </div>
+
+    <form (ngSubmit)="enviarInvitacion()" class="modal-form">
+      <div class="input-group">
+        <label>Correo electrónico</label>
+        <input 
+          type="email" 
+          name="emailInvitado"
+          placeholder="ejemplo@genesis.com" 
+          [(ngModel)]="emailInvitado"
+          required
+          [disabled]="cargando"
+        />
+      </div>
+
+      <div class="modal-actions">
+        <button type="submit" class="btn-submit" [disabled]="!emailInvitado || cargando">
+          {{ cargando ? 'Enviando...' : 'Enviar Invitación' }}
+        </button>
+        <button type="button" class="btn-cancel" (click)="cerrarModal()" [disabled]="cargando">
+          Cancelar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+}
