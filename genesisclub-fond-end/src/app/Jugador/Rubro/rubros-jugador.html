@@ -1,44 +1,55 @@
-<h1>Rubros para Jugadores</h1>
+<div class="rubros-jugador-container">
+  <h2>Rubros Disponibles</h2>
 
-@if (mensajeExito()) {
-  <div class="mr-alert mr-alert--success">{{ mensajeExito() }}</div>
-}
-@if (mensajeError()) {
-  <div class="mr-alert mr-alert--error">{{ mensajeError() }}</div>
-}
-
-@if (cargando()) {
-  <div class="mr-loading">
-    <div class="mr-spinner"></div>
-    <p>Cargando rubros...</p>
-  </div>
-} @else {
-  <section class="mr-section">
-    <h2>Rubros Disponibles</h2>
-    @if (rubrosDisponibles().length === 0) {
+  @if (cargando()) {
+    <div class="loading">
+      <p>Cargando rubros...</p>
+    </div>
+  } @else if (rubrosDisponibles().length === 0) {
+    <div class="no-rubros">
       <p>No hay rubros disponibles en este momento.</p>
-    } @else {
-      <div class="mr-grid">
-        @for (rubro of rubrosDisponibles(); track rubro.id) {
-          <div class="mr-card mr-card--disponible">
-            <h3>{{ rubro.nombre }}</h3>
-            <p>{{ rubro.descripcion }}</p>
-            <label>Clave de acceso:</label>
+    </div>
+  } @else {
+    <div class="rubros-grid">
+      @for (rubro of rubrosDisponibles(); track rubro.id) {
+        <div class="rubro-card">
+          <h3>{{ rubro.nombre }}</h3>
+          <p>{{ rubro.descripcion }}</p>
+          <div class="clave-input">
+            <label for="clave-{{ rubro.id }}">Clave de acceso:</label>
             <input
               type="password"
-              [value]="claveInput()[rubro.id] || ''"
-              (input)="setClave(rubro.id, $any($event.target.value))"
-              placeholder="Escribí la clave">
-            <button
-              class="mr-btn mr-btn--primary"
+              id="clave-{{ rubro.id }}"
+              [value]="obtenerClave(rubro.id)"
+              (input)="setClave(rubro.id, $any($event.target).value)"
+              placeholder="Ingresa la clave"
               [disabled]="procesando()"
-              (click)="entrarConClave(rubro)">
-              Entrar al rubro
-            </button>
+            />
           </div>
-        }
-      </div>
-    }
-  </section>
-}
+          <button
+            class="btn-entrar"
+            (click)="entrarConClave(rubro)"
+            [disabled]="procesando() || !obtenerClave(rubro.id)"
+          >
+            @if (procesando()) {
+              <span class="spinner"></span>
+            }
+            Entrar
+          </button>
+        </div>
+      }
+    </div>
+  }
 
+  @if (mensajeExito()) {
+    <div class="mensaje exito">
+      {{ mensajeExito() }}
+    </div>
+  }
+
+  @if (mensajeError()) {
+    <div class="mensaje error">
+      {{ mensajeError() }}
+    </div>
+  }
+</div>

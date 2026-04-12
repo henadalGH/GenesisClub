@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RubroDTO } from '../../Modelos/rubro.model';
 
 @Component({
   selector: 'app-modal-solicitud-rubro',
@@ -20,9 +21,9 @@ export class ModalSolicitudRubroComponent {
 
   claveAcceso: string = '';
 
-  onConfirmar(): void {
+  onSolicitar(): void {
     if (!this.cargando && this.claveAcceso.trim()) {
-      this.confirmar.emit(this.claveAcceso);
+      this.confirmar.emit(this.claveAcceso.trim());
       this.claveAcceso = '';
     }
   }

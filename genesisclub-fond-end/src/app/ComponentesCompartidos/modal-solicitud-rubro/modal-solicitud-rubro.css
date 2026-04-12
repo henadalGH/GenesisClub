@@ -50,14 +50,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px;
+  padding: 20px;
   border-bottom: 1px solid #e0e0e0;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: #333;
+  color: #1a1a1a;
 }
 
 .btn-cerrar {
@@ -72,10 +72,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.2s;
+  border-radius: 4px;
+  transition: all 0.3s ease;
 }
 
 .btn-cerrar:hover:not(:disabled) {
+  background-color: #f5f5f5;
   color: #333;
 }
 
@@ -85,89 +87,76 @@
 }
 
 .modal-body {
-  padding: 24px;
+  padding: 20px;
 }
 
-.modal-subtitle {
-  margin: 0 0 20px 0;
-  color: #666;
-  font-size: 0.95rem;
-}
-
-.modal-subtitle strong {
-  color: #333;
-}
-
-.alert {
-  padding: 12px 16px;
+.rubro-info {
+  margin-bottom: 20px;
+  padding: 15px;
+  background: #f8f9fa;
   border-radius: 8px;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  font-size: 0.9rem;
+  border-left: 4px solid #007bff;
 }
 
-.alert-error {
-  background-color: #fee;
-  color: #c33;
-  border: 1px solid #fcc;
+.rubro-info h3 {
+  margin: 0 0 8px 0;
+  color: #2c3e50;
 }
 
-.alert i {
-  margin-top: 2px;
-  flex-shrink: 0;
+.rubro-info p {
+  margin: 0;
+  color: #6c757d;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.motivo-section {
+  margin-bottom: 15px;
 }
 
-.form-group label {
+.motivo-section label {
   display: block;
   margin-bottom: 8px;
-  font-weight: 600;
-  color: #333;
-  font-size: 0.95rem;
+  font-weight: 500;
+  color: #495057;
 }
 
-.form-control {
+.motivo-section textarea {
   width: 100%;
-  padding: 10px 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.3s, box-shadow 0.3s;
-  box-sizing: border-box;
+  padding: 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+  resize: vertical;
+  min-height: 80px;
+  transition: border-color 0.3s ease;
 }
 
-.form-control:focus {
+.motivo-section textarea:focus {
   outline: none;
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-.form-control:disabled {
-  background-color: #f5f5f5;
+.motivo-section textarea:disabled {
+  background-color: #e9ecef;
   cursor: not-allowed;
-  opacity: 0.6;
 }
 
-.form-text {
-  display: block;
-  margin-top: 6px;
-  color: #999;
-  font-size: 0.85rem;
+.error-message {
+  color: #dc3545;
+  background: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-top: 10px;
+  font-size: 14px;
 }
 
 .modal-footer {
   display: flex;
-  justify-content: flex-end;
   gap: 12px;
-  padding: 20px 24px;
+  padding: 20px;
   border-top: 1px solid #e0e0e0;
-  background-color: #fafafa;
+  justify-content: flex-end;
 }
 
 .btn {
@@ -177,10 +166,12 @@
   font-size: 0.95rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.3s ease;
   display: flex;
   align-items: center;
   gap: 8px;
+  min-width: 100px;
+  justify-content: center;
 }
 
 .btn:disabled {
@@ -189,23 +180,22 @@
 }
 
 .btn-secundario {
-  background-color: #f0f0f0;
-  color: #333;
-  border: 1px solid #ddd;
+  background-color: #6c757d;
+  color: white;
 }
 
 .btn-secundario:hover:not(:disabled) {
-  background-color: #e0e0e0;
+  background-color: #5a6268;
 }
 
-.btn-primario {
-  background-color: #4a90e2;
+.btn-primary {
+  background-color: #007bff;
   color: white;
-  border: none;
 }
 
-.btn-primario:hover:not(:disabled) {
-  background-color: #357abd;
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056b3;
+  box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
 }
 
 .spinner {
@@ -213,13 +203,45 @@
   width: 14px;
   height: 14px;
   border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border-top: 2px solid white;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
 
 @keyframes spin {
-  to {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
     transform: rotate(360deg);
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .modal-contenido {
+    width: 95%;
+    margin: 0 10px;
+  }
+
+  .modal-header {
+    padding: 15px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-body {
+    padding: 15px;
+  }
+
+  .modal-footer {
+    padding: 15px;
+    flex-direction: column;
+  }
+
+  .btn {
+    width: 100%;
   }
 }
