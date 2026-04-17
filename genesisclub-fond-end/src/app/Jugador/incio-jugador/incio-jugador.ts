@@ -2,11 +2,12 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AuthServicio } from '../../ServiciosCompartidos/auth-servicio';
 import { HeaderJugador } from "../header-jugador/header-jugador";
+import { RubrosJugador } from "../Rubro/rubros-jugador";
 
 @Component({
   selector: 'app-incio-jugador',
   standalone: true,
-  imports: [RouterModule, HeaderJugador],
+  imports: [RouterModule, HeaderJugador, RubrosJugador],
   templateUrl: './incio-jugador.html',
   styleUrl: './incio-jugador.css',
 })

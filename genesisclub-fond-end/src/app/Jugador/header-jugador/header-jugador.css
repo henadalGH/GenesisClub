@@ -1,0 +1,130 @@
+/* =========================================
+   HEADER JUGADOR - BLINDAJE TOTAL
+   ========================================= */
+.jh-header {
+  background-color: #0F172A !important; /* Azul oscuro profundo */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  height: 75px;
+  display: flex;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 1100;
+  font-family: 'Inter', sans-serif;
+}
+
+.jh-container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* --- LOGO & BADGE --- */
+.jh-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  cursor: pointer;
+}
+
+.jh-logo__box {
+  background: #E07B2A;
+  color: white;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  font-weight: 900;
+  font-size: 1.2rem;
+  box-shadow: 0 4px 10px rgba(224, 123, 42, 0.3);
+}
+
+.jh-logo__text h2 {
+  font-size: 1.1rem;
+  margin: 0;
+  color: #FFFFFF !important;
+  letter-spacing: 0.5px;
+  line-height: 1;
+}
+
+.jh-logo__text h2 span { color: #E07B2A; }
+
+.jh-badge {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  color: #64748B;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+/* --- NAV LINKS --- */
+.jh-nav {
+  display: flex;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 6px;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.jh-nav__link {
+  color: #94A3B8 !important;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 10px 18px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.jh-nav__link i { font-size: 1.1rem; }
+
+.jh-nav__link:hover {
+  color: #FFFFFF !important;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.jh-nav__link.active {
+  color: #E07B2A !important;
+  background: rgba(224, 123, 42, 0.1);
+}
+
+/* --- BOTÓN CERRAR SESIÓN --- */
+.jh-btn-exit {
+  background: transparent;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  color: #EF4444 !important;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s;
+}
+
+.jh-btn-exit:hover {
+  background: #EF4444;
+  color: #FFFFFF !important;
+  box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+}
+
+/* --- RESPONSIVE --- */
+@media (max-width: 850px) {
+  .jh-nav__link span, .jh-btn-exit span {
+    display: none;
+  }
+  .jh-nav__link { padding: 10px; }
+  .jh-header { height: 65px; }
+}

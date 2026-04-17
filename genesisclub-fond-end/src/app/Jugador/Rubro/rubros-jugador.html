@@ -1,55 +1,83 @@
-<div class="rubros-jugador-container">
-  <h2>Rubros Disponibles</h2>
 
-  @if (cargando()) {
-    <div class="loading">
-      <p>Cargando rubros...</p>
-    </div>
-  } @else if (rubrosDisponibles().length === 0) {
-    <div class="no-rubros">
-      <p>No hay rubros disponibles en este momento.</p>
-    </div>
-  } @else {
-    <div class="rubros-grid">
-      @for (rubro of rubrosDisponibles(); track rubro.id) {
-        <div class="rubro-card">
-          <h3>{{ rubro.nombre }}</h3>
-          <p>{{ rubro.descripcion }}</p>
-          <div class="clave-input">
-            <label for="clave-{{ rubro.id }}">Clave de acceso:</label>
-            <input
-              type="password"
-              id="clave-{{ rubro.id }}"
-              [value]="obtenerClave(rubro.id)"
-              (input)="setClave(rubro.id, $any($event.target).value)"
-              placeholder="Ingresa la clave"
-              [disabled]="procesando()"
-            />
-          </div>
-          <button
-            class="btn-entrar"
-            (click)="entrarConClave(rubro)"
-            [disabled]="procesando() || !obtenerClave(rubro.id)"
-          >
-            @if (procesando()) {
-              <span class="spinner"></span>
-            }
-            Entrar
-          </button>
+
+<main class="rj-page">
+  <div class="rj-container">
+    
+    <header class="rj-header">
+      <div class="rj-icon-main"><i class="bi bi-unlock-fill"></i></div>
+      <div>
+        <h2 class="rj-titulo">Rubros Disponibles</h2>
+        <p class="rj-subtitulo">Ingresá la clave de acceso para unirte a una categoría.</p>
+      </div>
+    </header>
+
+    @if (cargando()) {
+      <div class="rj-loading">
+        <div class="rj-spinner"></div>
+        <p>Buscando rubros activos...</p>
+      </div>
+    } @else if (rubrosDisponibles().length === 0) {
+      <div class="rj-empty">
+        <i class="bi bi-search"></i>
+        <p>No hay rubros disponibles en este momento.</p>
+      </div>
+    } @else {
+      <div class="rj-grid">
+        @for (rubro of rubrosDisponibles(); track rubro.id) {
+          <article class="rj-card">
+            <div class="rj-card__content">
+              <h3 class="rj-card__name">{{ rubro.nombre }}</h3>
+              <p class="rj-card__desc">{{ rubro.descripcion || 'Sin descripción disponible.' }}</p>
+              
+              <div class="rj-input-group">
+                <label [for]="'clave-' + rubro.id">Clave de Acceso</label>
+                <div class="rj-input-wrapper">
+                  <i class="bi bi-key-fill"></i>
+                  <input
+                    type="password"
+                    [id]="'clave-' + rubro.id"
+                    [value]="obtenerClave(rubro.id)"
+                    (input)="setClave(rubro.id, $any($event.target).value)"
+                    placeholder="••••••••"
+                    [disabled]="procesando()"
+                  />
+                </div>
+              </div>
+
+              <button
+                class="rj-btn-entrar"
+                (click)="entrarConClave(rubro)"
+                [disabled]="procesando() || !obtenerClave(rubro.id)"
+              >
+                @if (procesando()) {
+                  <span class="rj-btn-spinner"></span>
+                  <span>Verificando...</span>
+                } @else {
+                  <i class="bi bi-box-arrow-in-right"></i>
+                  <span>Entrar</span>
+                }
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+
+    <div class="rj-alerts">
+      @if (mensajeExito()) {
+        <div class="rj-alert rj-alert--exito">
+          <i class="bi bi-check-circle-fill"></i>
+          <span>{{ mensajeExito() }}</span>
+        </div>
+      }
+
+      @if (mensajeError()) {
+        <div class="rj-alert rj-alert--error">
+          <i class="bi bi-exclamation-triangle-fill"></i>
+          <span>{{ mensajeError() }}</span>
         </div>
       }
     </div>
-  }
 
-  @if (mensajeExito()) {
-    <div class="mensaje exito">
-      {{ mensajeExito() }}
-    </div>
-  }
-
-  @if (mensajeError()) {
-    <div class="mensaje error">
-      {{ mensajeError() }}
-    </div>
-  }
-</div>
+  </div>
+</main>

@@ -1,117 +1,178 @@
-.rubros-jugador-container {
-  padding: 20px;
+/* =========================================
+   BLINDAJE DE PÁGINA Y COLORES BASE
+   (Fuerza un fondo oscuro para toda la sección)
+   ========================================= */
+.rj-page {
   max-width: 1200px;
   margin: 0 auto;
+  padding: 40px 20px;
+  background-color: #0F172A; /* Azul oscuro profundo de fondo */
+  color: #F8FAFC !important; /* Fuerza texto blanco en toda la página */
+  font-family: 'Inter', sans-serif;
+  min-height: 100vh;
 }
 
-.rubros-jugador-container h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  color: #333;
+/* =========================================
+   CABECERA DE SECCIÓN (Reparado)
+   ========================================= */
+.rj-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  padding-bottom: 15px;
 }
 
-.loading, .no-rubros {
-  text-align: center;
-  padding: 50px;
-  font-size: 18px;
-  color: #666;
+/* Icono Reparado: Fondo oscuro, icono naranja */
+.rj-icon-main {
+  background: #161B2B; /* Fondo de tarjeta oscuro */
+  color: #e07b2a !important; /* Icono naranja forzado */
+  width: 45px;
+  height: 45px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  border: 1px solid rgba(255,255,255,0.05);
 }
 
-.rubros-grid {
+.rj-titulo {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0;
+  color: #F8FAFC !important; /* Fuerza título blanco */
+}
+
+.rj-subtitulo {
+  font-size: 0.9rem;
+  color: #94A3B8 !important; /* Gris claro forzado */
+  margin: 0;
+}
+
+/* =========================================
+   GRILLA Y CARDS (Blindaje de Contraste)
+   ========================================= */
+.rj-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
 }
 
-.rubro-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 20px;
-  background: #fff;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+.rj-card {
+  background-color: #161B2B !important; /* Fondo de tarjeta muy oscuro FORZADO */
+  border-radius: 18px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: transform 0.3s;
 }
 
-.rubro-card h3 {
-  margin-top: 0;
-  color: #2c3e50;
+.rj-card:hover { transform: translateY(-5px); border-color: rgba(224, 123, 42, 0.3); }
+
+.rj-card__content { padding: 25px; position: relative; z-index: 2; }
+
+/* Detalles de Tarjeta Reparados */
+.rj-card__name {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 15px 0 5px;
+  color: #fff !important; /* Fuerza título blanco */
 }
 
-.rubro-card p {
-  color: #7f8c8d;
-  margin-bottom: 15px;
+.rj-card__desc {
+  font-size: 0.85rem;
+  color: #94A3B8 !important; /* Gris claro forzado */
+  margin-bottom: 25px;
+  line-height: 1.4;
 }
 
-.clave-input {
-  margin-bottom: 15px;
-}
-
-.clave-input label {
+/* =========================================
+   INPUT DE CLAVE (Fuerza visibilidad)
+   ========================================= */
+.rj-input-group label {
   display: block;
-  margin-bottom: 5px;
-  font-weight: bold;
-  color: #34495e;
+  color: #F8FAFC !important; /* Fuerza label blanco */
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
 }
 
-.clave-input input {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #bdc3c7;
-  border-radius: 4px;
-  font-size: 14px;
+.rj-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
-.btn-entrar {
+.rj-input-wrapper i {
+  position: absolute;
+  left: 15px;
+  color: #E07B2A !important; /* Icono llave naranja */
+}
+
+.rj-input-wrapper input {
   width: 100%;
-  padding: 10px;
-  background: #3498db;
-  color: white;
+  background: #080C14 !important; /* Fondo input más oscuro FORZADO */
+  border: 1px solid #334155;
+  padding: 14px 14px 14px 45px;
+  border-radius: 12px;
+  color: #FFFFFF !important; /* Fuerza texto de clave blanco */
+  font-size: 1rem;
+  outline: none;
+}
+
+.rj-input-wrapper input:focus {
+  border-color: #E07B2A;
+  box-shadow: 0 0 0 4px rgba(224, 123, 42, 0.1);
+}
+
+/* =========================================
+   BOTÓN ENTRAR (Contraste Blindado)
+   ========================================= */
+.rj-btn-entrar {
+  width: 100%;
+  background: #e07b2a !important; /* Naranja forzado */
+  color: white !important; /* Texto blanco forzado */
   border: none;
-  border-radius: 4px;
+  padding: 14px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
   cursor: pointer;
-  font-size: 16px;
-  transition: background 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: 0.3s;
 }
 
-.btn-entrar:hover:not(:disabled) {
-  background: #2980b9;
-}
+.rj-btn-entrar:hover { background: #f97316 !important; }
 
-.btn-entrar:disabled {
-  background: #bdc3c7;
+/* Botón Desactivado: Gris oscuro legible */
+.rj-btn-entrar:disabled {
+  background: #1F2937 !important;
+  color: #64748B !important;
   cursor: not-allowed;
 }
 
-.spinner {
-  display: inline-block;
-  width: 16px;
-  height: 16px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #3498db;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-right: 8px;
+/* =========================================
+   ALERTAS FLOTANTES (Reparado)
+   ========================================= */
+.rj-alerts {
+  position: fixed;
+  top: 90px;
+  right: 20px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.mensaje {
-  margin-top: 20px;
-  padding: 10px;
-  border-radius: 4px;
-  text-align: center;
-}
-
-.mensaje.exito {
-  background: #d4edda;
-  color: #155724;
-  border: 1px solid #c3e6cb;
-}
-
-.mensaje.error {
-  background: #f8d7da;
-  color: #721c24;
-  border: 1px solid #f5c6cb;
+.rj-alert {
+  padding: 15px 25px;
+  border-radius: 12px;
+  color: #fff !important; /* Texto blanco forzado */
 }
